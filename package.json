@@ -35,5 +35,8 @@
     "tap-spec": "^4.0.0",
     "tape": "^4.0.0",
     "zuul": "^3.0.0"
+  },
+  "dependencies": {
+    "pouchdb": "^3.6.0"
   }
 }
