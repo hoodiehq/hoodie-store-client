@@ -19,7 +19,7 @@ test('constructs a store object with a db property', function (t) {
 
   t.is(typeof store, 'object', 'is object')
   t.ok(store.db, '.db exists')
-  t.is(store.db, testDB, '.db is PouchDB object')
+  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
 })
 
 test('constructs a store object w/o new', function (t) {
@@ -30,7 +30,7 @@ test('constructs a store object w/o new', function (t) {
 
   t.is(typeof store, 'object', 'is object')
   t.ok(store.db, '.db exists')
-  t.is(store.db, testDB, '.db is PouchDB object')
+  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
 })
 
 test('throws an error w/o db', function (t) {
