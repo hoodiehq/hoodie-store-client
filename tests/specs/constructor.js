@@ -2,26 +2,40 @@
 
 var test = require('tape')
 
+var dbFactory = require('../utils/db')
 var Store = require('../../')
 
-test('constructs a store object', function (t) {
-  t.plan(1)
+var options = process.browser ? {
+  adapter: 'memory'
+} : {
+  db: require('memdown')
+}
 
-  var store = new Store('test-db')
+test('constructs a store object with a db property', function (t) {
+  t.plan(3)
+
+  var store = new Store('test-db', options)
+  var testDB = dbFactory('test-db')
 
   t.is(typeof store, 'object', 'is object')
+  t.ok(store.db, '.db exists')
+  t.is(store.db, testDB, '.db is PouchDB object')
 })
 
 test('constructs a store object w/o new', function (t) {
-  t.plan(1)
+  t.plan(3)
 
-  var store = Store('test-db')
+  var store = Store('test-db', options)
+  var testDB = dbFactory('test-db')
 
   t.is(typeof store, 'object', 'is object')
+  t.ok(store.db, '.db exists')
+  t.is(store.db, testDB, '.db is PouchDB object')
 })
 
 test('throws an error w/o db', function (t) {
-  t.plan(1)
+  t.plan(2)
 
   t.throws(Store, 'no arguments')
+  t.notOk(Store.db, 'db does not exist')
 })
