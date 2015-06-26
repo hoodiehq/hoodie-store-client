@@ -1,0 +1,45 @@
+{
+  "name": "pouchdb-hoodie-store",
+  "version": "0.0.0-semantically-released",
+  "description": "pouchdb with Hoodie's Store API",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "semantic-release pre",
+    "postpublish": "semantic-release post",
+    "test": "standard && npm run -s test:node | tap-spec && rm -rf test-db/",
+    "test:coverage": "istanbul cover tests && istanbul-coveralls",
+    "test:browser:local": "zuul --local 8080 -- tests",
+    "test:browser:cloud": "zuul -- tests",
+    "test:node": "node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HipsterBrown/pouchdb-hoodie-store.git"
+  },
+  "keywords": [
+    "hoodie",
+    "offlinefirst",
+    "storage",
+    "pouchdb",
+    "sync",
+    "data"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/HipsterBrown/pouchdb-hoodie-store/issues"
+  },
+  "homepage": "https://github.com/HipsterBrown/pouchdb-hoodie-store#readme",
+  "devDependencies": {
+    "istanbul": "^0.3.15",
+    "istanbul-coveralls": "^1.0.3",
+    "semantic-release": "^3.4.1",
+    "standard": "^4.3.1",
+    "tap-spec": "^4.0.0",
+    "tape": "^4.0.0",
+    "zuul": "^3.0.0"
+  },
+  "dependencies": {
+    "pouchdb": "^3.6.0"
+  }
+}

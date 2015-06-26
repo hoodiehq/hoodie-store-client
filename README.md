@@ -17,8 +17,7 @@ or in the [Hoodie Community Chat](http://hood.ie/chat/).
 [![NPM](https://nodei.co/npm/pouchdb-hoodie-store.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/pouchdb-hoodie-store/)
 
 This plugin provides simple methods store and
-sync data. It combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api)
-and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync)
+sync data. It combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api), [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync), and [pouchdb-hoodie-local-changes](https://github.com/zoepage/pouchdb-hoodie-local-changes).
 
 ## API
 
@@ -31,57 +30,59 @@ store = new Store(dbName, options)
 // store = new Store('mydb')
 
 // all methods return promises
-api.add(object)
-api.add([object1, id2])
-api.find(id)
-api.find(object) // with id property
-api.findOrAdd(id, object)
-api.findOrAdd(object)
-api.findOrAdd([object1, id2])
-api.findAll()
-api.findAll(filterFunction)
-api.update(id, changedProperties)
-api.update(id, updateFunction)
-api.update(object)
-api.update([object1, id2])
-api.updateOrAdd(id, object)
-api.updateOrAdd(object)
-api.updateOrAdd([object1, id2])
-api.updateAll(changedProperties)
-api.updateAll(updateFunction)
-api.remove(id)
-api.remove(object)
-api.remove([object1, id2])
-api.removeAll()
-api.removeAll(filterFunction)
-api.clear() // removes all data without triggering events
+store.add(object)
+store.add([object1, id2])
+store.find(id)
+store.find(object) // with id property
+store.findOrAdd(id, object)
+store.findOrAdd(object)
+store.findOrAdd([object1, id2])
+store.findAll()
+store.findAll(filterFunction)
+store.update(id, changedProperties)
+store.update(id, updateFunction)
+store.update(object)
+store.update([object1, id2])
+store.updateOrAdd(id, object)
+store.updateOrAdd(object)
+store.updateOrAdd([object1, id2])
+store.updateAll(changedProperties)
+store.updateAll(updateFunction)
+store.remove(id)
+store.remove(object)
+store.remove([object1, id2])
+store.removeAll()
+store.removeAll(filterFunction)
+store.clear() // removes all data without triggering events
 
 // sync methods, return native promises
-hoodie.store.pull() // pulls changes one-time
-hoodie.store.push() // pushes changes one-time
-hoodie.store.sync() // pulls and pushes changes one-time
-hoodie.store.connect() // starts continuous replication
-hoodie.store.disconnect() // stops continuous replication and all pending requests
+store.pull() // pulls changes one-time
+store.push() // pushes changes one-time
+store.sync() // pulls and pushes changes one-time
+store.connect() // starts continuous replication
+store.disconnect() // stops continuous replication and all pending requests
+store.isConnected()
 // pull / push / sync can be filtered by id, object, array
-hoodie.store.pull('objectId')
-hoodie.store.push(object)
-hoodie.store.push(['object1Id', object2])
+store.pull('objectId')
+store.push(object)
+store.push(['object1Id', object2])
 
-// returns true or false if there are objects with unsynced changes
-hoodie.store.hasLocalChanges()
-// returns true or false if passed object (or id) has unsynced changes
-hoodie.store.hasLocalChanges(id)
-hoodie.store.hasLocalChanges(object)
+store.getLocalChanges()
+store.getLocalChanges(id)
+store.getLocalChanges(object)
+store.getLocalChanges([object1, id2])
 
 // events
-hoodie.store.on('add', function(object, options) {})
-hoodie.store.on('update', function(object, options) {})
-hoodie.store.on('remove', function(object, options) {})
-hoodie.store.on('change', function(eventName, object, options) {})
-hoodie.store.on('sync', function(object) {})
-hoodie.store.on('clear', function() {})
-hoodie.store.one(event, handler)
-hoodie.store.off(event, handler)
+store.on('add', function(object, options) {})
+store.on('update', function(object, options) {})
+store.on('remove', function(object, options) {})
+store.on('change', function(eventName, object, options) {})
+store.on('pull', function(object) {})
+store.on('push', function(object) {})
+store.on('connect', function(object) {})
+store.on('disconnect', function(object) {})
+store.one(event, handler)
+store.off(event, handler)
 ```
 
 ## Installation
