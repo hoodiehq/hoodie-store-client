@@ -34,7 +34,7 @@
     "istanbul": "^0.3.15",
     "istanbul-coveralls": "^1.0.3",
     "memdown": "^1.0.0",
-    "semantic-release": "^3.4.1",
+    "semantic-release": "3.3.2",
     "standard": "^4.3.1",
     "tap-spec": "^4.0.0",
     "tape": "^4.0.0",
