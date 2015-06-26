@@ -1,6 +1,7 @@
 'use strict'
 
 var PouchDB = require('pouchdb')
+PouchDB.plugin(require('pouchdb-hoodie-api'))
 
 module.exports = Store
 
@@ -10,4 +11,7 @@ function Store (dbName, options) {
   options = options || {}
 
   this.db = new PouchDB(dbName, options)
+
+  return this.db.hoodieApi()
 }
+
