@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "pouchdb": "^3.6.0",
-    "pouchdb-hoodie-api": "^1.1.0"
+    "pouchdb-hoodie-api": "^1.1.0",
+    "pouchdb-hoodie-sync": "^1.1.0"
   }
 }
