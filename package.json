@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "semantic-release pre",
     "postpublish": "semantic-release post",
-    "test": "standard && npm run -s test:node | tap-spec && rm -rf test-db/",
+    "test": "standard && npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests && istanbul-coveralls",
     "test:browser:local": "zuul --local 8080 -- tests",
     "test:browser:cloud": "zuul -- tests",
