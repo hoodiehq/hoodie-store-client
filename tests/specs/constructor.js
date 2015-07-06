@@ -1,6 +1,7 @@
 'use strict'
 
 var test = require('tape')
+var rimraf = require('rimraf')
 
 var dbFactory = require('../utils/db')
 var Store = require('../../')
@@ -38,4 +39,20 @@ test('throws an error w/o db', function (t) {
 
   t.throws(Store, 'no arguments')
   t.notOk(Store.db, 'db does not exist')
+})
+
+test('constructs a store object without options', function (t) {
+  t.plan(3)
+
+  var store = new Store('test-db-noptions')
+  var testDB = dbFactory('test-db-noptions')
+
+  t.is(typeof store, 'object', 'is object')
+  t.ok(store.db, '.db exists')
+  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
+
+  // clean up the files created by this test
+  if (!process.browser) {
+    rimraf('test-db-noptions/', function (err) { console.log(err) })
+  }
 })
