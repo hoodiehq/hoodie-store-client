@@ -1,5 +1,4 @@
-test-db/
-test-db-*/
 coverage
-node_modules/
-*.log
+node_modules
+.DS_Store
+npm-debug.log
