@@ -15,7 +15,7 @@ PouchDB.plugin({
 module.exports = Store
 
 function Store (dbName, options) {
-  if (!(this instanceof Store)) return new Store(dbName)
+  if (!(this instanceof Store)) return new Store(dbName, options)
   if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
   options = options || {}
 
