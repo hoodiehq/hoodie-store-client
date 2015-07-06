@@ -18,7 +18,8 @@ function Store (dbName, options) {
   if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
   options = options || {}
 
-  var db = new PouchDB(dbName, options)
+  var CustomPouchDB = PouchDB.defaults(options)
+  var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
   var api = merge(db.hoodieApi({emitter: emitter}), db.hoodieSync({remote: dbName + '-remote', emitter: emitter}), onSwitch)
 
