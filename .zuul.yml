@@ -6,8 +6,9 @@ browsers:
     version: latest
   - name: safari
     version: latest
-  - name: ie
-    version: latest
+  # https://github.com/hoodiehq/pouchdb-hoodie-store/issues/13
+  # - name: ie
+  #   version: latest
   - name: iphone
     version: latest
   - name: android
