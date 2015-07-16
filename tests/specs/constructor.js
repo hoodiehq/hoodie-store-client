@@ -53,6 +53,8 @@ test('constructs a store object without options', function (t) {
 
   // clean up the files created by this test
   if (!process.browser) {
-    rimraf('test-db-noptions/', function (err) { console.log(err) })
+    testDB.then(function () {
+      rimraf('test-db-noptions/', function (err) { console.log(err) })
+    })
   }
 })
