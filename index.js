@@ -28,15 +28,15 @@ function Store (dbName, options) {
     db.hoodieSync({remote: dbName + '-remote', emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
     {
-      unsyncedLocalDocs: mapUnsyncedLocalIds.bind(db, db.unsyncedLocalDocs)
+      findAllUnsynced: mapUnsyncedLocalIds.bind(db)
     }
   )
 
   return api
 }
 
-function mapUnsyncedLocalIds (unsyncedLocalDocs, options) {
-  return unsyncedLocalDocs.call(this, options)
+function mapUnsyncedLocalIds (options) {
+  return this.unsyncedLocalDocs.call(this, options)
 
   .then(function (changedDocs) {
     return changedDocs.map(function (doc) {

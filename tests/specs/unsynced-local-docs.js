@@ -14,7 +14,7 @@ test('has "unsynced-local-docs" methods', function (t) {
 
   var store = new Store('test-db-unsynced-local-docs', options)
 
-  t.is(typeof store.unsyncedLocalDocs, 'function', 'has "unsyncedLocalDocs" method')
+  t.is(typeof store.findAllUnsynced, 'function', 'has "findAllUnsynced" method')
 })
 
 test('returns docs with "id" prop', function (t) {
@@ -28,7 +28,7 @@ test('returns docs with "id" prop', function (t) {
   store.add([localObj1, localObj2])
 
   .then(function () {
-    return store.unsyncedLocalDocs({remote: 'test-db-ids-remote', keys: ''})
+    return store.findAllUnsynced({remote: 'test-db-ids-remote', keys: ''})
   })
 
   .then(function (changedDocs) {
@@ -41,7 +41,7 @@ test('returns docs with "id" prop', function (t) {
   })
 
   .then(function () {
-    return store.unsyncedLocalDocs({remote: 'test-db-ids-remote', keys: ''})
+    return store.findAllUnsynced({remote: 'test-db-ids-remote', keys: ''})
   })
 
   .then(function (changedDocs) {
