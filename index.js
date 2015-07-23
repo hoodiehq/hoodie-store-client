@@ -7,6 +7,7 @@ var Sync = require('pouchdb-hoodie-sync')
 var UnsyncedLocalDocs = require('pouchdb-hoodie-unsynced-local-docs')
 var merge = require('lodash.merge')
 var EventEmitter = require('events').EventEmitter
+var localStorageWrapper = require('humble-localstorage')
 
 PouchDB.plugin({
   hoodieApi: API.hoodieApi,
@@ -28,9 +29,11 @@ function Store (dbName, options) {
     db.hoodieSync({remote: dbName + '-remote', emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
     {
-      findAllUnsynced: mapUnsyncedLocalIds.bind(db)
+      findAllUnsynced: mapUnsyncedLocalIds.bind(db),
+      hasLocalChanges: hasLocalChanges.bind(db)
     }
   )
+  subscribeToInternalEvents(emitter)
 
   return api
 }
@@ -48,3 +51,50 @@ function mapUnsyncedLocalIds (options) {
   })
 }
 
+function hasLocalChanges (objOrId) {
+  var changedIds = localStorageWrapper.getObject('hoodie_changedObjectIds') || []
+  if (objOrId) {
+    var id = objOrId.id ? objOrId.id : objOrId
+    return changedIds.indexOf(id) >= 0
+  }
+
+  return changedIds.length > 0
+}
+
+function markAsChanged (object) {
+  var changedIds = localStorageWrapper.getObject('hoodie_changedObjectIds') || []
+  var id = object.id
+  var hasId = changedIds.indexOf(id) >= 0
+
+  if (hasId) {
+    return
+  }
+  localStorageWrapper.setObject('hoodie_changedObjectIds', changedIds.concat(id))
+}
+
+function unmarkAsChanged (object) {
+  var changedIds = localStorageWrapper.getObject('hoodie_changedObjectIds')
+  var id = object._id
+  var index = changedIds.indexOf(id)
+
+  if (index === -1) {
+    return
+  }
+
+  changedIds.splice(index, 1)
+  localStorageWrapper.setObject('hoodie_changedObjectIds', changedIds)
+}
+
+function subscribeToInternalEvents (emitter) {
+  emitter.on('change', function (eventName, object) {
+    markAsChanged(object)
+  })
+
+  emitter.on('push', function (object) {
+    unmarkAsChanged(object)
+  })
+
+  emitter.on('clear', function () {
+    localStorageWrapper.removeItem('hoodie_changedObjectIds')
+  })
+}
