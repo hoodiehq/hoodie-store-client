@@ -13,6 +13,8 @@ before_install:
 before_script:
 - npm prune
 script: npm run $COMMAND
+after_success:
+- if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
 env:
   matrix:
   - NODE=0.10 COMMAND=test:browser:cloud

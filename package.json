@@ -7,7 +7,8 @@
     "prepublish": "semantic-release pre",
     "postpublish": "semantic-release post",
     "test": "standard && npm run -s test:node | tap-spec",
-    "test:coverage": "istanbul cover tests && istanbul-coveralls",
+    "test:coverage": "istanbul cover tests",
+    "test:coverage:upload": "istanbul-coveralls",
     "test:browser:local": "zuul --local 8080 -- tests",
     "test:browser:cloud": "zuul -- tests",
     "test:node": "node tests"
