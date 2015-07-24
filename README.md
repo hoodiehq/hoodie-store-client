@@ -67,10 +67,10 @@ store.pull('objectId')
 store.push(object)
 store.push(['object1Id', object2])
 
-store.getLocalChanges()
-store.getLocalChanges(id)
-store.getLocalChanges(object)
-store.getLocalChanges([object1, id2])
+store.hasLocalChanges()
+store.hasLocalChanges(id)
+store.hasLocalChanges(object)
+store.hasLocalChanges([object1, id2])
 
 // events
 store.on('add', function(object, options) {})
