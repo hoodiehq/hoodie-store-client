@@ -58,3 +58,15 @@ test('constructs a store object without options', function (t) {
     })
   }
 })
+
+test('constructs a store object with remote option', function (t) {
+  t.plan(2)
+
+  var newOptions = options
+  newOptions.remote = 'custom-remote-name'
+
+  var store = new Store('test-db-remote-option', newOptions)
+
+  t.is(typeof store, 'object', 'is object')
+  t.is(store.db.__opts.remote, newOptions.remote, 'has correct remote name')
+})
