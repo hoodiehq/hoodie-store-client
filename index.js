@@ -25,8 +25,9 @@ function Store (dbName, options) {
   var CustomPouchDB = PouchDB.defaults(options)
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
+  var remote = options.remote || dbName + '-remote'
   var api = merge(
-    db.hoodieSync({remote: dbName + '-remote', emitter: emitter}),
+    db.hoodieSync({remote: remote, emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
     {
       findAllUnsynced: mapUnsyncedLocalIds.bind(db),
