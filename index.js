@@ -1,7 +1,6 @@
 'use strict'
 
-/* istanbul ignore next */
-var PouchDB = process.browser ? global.PouchDB : require('pouchdb')
+var PouchDB = global.PouchDB || require('pouchdb')
 var API = require('pouchdb-hoodie-api')
 var Sync = require('pouchdb-hoodie-sync')
 var UnsyncedLocalDocs = require('pouchdb-hoodie-unsynced-local-docs')
