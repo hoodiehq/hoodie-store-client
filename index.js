@@ -1,4 +1,4 @@
-'use strict'
+module.exports = Store
 
 var PouchDB = global.PouchDB || require('pouchdb')
 var API = require('pouchdb-hoodie-api')
@@ -13,8 +13,6 @@ PouchDB.plugin({
   hoodieSync: Sync.hoodieSync,
   unsyncedLocalDocs: UnsyncedLocalDocs.unsyncedLocalDocs
 })
-
-module.exports = Store
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -36,6 +34,19 @@ function Store (dbName, options) {
   subscribeToInternalEvents(emitter)
 
   return api
+}
+
+Store.defaults = function (defaultOpts) {
+  function CustomStore (dbName, options) {
+    if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
+    options = options || {}
+
+    options = merge(defaultOpts, options)
+
+    return Store(dbName, options)
+  }
+
+  return CustomStore
 }
 
 function mapUnsyncedLocalIds (options) {
