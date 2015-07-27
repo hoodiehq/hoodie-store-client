@@ -70,3 +70,24 @@ test('constructs a store object with remote option', function (t) {
   t.is(typeof store, 'object', 'is object')
   t.is(store.db.__opts.remote, newOptions.remote, 'has correct remote name')
 })
+
+test('constructs a store object using "Store.defaults"', function (t) {
+  t.plan(2)
+
+  var CustomStore = Store.defaults(options)
+  var store = new CustomStore('test-db-custom')
+  var testDB = dbFactory('test-db-custom')
+  console.log(store)
+
+  t.ok(store.db, '.db exists')
+  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
+})
+
+test('"defaults" throws an error w/o db', function (t) {
+  t.plan(2)
+
+  var CustomStore = Store.defaults(options)
+
+  t.throws(CustomStore, 'no arguments')
+  t.notOk(CustomStore.db, 'db does not exist')
+})
