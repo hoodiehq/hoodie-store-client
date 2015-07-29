@@ -45,6 +45,13 @@ test('new Store(dbName)', function (t) {
   t.throws(Store.bind(null, 'db'), 'throws error')
 })
 
+test('new Store("name", {remote: "othername"})', function (t) {
+  t.plan(1)
+
+  var store = new Store('name', merge({ remote: 'othername' }, options))
+  t.is(store.db.__opts.remote, 'othername', 'sets remote name to "othername"')
+})
+
 test('constructs a store object options.adapter / options.db', function (t) {
   var store = new Store('test-db-adapter', { remote: 'test-db-adapter-remote' })
 
