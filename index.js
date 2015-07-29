@@ -21,8 +21,18 @@ function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
   if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
 
-  if (!options || !options.remote) {
-    throw new Error('options.remote is required')
+  if (!options || (!options.remote && !options.remoteBaseUrl)) {
+    throw new Error('options.remote or options.remoteBaseUrl is required')
+  }
+
+  if (options.remoteBaseUrl) {
+    options.remoteBaseUrl = options.remoteBaseUrl.replace(/\/$/, '')
+    if (!options.remote) {
+      options.remote = dbName
+    }
+    if (!/^https?:\/\//.test(options.remote)) {
+      options.remote = (options.remoteBaseUrl + '/' + options.remote)
+    }
   }
 
   var CustomPouchDB = PouchDB.defaults(options)
