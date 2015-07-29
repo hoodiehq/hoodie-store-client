@@ -68,15 +68,20 @@ test('Store.defaults({remote})', function (t) {
 
 function cleanupDb (store, t) {
   // clean up the files created by this test
-  if (!process.browser) {
-    store.db.then(function () {
-      rimraf(store.db._db_name, function (error) {
-        if (error) {
-          throw error
-        }
-
-        t.end()
-      })
-    })
+  if (process.browser) {
+    return t.end()
   }
+  store.db.then(function () {
+    rimraf(store.db._db_name, function (error) {
+      if (error) {
+        throw error
+      }
+
+      t.end()
+    })
+  })
+
+  .catch(function (error) {
+    console.log(error)
+  })
 }
