@@ -52,6 +52,34 @@ test('new Store("name", {remote: "othername"})', function (t) {
   t.is(store.db.__opts.remote, 'othername', 'sets remote name to "othername"')
 })
 
+test('new Store("name", {remoteBaseUrl: "https://example.com"})', function (t) {
+  t.plan(1)
+
+  var store = new Store('name', merge({ remoteBaseUrl: 'https://my.cou.ch' }, options))
+  t.is(store.db.__opts.remote, 'https://my.cou.ch/name', 'sets remote name to "https://my.cou.ch/name"')
+})
+
+test('remoteBaseUrl with trailing /', function (t) {
+  t.plan(1)
+
+  var store = new Store('name', merge({ remoteBaseUrl: 'https://my.cou.ch/' }, options))
+  t.is(store.db.__opts.remote, 'https://my.cou.ch/name', 'sets remote name without double //')
+})
+
+test('new Store("name", {remote: "othername", remoteBaseUrl: "https://example.com"})', function (t) {
+  t.plan(1)
+
+  var store = new Store('name', merge({ remote: 'othername', remoteBaseUrl: 'https://my.cou.ch' }, options))
+  t.is(store.db.__opts.remote, 'https://my.cou.ch/othername', 'sets remote name to "https://my.cou.ch/othername"')
+})
+
+test('new Store("name", {remote: "othername", remoteBaseUrl: "https://example.com"})', function (t) {
+  t.plan(1)
+
+  var store = new Store('name', merge({ remote: 'https://my.other.cou.ch/name', remoteBaseUrl: 'https://my.cou.ch' }, options))
+  t.is(store.db.__opts.remote, 'https://my.other.cou.ch/name', 'sets remote name to "https://my.cou.ch/othername"')
+})
+
 test('constructs a store object options.adapter / options.db', function (t) {
   var store = new Store('test-db-adapter', { remote: 'test-db-adapter-remote' })
 
