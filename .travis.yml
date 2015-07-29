@@ -12,6 +12,8 @@ before_install:
 - nvm use $NODE
 before_script:
 - npm prune
+# leveldown (node-gyp) installs different binaries depending on node version
+- ( cd node_modules/pouchdb/node_modules ; npm install leveldown )
 script: npm run $COMMAND
 after_success:
 - if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
@@ -22,3 +24,4 @@ env:
   - NODE=0.12 COMMAND=test
   - NODE=0.10 COMMAND=test
   - NODE=iojs-v1 COMMAND=test
+  - NODE=iojs-v2 COMMAND=test
