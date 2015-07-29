@@ -1,11 +1,11 @@
 module.exports = Store
 
-var PouchDB = global.PouchDB || require('pouchdb')
 var API = require('pouchdb-hoodie-api')
+var EventEmitter = require('events').EventEmitter
+var merge = require('lodash.merge')
+var PouchDB = global.PouchDB || require('pouchdb')
 var Sync = require('pouchdb-hoodie-sync')
 var UnsyncedLocalDocs = require('pouchdb-hoodie-unsynced-local-docs')
-var merge = require('lodash.merge')
-var EventEmitter = require('events').EventEmitter
 
 var hasLocalChanges = require('./lib/has-local-changes')
 var mapUnsyncedLocalDocs = require('./lib/map-unsynced-local-docs')
@@ -20,17 +20,20 @@ PouchDB.plugin({
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
   if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
-  options = options || {}
+
+  if (!options || !options.remote) {
+    throw new Error('options.remote is required')
+  }
 
   var CustomPouchDB = PouchDB.defaults(options)
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
-  var remote = options.remote || dbName + '-remote'
+  var remote = options.remote
   var api = merge(
     db.hoodieSync({remote: remote, emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
     {
-      findAllUnsynced: mapUnsyncedLocalDocs.bind(db),
+      findAllUnsynced: mapUnsyncedLocalDocs.bind(db, options),
       hasLocalChanges: hasLocalChanges.bind(db)
     }
   )

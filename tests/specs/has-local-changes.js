@@ -1,7 +1,6 @@
-'use strict'
-
-var test = require('tape')
+var merge = require('lodash.merge')
 var localStorageWrapper = require('humble-localstorage')
+var test = require('tape')
 
 var Store = require('../../')
 var options = process.browser ? {
@@ -10,42 +9,34 @@ var options = process.browser ? {
   db: require('memdown')
 }
 
-test('has "local-changes" method', function (t) {
-  t.plan(1)
+test('.hasLocalChanges()', function (t) {
+  t.plan(4)
 
-  var store = new Store('test-db-local-changes', options)
-
-  t.is(typeof store.hasLocalChanges, 'function', 'has "hasLocalChanges" method')
-})
-
-test('returns correct response to local changes', function (t) {
-  t.plan(3)
-
-  var store = new Store('test-db-local', options)
+  var store = new Store('test-db-local', merge({remote: 'test-db-local-remote'}, options))
+  t.is(typeof store.hasLocalChanges, 'function', 'exsits')
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
   var localObj2 = {id: 'test2', foo: 'bar2'}
 
-  localStorageWrapper.removeItem('hoodie_changedObjectIds')
-  t.is(store.hasLocalChanges(), false, 'returns "false" after removing reference array')
+  localStorageWrapper.clear()
+  t.is(store.hasLocalChanges(), false, 'returns "false" by default')
 
   store.add([localObj1, localObj2])
 
   .then(function () {
-    t.is(store.hasLocalChanges(), true, 'returns "true" to local changes')
+    t.is(store.hasLocalChanges(), true, 'returns "true" after objects added')
+    return store.sync()
+  })
 
-    store.sync()
-
-    .then(function () {
-      t.is(store.hasLocalChanges(), false, 'returns "false" after synced changes')
-    })
+  .then(function () {
+    t.is(store.hasLocalChanges(), false, 'returns "false" after sync')
   })
 })
 
-test('returns correct response to local changes with filter', function (t) {
+test('.hasLocalChanges(filter)', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-local-filter', options)
+  var store = new Store('test-db-local-filter', merge({remote: 'test-db-local-filter-remote'}, options))
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
   var localObj2 = {id: 'test2', foo: 'bar2'}
@@ -53,21 +44,21 @@ test('returns correct response to local changes with filter', function (t) {
   store.add([localObj1, localObj2])
 
   .then(function () {
-    t.is(store.hasLocalChanges('test1'), true, 'returns "true" to local change with id')
-    t.is(store.hasLocalChanges({id: 'test2'}), true, 'returns "true" to local changes with object')
+    t.is(store.hasLocalChanges('test1'), true, 'returns "true" with id filter')
+    t.is(store.hasLocalChanges({id: 'test2'}), true, 'returns "true" to with object filter')
 
     store.clear()
 
     .then(function () {
-      t.is(store.hasLocalChanges(), false, 'returns "false" after "clear" event')
+      t.is(store.hasLocalChanges(), false, 'returns "false" after "clear"')
     })
   })
 })
 
-test('correctly store unique ids in reference', function (t) {
+test('.hasLocalChanges() after changing same object twice', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-reference', options)
+  var store = new Store('test-db-reference', merge({remote: 'test-db-reference-remote'}, options))
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
 
@@ -77,34 +68,22 @@ test('correctly store unique ids in reference', function (t) {
 
   .then(function () {
     var changedIds = localStorageWrapper.getObject('hoodie_changedObjectIds')
-    t.is(store.hasLocalChanges('test1'), true, 'returns "true" to localChanges after update')
+    t.is(store.hasLocalChanges('test1'), true, 'returns "true" to after update')
     t.is(changedIds.length, 1, 'stores only unique ids in reference')
   })
 })
 
-test('unmarks only referenced ids after push', function (t) {
+test('.hasLocalChanges(unknownId)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-unmark', options)
+  var store = new Store('test-db-unmark', merge({remote: 'test-db-unmark-remote'}, options))
 
-  var localObj1 = {id: 'test1', foo: 'bar1'}
-  var localObj2 = {_id: 'test2', foo: 'bar2'}
+  var localObj = {_id: 'pouchdb-put-doc', foo: 'bar1'}
 
-  store.add(localObj1)
-
-  .then(function () {
-    return store.db.put(localObj2)
-  })
+  return store.db.put(localObj)
 
   .then(function () {
-    t.is(store.hasLocalChanges('test2'), false, 'returns "false" to unreferenced, stored item')
-
-    return store.sync()
-  })
-
-  .then(function () {
-    t.is(store.hasLocalChanges(), false, 'returns "false" after sync')
-
-    store.clear()
+    t.is(store.hasLocalChanges('pouchdb-put-doc'), false, 'returns "false" to stored, but unreferenced object')
+    t.is(store.hasLocalChanges('unknown-id'), false, 'returns "false" to unknown object')
   })
 })

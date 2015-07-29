@@ -1,5 +1,4 @@
-'use strict'
-
+var merge = require('lodash.merge')
 var test = require('tape')
 
 var Store = require('../../')
@@ -12,7 +11,7 @@ var options = process.browser ? {
 test('has "sync" methods', function (t) {
   t.plan(6)
 
-  var store = new Store('test-db-sync', options)
+  var store = new Store('test-db-sync', merge({remote: 'test-db-sync-remote'}, options))
 
   t.is(typeof store.pull, 'function', 'had "pull" method')
   t.is(typeof store.push, 'function', 'had "push" method')
@@ -25,7 +24,7 @@ test('has "sync" methods', function (t) {
 test('store.on("push") for store.push()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-push', options)
+  var store = new Store('test-db-push', merge({remote: 'test-db-push-remote'}, options))
   var pushEvents = []
 
   store.on('push', pushEvents.push.bind(pushEvents))
@@ -45,7 +44,7 @@ test('store.on("push") for store.push()', function (t) {
 test('api.off("push")', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-push-off', options)
+  var store = new Store('test-db-push-off', merge({remote: 'test-db-push-off-remote'}, options))
   var pushEvents = []
 
   store.on('push', pushHandler)
@@ -77,7 +76,7 @@ test('api.off("push")', function (t) {
 test('api.one("push")', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push-one', options)
+  var store = new Store('test-db-push-one', merge({remote: 'test-db-push-one-remote'}, options))
   var pushEvents = []
 
   store.one('push', pushEvents.push.bind(pushEvents))

@@ -1,5 +1,4 @@
-'use strict'
-
+var merge = require('lodash.merge')
 var test = require('tape')
 
 var Store = require('../../')
@@ -9,18 +8,18 @@ var options = process.browser ? {
   db: require('memdown')
 }
 
-test('has "unsynced-local-docs" methods', function (t) {
+test('.findAllUnsynced()', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-unsynced-local-docs', options)
+  var store = new Store('test-db-find-all-unsynced-1', merge({remote: 'test-db-find-all-unsynced-1-remote'}, options))
 
-  t.is(typeof store.findAllUnsynced, 'function', 'has "findAllUnsynced" method')
+  t.is(typeof store.findAllUnsynced, 'function', 'exists')
 })
 
-test('returns docs with "id" prop', function (t) {
+test('.findAllUnsynced() before & after sync', function (t) {
   t.plan(5)
 
-  var store = new Store('test-db-ids', options)
+  var store = new Store('test-db-find-all-unsynced-2', merge({remote: 'test-db-find-all-unsynced-2-remote'}, options))
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
   var localObj2 = {id: 'test2', foo: 'bar2'}
@@ -28,7 +27,7 @@ test('returns docs with "id" prop', function (t) {
   store.add([localObj1, localObj2])
 
   .then(function () {
-    return store.findAllUnsynced({remote: 'test-db-ids-remote', keys: ''})
+    return store.findAllUnsynced()
   })
 
   .then(function (changedDocs) {
@@ -41,10 +40,51 @@ test('returns docs with "id" prop', function (t) {
   })
 
   .then(function () {
-    return store.findAllUnsynced({remote: 'test-db-ids-remote', keys: ''})
+    return store.findAllUnsynced()
   })
 
   .then(function (changedDocs) {
     t.is(changedDocs.length, 0, 'local changes synced with remote')
+  })
+})
+
+test('.findAllUnsynced("id")', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-db-find-all-unsynced-3', merge({remote: 'test-db-find-all-unsynced-3-remote'}, options))
+
+  store.add([
+    {id: 'id', foo: 'bar'},
+    {id: 'otherid', foo: 'bar'}
+  ])
+
+  .then(function () {
+    return store.findAllUnsynced('id')
+  })
+
+  .then(function (objects) {
+    t.is(objects.length, 1, 'find object')
+    t.is(objects[0].foo, 'bar', 'object.foo matches')
+  })
+})
+
+test('.findAllUnsynced(["id1", {id: "id2"}])', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-db-find-all-unsynced-3', merge({remote: 'test-db-find-all-unsynced-3-remote'}, options))
+
+  store.add([
+    {id: 'id1', foo: 'bar'},
+    {id: 'id2', foo: 'bar'},
+    {id: 'id3', foo: 'bar'}
+  ])
+
+  .then(function () {
+    return store.findAllUnsynced(['id1', {id: 'id2'}])
+  })
+
+  .then(function (objects) {
+    t.is(objects.length, 2, 'finds two objects')
+    t.is(objects[0].foo, 'bar', 'objects properties passed')
   })
 })

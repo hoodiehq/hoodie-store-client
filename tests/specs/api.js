@@ -1,7 +1,5 @@
-'use strict'
-
+var merge = require('lodash.merge')
 var test = require('tape')
-var waitFor = require('../utils/wait-for')
 
 var Store = require('../../')
 var options = process.browser ? {
@@ -10,10 +8,10 @@ var options = process.browser ? {
   db: require('memdown')
 }
 
-test('has "api" methods', function (t) {
+test('API methods', function (t) {
   t.plan(12)
 
-  var store = new Store('test-db-api', options)
+  var store = new Store('test-db-api', merge({remote: 'test-db-api'}, options))
 
   t.is(typeof store.add, 'function', 'has "add" method')
   t.is(typeof store.find, 'function', 'has "find" method')
@@ -32,7 +30,7 @@ test('has "api" methods', function (t) {
 test('store.on("change") with adding one', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-change', options)
+  var store = new Store('test-db-change', merge({remote: 'test-db-change'}, options))
   var changeEvents = []
 
   store.on('change', addEventToArray.bind(null, changeEvents))
@@ -40,10 +38,6 @@ test('store.on("change") with adding one', function (t) {
   store.add({
     foo: 'bar'
   })
-
-  .then(waitFor(function () {
-    return changeEvents.length
-  }, 1))
 
   .then(function () {
     t.is(changeEvents.length, 1, 'triggers 1 change event')
@@ -55,7 +49,7 @@ test('store.on("change") with adding one', function (t) {
 test('store.off("add") with one add handler', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-off', options)
+  var store = new Store('test-db-off', merge({remote: 'test-db-off'}, options))
   var addEvents = []
   var changeEvents = []
 
@@ -71,10 +65,6 @@ test('store.off("add") with one add handler', function (t) {
     foo: 'bar'
   })
 
-  .then(waitFor(function () {
-    return changeEvents.length
-  }, 1))
-
   .then(function () {
     t.is(addEvents.length, 0, 'triggers no add event')
   })
@@ -83,7 +73,7 @@ test('store.off("add") with one add handler', function (t) {
 test('store.one("add") with adding one', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-one', options)
+  var store = new Store('test-db-one', merge({remote: 'test-db-one'}, options))
   var addEvents = []
 
   store.one('add', addEventToArray.bind(null, addEvents))
@@ -91,10 +81,6 @@ test('store.one("add") with adding one', function (t) {
   store.add({
     foo: 'bar'
   })
-
-  .then(waitFor(function () {
-    return addEvents.length
-  }, 1))
 
   .then(function () {
     t.is(addEvents.length, 1, 'triggers 1 add event')
