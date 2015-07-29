@@ -1,5 +1,3 @@
-'use strict'
-
 var PouchDB = process.browser ? global.PouchDB : require('pouchdb')
 
 module.exports = function (name) {
