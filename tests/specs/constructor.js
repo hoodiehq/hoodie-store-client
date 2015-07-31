@@ -80,7 +80,7 @@ test('new Store("name", {remote: "othername", remoteBaseUrl: "https://example.co
   t.is(store.db.__opts.remote, 'https://my.other.cou.ch/name', 'sets remote name to "https://my.cou.ch/othername"')
 })
 
-test('constructs a store object options.adapter / options.db', function (t) {
+test('constructs a store object without options.adapter / options.db', function (t) {
   var store = new Store('test-db-adapter', { remote: 'test-db-adapter-remote' })
 
   t.is(typeof store, 'object', 'is object')
@@ -92,13 +92,24 @@ test('constructs a store object options.adapter / options.db', function (t) {
 })
 
 test('Store.defaults({remote})', function (t) {
-  var CustomStore = Store.defaults({remote: 'test-db-custom-remote'}, options)
+  t.plan(2)
+
+  var CustomStore = Store.defaults(merge({remote: 'test-db-custom-remote'}, options))
   var store = new CustomStore('test-db-custom')
 
   t.throws(CustomStore, 'throws without argumens')
   t.is(store.db.__opts.remote, 'test-db-custom-remote', 'sets remote name')
+})
 
-  cleanupDb(store, t)
+test('Store.defaults({remoteBaseUrl})', function (t) {
+  t.plan(2)
+
+  var CustomStore = Store.defaults(merge({remoteBaseUrl: 'http://example.com'}, options))
+  var store = new CustomStore('test-db-custom')
+  var store2 = new CustomStore('test-db-custom2')
+
+  t.is(store.db.__opts.remote, 'http://example.com/test-db-custom', 'sets remote name')
+  t.is(store2.db.__opts.remote, 'http://example.com/test-db-custom2', 'sets remote name correcly on multiple instances')
 })
 
 function cleanupDb (store, t) {
