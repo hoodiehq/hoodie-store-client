@@ -2,9 +2,6 @@ language: node_js
 node_js:
 - '0.12'
 sudo: false
-cache:
-  directories:
-  - node_modules
 notifications:
   email: false
 before_install:
@@ -12,8 +9,6 @@ before_install:
 - nvm use $NODE
 before_script:
 - npm prune
-# leveldown (node-gyp) installs different binaries depending on node version
-- ( cd node_modules/pouchdb/node_modules ; npm install leveldown )
 script: npm run $COMMAND
 after_success:
 - if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
