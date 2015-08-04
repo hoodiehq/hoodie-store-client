@@ -47,7 +47,6 @@
     "lodash.merge": "^3.3.2",
     "pouchdb": "^3.6.0",
     "pouchdb-hoodie-api": "1.4.0",
-    "pouchdb-hoodie-sync": "^1.1.0",
-    "pouchdb-hoodie-unsynced-local-docs": "^1.0.0"
+    "pouchdb-hoodie-sync": "^1.1.0"
   }
 }
