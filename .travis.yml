@@ -1,22 +1,18 @@
-language: node_js
-node_js:
-- '0.12'
 sudo: false
-cache:
-  directories:
-  - node_modules
+language: node_js
 notifications:
   email: false
+node_js:
+  - '0.10'
 before_install:
-- nvm install $NODE
-- nvm use $NODE
+  - npm i -g npm@^2.0.0
 before_script:
-- npm prune
-# leveldown (node-gyp) installs different binaries depending on node version
-- ( cd node_modules/pouchdb/node_modules ; npm install leveldown )
-script: npm run $COMMAND
+  - npm prune
+  - curl -Lo travis_after_all.py https://git.io/vLSON
 after_success:
-- if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
+  - python travis_after_all.py
+  - export $(cat .to_export_back)
+  - npm run semantic-release
 env:
   matrix:
   - NODE=0.10 COMMAND=test:browser:cloud
