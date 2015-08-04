@@ -1,21 +1,19 @@
 {
   "name": "pouchdb-hoodie-store",
-  "version": "0.0.0-semantically-released",
   "description": "pouchdb with Hoodie's Store API",
   "main": "index.js",
   "scripts": {
-    "prepublish": "semantic-release pre",
-    "postpublish": "semantic-release post",
     "test": "standard && npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests",
     "test:coverage:upload": "istanbul-coveralls",
     "test:browser:local": "zuul --local 8080 -- tests",
     "test:browser:cloud": "zuul -- tests",
-    "test:node": "node tests"
+    "test:node": "node tests",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HipsterBrown/pouchdb-hoodie-store.git"
+    "url": "https://github.com/hoodiehq/pouchdb-hoodie-store.git"
   },
   "keywords": [
     "hoodie",
@@ -28,15 +26,15 @@
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/HipsterBrown/pouchdb-hoodie-store/issues"
+    "url": "https://github.com/hoodiehq/pouchdb-hoodie-store/issues"
   },
-  "homepage": "https://github.com/HipsterBrown/pouchdb-hoodie-store#readme",
+  "homepage": "https://github.com/hoodiehq/pouchdb-hoodie-store#readme",
   "devDependencies": {
     "istanbul": "^0.3.15",
     "istanbul-coveralls": "^1.0.3",
     "memdown": "^1.0.0",
     "rimraf": "^2.4.1",
-    "semantic-release": "3.3.2",
+    "semantic-release": "^4.0.2",
     "standard": "^4.3.1",
     "tap-spec": "^4.0.0",
     "tape": "^4.0.0",
