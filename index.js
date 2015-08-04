@@ -5,16 +5,13 @@ var EventEmitter = require('events').EventEmitter
 var merge = require('lodash.merge')
 var PouchDB = global.PouchDB || require('pouchdb')
 var Sync = require('pouchdb-hoodie-sync')
-var UnsyncedLocalDocs = require('pouchdb-hoodie-unsynced-local-docs')
 
 var hasLocalChanges = require('./lib/has-local-changes')
-var mapUnsyncedLocalDocs = require('./lib/map-unsynced-local-docs')
 var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
 
 PouchDB.plugin({
   hoodieApi: API.hoodieApi,
-  hoodieSync: Sync.hoodieSync,
-  unsyncedLocalDocs: UnsyncedLocalDocs.unsyncedLocalDocs
+  hoodieSync: Sync.hoodieSync
 })
 
 function Store (dbName, options) {
@@ -44,10 +41,7 @@ function Store (dbName, options) {
   var api = merge(
     db.hoodieSync({remote: remote, emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
-    {
-      findAllUnsynced: mapUnsyncedLocalDocs.bind(db, options),
-      hasLocalChanges: hasLocalChanges.bind(db)
-    }
+    { hasLocalChanges: hasLocalChanges.bind(db) }
   )
   subscribeToInternalEvents(emitter)
 
