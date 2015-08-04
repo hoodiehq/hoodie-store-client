@@ -9,9 +9,24 @@ before_install:
 - nvm use $NODE
 before_script:
 - npm prune
+- curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
+# See https://github.com/boennemann/semantic-release/issues/18
 script: npm run $COMMAND
 after_success:
-- if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
+- python travis_after_all.py
+- export $(cat .to_export_back)
+- if [[ $BUILD_LEADER = YES ]]; then npm run coveralls; fi
+after_failure:
+- python travis_after_all.py
+- export $(cat .to_export_back)
+before_deploy:
+- rm -f travis_after_all.py .to_export_back
+- npm run docs
+- npm config set spin false --global
+after_deploy:
+- npm run deploydocs
+after_script:
+- echo leader=$BUILD_LEADER status=$BUILD_AGGREGATE_STATUS
 env:
   matrix:
   - NODE=0.10 COMMAND=test:browser:cloud
@@ -20,3 +35,18 @@ env:
   - NODE=0.10 COMMAND=test
   - NODE=iojs-v1 COMMAND=test
   - NODE=iojs-v2 COMMAND=test
+deploy:
+  provider: npm
+  email: gregor@martynus.net
+  # Very important. Don't forget this one.
+  skip_cleanup: true
+  # Travis currently only supports the old auth key format.
+  # Do `echo -n "<username>:<password>" | base64` to get it.
+  # You should encrypt this:
+  # `travis encrypt $(echo -n "<username>:<password>" | base64) --add deploy.api_key`
+  api_key:
+   - secure: "v0hc/gLQR79N7/+rhbXfRzWnngwwy27dvUx2KBbGHoVfGKaBaYeliE9QPZoGiFr6J7P1aAamJmM/iBT4hnVgRXepFIbAOFZn0+rM0x7Bl/0Dwev18mb0WMoUB19IBqGac+LbzYLTQ3C/j1RX0j2rn7V0svyOmJ0IfMZZRe/BFteAyZsWREgdavtPEPZVU5bYGkXrA3/76EO/gevlCPZjjG+K1vCHh83KE3A5dh8yAjLRJ1GWJpptTsY4UBC56W9eC7trGkXnlVIDqhHKwsUTXZlCQ1I3WdPOn6/345IeOG+sDG4IHWYZfRH7GruC1c9dA655iF3tBtXEigr2oJi2HRUcxoc90NZpMRADCnZcTGoYNcjtuo/h0RAo9PZmmSeiLiyBtffJBCNoi26H/pGEObwjF5gNUxcnDMxMOJkqAMhhbAV1nsH1r4NBT6Rvk8gDJ4fROTvQt57hQ8KhmyWfsiSyXJtT9NVcpEmSfxSc5nn6x7/9Jg0phUaxZneF1wfjIca5im2qiQyontUSe95s8Lr2z4tiBr68gEcMCZI25yno+cIDnP3t76EQSuQZw4a6C1rZdOT6YYaanIwRV8SOc8IQdOkFDjERcn+acclyRERN6hpv8HS9L8jFVSdzqrcdVFSx20Mo4RIGDNIXxmh+lBy4yRfRmpKb2G+qcsbWxqU="
+  on:
+    branch: master
+    repo: hoodiehq/pouchdb-hoodie-store
+    condition: "$BUILD_LEADER$BUILD_AGGREGATE_STATUS = YESothers_succeeded"
