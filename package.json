@@ -43,7 +43,7 @@
   "dependencies": {
     "humble-localstorage": "^1.4.1",
     "lodash.merge": "^3.3.2",
-    "pouchdb": "^3.6.0",
+    "pouchdb": "^4.0.0",
     "pouchdb-hoodie-api": "1.4.0",
     "pouchdb-hoodie-sync": "^1.1.0"
   }
