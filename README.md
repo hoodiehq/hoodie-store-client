@@ -101,18 +101,26 @@ npm install --save pouchdb-hoodie-store
 Attach this plugin to the `PouchDB` object:
 
 ```js
-var PouchDB = require('pouchdb')
-PouchDB.plugin(require('pouchdb-hoodie-store'))
+var Store = require('pouchdb-hoodie-store')
 ```
 
 #### In the browser
 
-Include this plugin after `pouchdb.js` in your HTML page:
+Include this plugin in your HTML page:
 
 ```html
-<script src="node_modules/pouchdb/dist/pouchdb.js"></script>
 <script src="node_modules/pouchdb-hoodie-store/dist/pouchdb-hoodie-store.js"></script>
 ```
+
+Since `pouchdb.js` is bundled into the plugin by default, there's no need to load it separately.
+If you want to load your own PouchDB, just add it before loading the plugin, and it'll use your version of `pouchdb.js`.  
+  
+```html
+<script src="node_modules/pouchdb/dist/pouchdb.js"></script>
+```
+
+Additionally we will distribute a "without PouchDB" version `pouchdb-hoodie-store-without-pouchdb.js` which you  
+should use if you specify your own pouchdb version.
 
 ## Testing
 
