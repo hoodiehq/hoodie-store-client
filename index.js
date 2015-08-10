@@ -8,6 +8,8 @@ var Sync = require('pouchdb-hoodie-sync')
 
 var hasLocalChanges = require('./lib/has-local-changes')
 var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
+var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
+var syncWrapper = require('./lib/sync-wrapper')
 
 PouchDB.plugin({
   hoodieApi: API.hoodieApi,
@@ -38,11 +40,20 @@ function Store (dbName, options) {
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
   var remote = options.remote
+  var syncApi = db.hoodieSync({remote: remote})
   var api = merge(
-    db.hoodieSync({remote: remote, emitter: emitter}),
     db.hoodieApi({emitter: emitter}),
-    { hasLocalChanges: hasLocalChanges.bind(db) }
+    {
+      hasLocalChanges: hasLocalChanges.bind(db),
+      push: syncWrapper.bind(syncApi, 'push'),
+      pull: syncWrapper.bind(syncApi, 'pull'),
+      sync: syncWrapper.bind(syncApi, 'sync'),
+      connect: syncApi.connect,
+      disconnect: syncApi.disconnect,
+      isConnected: syncApi.isConnected
+    }
   )
+  subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)
 
   return api
