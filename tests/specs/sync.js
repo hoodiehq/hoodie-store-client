@@ -29,7 +29,7 @@ test('store.on("push") for store.push()', function (t) {
 
   store.on('push', pushEvents.push.bind(pushEvents))
 
-  store.db.put({_id: 'test', foo: 'bar'})
+  store.add({id: 'test', foo: 'bar'})
 
   .then(function () {
     return store.push()
@@ -52,10 +52,10 @@ test('api.off("push")', function (t) {
     pushEvents.push(doc)
   }
 
-  var obj1 = {_id: 'test1', foo1: 'bar1'}
-  var obj2 = {_id: 'test2', foo1: 'bar2'}
+  var obj1 = {id: 'test1', foo1: 'bar1'}
+  var obj2 = {id: 'test2', foo1: 'bar2'}
 
-  store.db.bulkDocs([obj1, obj2])
+  store.add([obj1, obj2])
 
   .then(function () {
     return store.push('test2')
@@ -81,10 +81,10 @@ test('api.one("push")', function (t) {
 
   store.one('push', pushEvents.push.bind(pushEvents))
 
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var obj1 = {id: 'test1', foo: 'bar1'}
+  var obj2 = {id: 'test2', foo: 'bar2'}
 
-  store.db.bulkDocs([obj1, obj2])
+  store.add([obj1, obj2])
 
   .then(function () {
     return store.push()
