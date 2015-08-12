@@ -30,21 +30,21 @@
   },
   "homepage": "https://github.com/hoodiehq/pouchdb-hoodie-store#readme",
   "devDependencies": {
-    "istanbul": "^0.3.15",
+    "istanbul": "^0.3.17",
     "istanbul-coveralls": "^1.0.3",
     "memdown": "^1.0.0",
-    "rimraf": "^2.4.1",
-    "semantic-release": "^4.0.2",
-    "standard": "^4.3.1",
-    "tap-spec": "^4.0.0",
-    "tape": "^4.0.0",
-    "zuul": "^3.0.0"
+    "rimraf": "^2.4.2",
+    "semantic-release": "^4.0.3",
+    "standard": "^5.0.2",
+    "tap-spec": "^4.0.2",
+    "tape": "^4.1.0",
+    "zuul": "^3.2.0"
   },
   "dependencies": {
     "humble-localstorage": "^1.4.1",
     "lodash.merge": "^3.3.2",
     "pouchdb": "^4.0.0",
-    "pouchdb-hoodie-api": "1.4.0",
+    "pouchdb-hoodie-api": "^1.4.0",
     "pouchdb-hoodie-sync": "^1.2.0"
   }
 }
