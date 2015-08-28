@@ -1,10 +1,3 @@
-# NOTE: THIS IS WORK IN PROGRESS
-
-Want to give a hand? We're happy to get you going. Ping us [@HoodieHQ](https://twitter.com/hoodiehq)
-or in the [Hoodie Community Chat](http://hood.ie/chat/).
-
----
-
 # pouchdb-hoodie-store
 
 > Hoodie-like Store & Sync API on top of PouchDB
