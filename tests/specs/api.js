@@ -44,6 +44,8 @@ test('store.on("change") with adding one', function (t) {
     t.is(changeEvents[0].eventName, 'add', 'passes the event name')
     t.is(changeEvents[0].object.foo, 'bar', 'event passes object')
   })
+
+  .catch(t.fail)
 })
 
 test('store.off("add") with one add handler', function (t) {
@@ -68,6 +70,8 @@ test('store.off("add") with one add handler', function (t) {
   .then(function () {
     t.is(addEvents.length, 0, 'triggers no add event')
   })
+
+  .catch(t.fail)
 })
 
 test('store.one("add") with adding one', function (t) {
@@ -86,6 +90,8 @@ test('store.one("add") with adding one', function (t) {
     t.is(addEvents.length, 1, 'triggers 1 add event')
     t.is(addEvents[0].object.foo, 'bar', 'event passes object')
   })
+
+  .catch(t.fail)
 })
 
 function addEventToArray (array, object) {

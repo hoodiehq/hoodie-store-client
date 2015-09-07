@@ -31,6 +31,8 @@ test('.hasLocalChanges()', function (t) {
   .then(function () {
     t.is(store.hasLocalChanges(), false, 'returns "false" after sync')
   })
+
+  .catch(t.fail)
 })
 
 test('.hasLocalChanges(filter)', function (t) {
@@ -47,12 +49,14 @@ test('.hasLocalChanges(filter)', function (t) {
     t.is(store.hasLocalChanges('test1'), true, 'returns "true" with id filter')
     t.is(store.hasLocalChanges({id: 'test2'}), true, 'returns "true" to with object filter')
 
-    store.clear()
-
-    .then(function () {
-      t.is(store.hasLocalChanges(), false, 'returns "false" after "clear"')
-    })
+    return store.clear()
   })
+
+  .then(function () {
+    t.is(store.hasLocalChanges(), false, 'returns "false" after "clear"')
+  })
+
+  .catch(t.fail)
 })
 
 test('.hasLocalChanges() after changing same object twice', function (t) {
@@ -71,6 +75,8 @@ test('.hasLocalChanges() after changing same object twice', function (t) {
     t.is(store.hasLocalChanges('test1'), true, 'returns "true" to after update')
     t.is(changedIds.length, 1, 'stores only unique ids in reference')
   })
+
+  .catch(t.fail)
 })
 
 test('.hasLocalChanges(unknownId)', function (t) {
@@ -80,10 +86,12 @@ test('.hasLocalChanges(unknownId)', function (t) {
 
   var localObj = {_id: 'pouchdb-put-doc', foo: 'bar1'}
 
-  return store.db.put(localObj)
+  store.db.put(localObj)
 
   .then(function () {
     t.is(store.hasLocalChanges('pouchdb-put-doc'), false, 'returns "false" to stored, but unreferenced object')
     t.is(store.hasLocalChanges('unknown-id'), false, 'returns "false" to unknown object')
   })
+
+  .catch(t.fail)
 })

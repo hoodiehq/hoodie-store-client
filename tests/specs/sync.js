@@ -39,6 +39,8 @@ test('store.push() returns hoodie objects', function (t) {
     t.is(pushedObjs[0].id, 'test1', 'returns hoodie object')
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
+
+  .catch(t.fail)
 })
 
 test('store.push(docsOrIds) returns hoodie objects', function (t) {
@@ -60,7 +62,7 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
 
-  .catch(console.warn.bind(console))
+  .catch(t.fail)
 })
 
 test('store.sync() returns hoodie objects', function (t) {
@@ -81,6 +83,8 @@ test('store.sync() returns hoodie objects', function (t) {
     t.is(pushedObjs[0].id, 'test1', 'returns hoodie object')
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
+
+  .catch(t.fail)
 })
 
 test('store.on("push") for store.push()', function (t) {
@@ -102,6 +106,8 @@ test('store.on("push") for store.push()', function (t) {
     t.is(pushEvents[0].id, 'test', 'event passes object')
     t.is(pushEvents[0].foo, 'bar', 'event passes object')
   })
+
+  .catch(t.fail)
 })
 
 test('api.off("push")', function (t) {
@@ -134,6 +140,8 @@ test('api.off("push")', function (t) {
   .then(function () {
     t.is(pushEvents.length, 1, 'push event was removed')
   })
+
+  .catch(t.fail)
 })
 
 test('api.one("push")', function (t) {
@@ -166,6 +174,8 @@ test('api.one("push")', function (t) {
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers no second push event')
   })
+
+  .catch(t.fail)
 })
 
 test('api.on("connect") for api.connect()', function (t) {
@@ -183,4 +193,6 @@ test('api.on("connect") for api.connect()', function (t) {
   .then(function () {
     t.is(numConnectEvents, 1, '"connect" event triggered')
   })
+
+  .catch(t.fail)
 })
