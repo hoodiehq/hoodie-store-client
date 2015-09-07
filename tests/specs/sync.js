@@ -2,6 +2,7 @@ var merge = require('lodash.merge')
 var test = require('tape')
 
 var Store = require('../../')
+var PouchDB = global.PouchDB || require('pouchdb')
 var options = process.browser ? {
   adapter: 'memory'
 } : {
@@ -192,6 +193,131 @@ test('api.on("connect") for api.connect()', function (t) {
 
   .then(function () {
     t.is(numConnectEvents, 1, '"connect" event triggered')
+  })
+
+  .catch(t.fail)
+})
+
+test('triggers "change" events on pull', function (t) {
+  t.plan(13)
+
+  var store = new Store('test-db-remote-changes-local', merge({remote: 'test-db-remote-changes-remote'}, options))
+  var remoteDb = new PouchDB('test-db-remote-changes-remote', options)
+
+  var changeEvents = []
+  var addEvents = []
+  var updateEvents = []
+  var removeEvents = []
+
+  store.on('change', function (event, object, options) {
+    changeEvents.push({
+      event: event,
+      object: object,
+      options: options
+    })
+  })
+
+  store.on('add', function (object, options) {
+    addEvents.push({
+      object: object,
+      options: options
+    })
+  })
+
+  store.on('update', function (object, options) {
+    updateEvents.push({
+      object: object,
+      options: options
+    })
+  })
+
+  store.on('remove', function (object, options) {
+    removeEvents.push({
+      object: object,
+      options: options
+    })
+  })
+
+  var doc = {_id: 'test', foo: 'bar'}
+  remoteDb.put(doc)
+
+  .then(function (response) {
+    doc._rev = response.rev
+    return store.pull()
+  })
+
+  .then(function () {
+    doc.foo = 'baz'
+    return remoteDb.put(doc)
+  })
+
+  .then(function (response) {
+    doc._rev = response.rev
+    return store.pull()
+  })
+
+  .then(function () {
+    doc._deleted = true
+    doc.foo = 'boo'
+    return remoteDb.put(doc)
+  })
+
+  .then(function () {
+    return store.pull()
+  })
+
+  .then(function () {
+    t.is(changeEvents.length, 3, '"change" event triggered')
+    t.is(changeEvents[0].event, 'add', '"change" triggered with event name')
+    t.is(changeEvents[0].object.foo, 'bar', '"change" triggered with object')
+    t.deepEqual(changeEvents[0].options, {remote: true}, '"change" triggered with {remote: true}')
+
+    t.is(addEvents.length, 1, '"add" event triggered')
+    t.is(addEvents[0].object.foo, 'bar', '"add" triggered with object')
+    t.deepEqual(addEvents[0].options, {remote: true}, '"add" triggered with {remote: true}')
+
+    t.is(updateEvents.length, 1, '"update" event triggered')
+    t.is(updateEvents[0].object.foo, 'baz', '"update" triggered with object')
+    t.deepEqual(updateEvents[0].options, {remote: true}, '"update" triggered with {remote: true}')
+
+    t.is(removeEvents.length, 1, '"remove" event triggered')
+    t.is(removeEvents[0].object.foo, 'boo', '"remove" triggered with object')
+    t.deepEqual(removeEvents[0].options, {remote: true}, '"remove" triggered with {remote: true}')
+  })
+
+  .catch(t.fail)
+})
+
+test('triggers no "change" from remote if only local changes pushed', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-db-remote-changes-local2', merge({remote: 'test-db-remote-changes-remote2'}, options))
+  var remoteChangeEvents = []
+
+  store.on('change', function (event, object, options) {
+    if (!options || !options.remote) {
+      return
+    }
+    remoteChangeEvents.push({
+      event: event,
+      object: object,
+      options: options
+    })
+  })
+
+  store.add({foo: 'bar'})
+
+  .then(function () {
+    return store.push()
+  })
+
+  .then(function () {
+    t.is(remoteChangeEvents.length, 0, 'no "change" events triggered')
+    return store.pull()
+  })
+
+  .then(function () {
+    t.is(remoteChangeEvents.length, 0, 'no "change" events triggered')
   })
 
   .catch(t.fail)
