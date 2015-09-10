@@ -17,7 +17,7 @@ test('new Store(db, options)', function (t) {
   var store = new Store('test-db', merge({remote: 'test-db-remote'}, options))
   var testDB = dbFactory('test-db')
 
-  t.is(typeof store, 'object', 'is a constructor')
+  t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
   t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
 })
@@ -28,7 +28,7 @@ test('Store(db, options) w/o new', function (t) {
   var store = Store('test-db', merge({remote: 'test-db-remote'}, options))
   var testDB = dbFactory('test-db')
 
-  t.is(typeof store, 'object', 'is a constructor')
+  t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
   t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
 })
@@ -83,7 +83,7 @@ test('new Store("name", {remote: "othername", remoteBaseUrl: "https://example.co
 test('constructs a store object without options.adapter / options.db', function (t) {
   var store = new Store('test-db-adapter', { remote: 'test-db-adapter-remote' })
 
-  t.is(typeof store, 'object', 'is object')
+  t.is(typeof store, 'function', 'is object')
   t.ok(store.db, '.db exists')
   t.is(store.db._db_name, 'test-db-adapter', '.db is PouchDB object')
 
