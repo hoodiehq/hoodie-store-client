@@ -12,6 +12,7 @@ before_script:
 after_success:
   - python travis_after_all.py
   - export $(cat .to_export_back)
+  - npm run build
   - npm run semantic-release
 env:
   matrix:

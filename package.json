@@ -3,6 +3,7 @@
   "description": "pouchdb with Hoodie's Store API",
   "main": "index.js",
   "scripts": {
+    "build": "browserify index.js > dist/pouchdb-hoodie-store.js",
     "test": "standard && npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests",
     "test:coverage:upload": "istanbul-coveralls",
@@ -30,6 +31,7 @@
   },
   "homepage": "https://github.com/hoodiehq/pouchdb-hoodie-store#readme",
   "devDependencies": {
+    "browserify": "^11.1.0",
     "istanbul": "^0.3.17",
     "istanbul-coveralls": "^1.0.3",
     "memdown": "^1.0.0",
