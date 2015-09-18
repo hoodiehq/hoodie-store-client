@@ -1,0 +1,40 @@
+{
+  "name": "hoodie-client",
+  "description": "Hoodie Client Core",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && npm run -s test:node | tap-spec",
+    "test:coverage": "istanbul cover tests",
+    "test:coverage:upload": "istanbul-coveralls",
+    "test:node": "node tests",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoodiehq/hoodie-client.git"
+  },
+  "keywords": [
+    "hoodie",
+    "nobackend",
+    "offline-first"
+  ],
+  "author": "The Hoodie Community",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/hoodiehq/hoodie-client/issues"
+  },
+  "homepage": "https://github.com/hoodiehq/hoodie-client#readme",
+  "devDependencies": {
+    "istanbul": "^0.3.20",
+    "istanbul-coveralls": "^1.0.3",
+    "standard": "^5.3.0",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0",
+    "semantic-release": "^4.3.5"
+  },
+  "dependencies": {
+    "account-client": "^1.0.0",
+    "humble-localstorage": "^1.4.2",
+    "pouchdb-hoodie-store": "^1.0.2"
+  }
+}
