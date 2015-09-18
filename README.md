@@ -2,6 +2,11 @@
 
 > Hoodie Client Core
 
+[![Build Status](https://travis-ci.org/hoodiehq/hoodie-client.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-client)
+[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-client/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-client?branch=master)
+[![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
+[![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
+
 This is the hoodie client glue code that initialises the hoodie client core
 including [store](https://github.com/hoodiehq/pouchdb-hoodie-store),
 [account](https://github.com/hoodiehq/account-client), and
