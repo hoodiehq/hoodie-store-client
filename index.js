@@ -3,6 +3,7 @@ module.exports = Hoodie
 var Store = require('pouchdb-hoodie-store')
 var Account = require('account-client')
 var Task = function () {}
+var Log = require('hoodie-client-log')
 
 var getState = require('./lib/get-state')
 var id = require('./lib/id').id
@@ -19,6 +20,7 @@ function Hoodie (options) {
 
   api.account = new Account({ url: '/hoodie/account/api' })
   api.task = new Task('/hoodie/task/api')
+  api.log = new Log('hoodie')
 
   return api
 }
