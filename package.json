@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "account-client": "^1.0.0",
+    "hoodie-client-connection-status": "^1.0.0",
     "hoodie-client-log": "^1.0.0",
     "humble-localstorage": "^1.4.2",
     "pouchdb-hoodie-store": "^1.0.2"
