@@ -38,17 +38,22 @@ global.hoodie = new Hoodie()
    Returns true if Hoodie backend can currently be reached, otherwise false
 - `hoodie.request(type, url/*, options/*)`  
    Sends a request
+- `hoodie.log`  
+   see https://github.com/hoodiehq/hoodie-client-log for more info
+   - `hoodie.log(message)`
+   - `hoodie.log.info(message)`
+   - `hoodie.log.warn(message)`
+   - `hoodie.log.error(message)`
+   - `hoodie.log.scoped(name)`
+- `hoodie.connectionStatus`  
+   see https://github.com/hoodiehq/hoodie-client-connection-status for more info
+   - `hoodie.connectionStatus.ok`
+   - `hoodie.connectionStatus.check(options)`
+   - `hoodie.connectionStatus.on(event, handler)`
 - `hoodie.reset()`  
    Reset hoodie client and emit `reset` events so plugins can reset as well
 - `hoodie.plugin(function (hoodie) {})`  
    Initialise hoodie plugin
-
-_to be defined_
-
-- `hoodie.log(message)`
-- `hoodie.log.info(message)`
-- `hoodie.log.warn(message)`
-- `hoodie.log.error(message)`
 
 Also compare docs of old hoodie client API, it's mostly the same:
 http://docs.hood.ie/en/techdocs/api/client/hoodie.html
