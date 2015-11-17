@@ -1,0 +1,18 @@
+ui: tape
+browsers:
+  - name: chrome
+    version: latest
+  - name: firefox
+    version: latest
+  - name: safari
+    version: latest
+  # https://github.com/hoodiehq/hoodie-client-store/issues/13
+  # - name: ie
+  #   version: latest
+  - name: iphone
+    version: latest
+  - name: android
+    version: latest
+scripts:
+  - './node_modules/pouchdb/dist/pouchdb.js'
+  - './node_modules/pouchdb/dist/pouchdb.memory.js'
