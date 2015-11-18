@@ -1,36 +1,9 @@
 {
   "name": "hoodie-client",
   "description": "Hoodie Client Core",
-  "main": "index.js",
-  "scripts": {
-    "test": "standard && npm run -s test:node | tap-spec",
-    "test:coverage": "istanbul cover tests",
-    "test:coverage:upload": "istanbul-coveralls",
-    "test:node": "node tests",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hoodiehq/hoodie-client.git"
-  },
-  "keywords": [
-    "hoodie",
-    "nobackend",
-    "offline-first"
-  ],
   "author": "The Hoodie Community",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/hoodiehq/hoodie-client/issues"
-  },
-  "homepage": "https://github.com/hoodiehq/hoodie-client#readme",
-  "devDependencies": {
-    "istanbul": "^0.3.20",
-    "istanbul-coveralls": "^1.0.3",
-    "standard": "^5.3.0",
-    "tap-spec": "^4.1.0",
-    "tape": "^4.2.0",
-    "semantic-release": "^4.3.5"
   },
   "dependencies": {
     "hoodie-client-account": "^1.0.0",
@@ -39,5 +12,45 @@
     "hoodie-client-store": "^3.0.0",
     "hoodie-client-task": "^1.0.0",
     "humble-localstorage": "^1.4.2"
+  },
+  "devDependencies": {
+    "browserify": "^12.0.1",
+    "istanbul": "^0.3.20",
+    "istanbul-coveralls": "^1.0.3",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^1.3.1",
+    "rimraf": "^2.4.3",
+    "semantic-release": "^4.3.5",
+    "standard": "^5.3.0",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0",
+    "uglify-js": "^2.6.1",
+    "uglifyify": "^3.0.1"
+  },
+  "homepage": "https://github.com/hoodiehq/hoodie-client#readme",
+  "keywords": [
+    "hoodie",
+    "nobackend",
+    "offline-first"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoodiehq/hoodie-client.git"
+  },
+  "scripts": {
+    "build": "npm-run-all -p build:raw:*",
+    "build:dev": "npm-run-all prebuild build:raw:dev",
+    "build:min": "npm-run-all prebuild build:raw:min",
+    "build:raw:dev": "browserify -s Hoodie index.js -o dist/hoodie.js",
+    "build:raw:min": "browserify -s Hoodie -g uglifyify index.js | uglifyjs -c -o dist/hoodie.min.js",
+    "prebuild": "rimraf dist && mkdirp dist",
+    "prepublish": "npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "test": "standard && npm run build && npm run -s test:node | tap-spec",
+    "test:coverage": "istanbul cover tests",
+    "test:coverage:upload": "istanbul-coveralls",
+    "test:node": "node tests"
   }
 }
