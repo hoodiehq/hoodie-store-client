@@ -1,7 +1,7 @@
 module.exports = Hoodie
 
-var Store = require('pouchdb-hoodie-store')
-var Account = require('account-client')
+var Store = require('hoodie-client-store')
+var Account = require('hoodie-client-account')
 var Task = function () {}
 var ConnectionStatus = require('hoodie-client-connection-status')
 var Log = require('hoodie-client-log')
