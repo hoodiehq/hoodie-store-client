@@ -2,3 +2,5 @@
 .DS_Store
 coverage
 node_modules
+# Sorry, some folks need that eslint
+.eslintrc
