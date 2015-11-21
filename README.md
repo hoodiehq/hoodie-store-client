@@ -198,11 +198,6 @@ hoodie.reset()
 
 ### `hoodie.on`
 
----
-
-🐕 **TO BE DONE**: [#14](https://github.com/hoodiehq/hoodie-client/issues/14)
-
----
 
 ```js
 hoodie.on(eventName, handler)
@@ -218,11 +213,6 @@ hoodie.on('account:signin', function (username) {
 
 ### `hoodie.one`
 
----
-
-🐕 **TO BE DONE**: [#14](https://github.com/hoodiehq/hoodie-client/issues/14)
-
----
 
 ```js
 hoodie.one(eventName, handler)
@@ -242,11 +232,6 @@ hoodie.trigger('mycustomevent', { foo: 'baz' })
 
 ### `hoodie.off`
 
----
-
-🐕 **TO BE DONE**: [#14](https://github.com/hoodiehq/hoodie-client/issues/14)
-
----
 
 Removes event handler that has been added before
 
@@ -262,11 +247,6 @@ hoodie.off('connectionstatus:disconnected', showNotification)
 
 ### `hoodie.trigger`
 
----
-
-🐕 **TO BE DONE**: [#14](https://github.com/hoodiehq/hoodie-client/issues/14)
-
----
 
 Trigger custom events
 
