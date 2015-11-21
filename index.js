@@ -7,16 +7,19 @@ var ConnectionStatus = require('hoodie-client-connection-status')
 var Log = require('hoodie-client-log')
 
 var getState = require('./lib/get-state')
-var id = require('./lib/id').id
+var id = require('./lib/id')
 
 function Hoodie (options) {
   var state = getState(options)
 
-  var api = {}
-  api.id = id.bind(null, state)
+  var api = {
+    get id () {
+      return id.get(state)
+    }
+  }
 
   var CustomStore = Store.defaults({ remoteBaseUrl: '/hoodie/store/api' })
-  var dbName = 'user/' + api.id()
+  var dbName = 'user/' + api.id
   api.store = new CustomStore(dbName)
 
   api.account = new Account({ url: '/hoodie/account/api' })
