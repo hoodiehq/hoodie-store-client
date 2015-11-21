@@ -46,7 +46,7 @@ hoodie.acount.signUp({
 
 ### Constructor
 
-````js
+```js
 hoodie = new Hoodie({
   // optional. set to hostname where Hoodie server runs, if your app runs on
   // a different host
