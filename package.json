@@ -36,7 +36,7 @@
     "hoodie-client-account": "^1.0.0",
     "hoodie-client-connection-status": "^1.0.0",
     "hoodie-client-log": "^1.0.0",
-    "hoodie-client-store": "^2.0.0",
+    "hoodie-client-store": "^3.0.0",
     "hoodie-client-task": "^1.0.0",
     "humble-localstorage": "^1.4.2"
   }
