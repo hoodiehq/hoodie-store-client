@@ -47,7 +47,7 @@
     "zuul": "^3.2.0"
   },
   "dependencies": {
-    "hoodie-zuul-config": "^1.0.1",
+    "hoodie-zuul-config": "^2.0.0",
     "humble-localstorage": "^1.4.1",
     "lodash.merge": "^3.3.2",
     "pouchdb": "^4.0.0",
