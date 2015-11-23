@@ -1,13 +1,13 @@
 # hoodie-client
 
-> Hoodie’s front-end client for the browser
+> Hoodie’s client for the browser
 
 [![Build Status](https://travis-ci.org/hoodiehq/hoodie-client.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-client)
 [![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-client/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-client?branch=master)
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
 
-This is the hoodie client glue code that integrates the hoodie client core modules
+Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-client-account), [store](https://github.com/hoodiehq/hoodie-client-store) and [task](https://github.com/hoodiehq/hoodie-client-test)
 
 ## Example
 
@@ -47,7 +47,7 @@ hoodie.acount.signUp({
 ### Constructor
 
 ```js
-hoodie = new Hoodie({
+new Hoodie({
   // optional. set to hostname where Hoodie server runs, if your app runs on
   // a different host
   url: 'http://example.com',
@@ -81,12 +81,12 @@ hoodie = new Hoodie({
 })
 ```
 
-### `hoodie.id`
+### hoodie.id
 
 Read-only, unique, persistent identifier for the current user. It gets generated
 on first load, it does not depend on an user account
 
-### `hoodie.url`
+### hoodie.url
 
 ---
 
@@ -96,19 +96,19 @@ on first load, it does not depend on an user account
 
 Read-only, full url to the hoodie server, e.g. `http://example.com/hoodie`
 
-### `hoodie.account`
+### hoodie.account
 
 see [account API](https://github.com/hoodiehq/hoodie-client-account#api)
 
-### `hoodie.store`
+### hoodie.store
 
 see [store API](https://github.com/hoodiehq/hoodie-client-store#api)
 
-### `hoodie.task`
+### hoodie.task
 
 see [task API](https://github.com/hoodiehq/hoodie-client-account#api)
 
-### `hoodie.connectionStatus`
+### hoodie.connectionStatus
 
 see [connectionStatus API](https://github.com/hoodiehq/hoodie-client-connection-status#api)
 
@@ -118,11 +118,11 @@ see [connectionStatus API](https://github.com/hoodiehq/hoodie-client-connection-
 
 ---
 
-### `hoodie.log`
+### hoodie.log
 
 see [log API](https://github.com/hoodiehq/hoodie-client-log#api)
 
-### `hoodie.request`
+### hoodie.request
 
 ---
 
@@ -153,7 +153,7 @@ hoodie.request({
 })
 ```
 
-### `hoodie.plugin`
+### hoodie.plugin
 
 ---
 
@@ -181,7 +181,7 @@ hoodie.plugin(function (hoodie) {
 })
 ```
 
-### `hoodie.reset`
+### hoodie.reset
 
 ---
 
@@ -196,8 +196,9 @@ Returns a promise
 hoodie.reset()
 ```
 
-### `hoodie.on`
+### hoodie.on
 
+Subscribe to account event.
 
 ```js
 hoodie.on(eventName, handler)
@@ -206,13 +207,14 @@ hoodie.on(eventName, handler)
 Example
 
 ```js
-hoodie.on('account:signin', function (username) {
-  alert('Hello there, ' + username)
+hoodie.on('account:signin', function (accountProperties) {
+  alert('Hello there, ' + accountProperties.username)
 })
 ```
 
-### `hoodie.one`
+### hoodie.one
 
+Call function once at given account event.
 
 ```js
 hoodie.one(eventName, handler)
@@ -230,7 +232,7 @@ hoodie.trigger('mycustomevent', { foo: 'baz' })
 // DOES NOT log "foo is baz"
 ```
 
-### `hoodie.off`
+### hoodie.off
 
 
 Removes event handler that has been added before
@@ -245,7 +247,7 @@ Example
 hoodie.off('connectionstatus:disconnected', showNotification)
 ```
 
-### `hoodie.trigger`
+### hoodie.trigger
 
 
 Trigger custom events
