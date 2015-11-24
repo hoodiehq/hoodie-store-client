@@ -88,12 +88,6 @@ on first load, it does not depend on an user account
 
 ### hoodie.url
 
----
-
-🐕 **TO BE DONE**: [#13](https://github.com/hoodiehq/hoodie-client/issues/13)
-
----
-
 Read-only, full url to the hoodie server, e.g. `http://example.com/hoodie`
 
 ### hoodie.account
