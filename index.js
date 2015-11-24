@@ -15,16 +15,19 @@ function Hoodie (options) {
   var api = {
     get id () {
       return id.get(state)
+    },
+    get url () {
+      return state.url + '/hoodie'
     }
   }
 
-  var CustomStore = Store.defaults({ remoteBaseUrl: '/hoodie/store/api' })
+  var CustomStore = Store.defaults({ remoteBaseUrl: api.url + '/store/api' })
   var dbName = 'user/' + api.id
   api.store = new CustomStore(dbName)
 
-  api.account = new Account({ url: '/hoodie/account/api' })
+  api.account = new Account({ url: api.url + '/account/api' })
   api.task = new Task('/hoodie/task/api')
-  api.connectionStatus = new ConnectionStatus('/hoodie')
+  api.connectionStatus = new ConnectionStatus(api.url)
   api.log = new Log('hoodie')
 
   api.on = require('./lib/events').on.bind(this, state)
