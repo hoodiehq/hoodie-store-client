@@ -1,16 +1,14 @@
+var simple = require('simple-mock')
 var test = require('tape')
-var Hoodie = require('../../index')
 
-// Set window.location
-global.window = {
-  location: {
-    origin: 'http://localhost:1234'
-  }
-}
+var Hoodie = require('../../index')
 
 test('has "url" property', function (t) {
   t.plan(3)
 
+  simple.mock(global, 'location', {
+    origin: 'http://localhost:1234'
+  })
   var defaultHoodie = new Hoodie()
   var hoodieDefaultUrl = 'http://localhost:1234/hoodie'
   t.is(typeof defaultHoodie.url, 'string', 'has a url')
@@ -22,4 +20,6 @@ test('has "url" property', function (t) {
     url: exampleUrl
   })
   t.is(specifiedUrlHoodie.url, hoodieExampleUrl, 'url is retained after being passed in')
+
+  simple.restore()
 })
