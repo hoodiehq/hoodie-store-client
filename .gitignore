@@ -4,3 +4,5 @@ coverage
 node_modules
 # Sorry, some folks need that eslint
 .eslintrc
+
+dist/
