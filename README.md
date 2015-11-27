@@ -7,7 +7,7 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
 
-Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-client-account), [store](https://github.com/hoodiehq/hoodie-client-store) and [task](https://github.com/hoodiehq/hoodie-client-test)
+Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-client-account), [store](https://github.com/hoodiehq/hoodie-client-store) and [task](https://github.com/hoodiehq/hoodie-client-task)
 
 ## Example
 
