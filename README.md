@@ -15,7 +15,7 @@ Hoodie’s client glue code that integrates Hoodie’s client core modules: [acc
 var Hoodie = require('hoodie-client')
 var hoodie = new Hoodie(options)
 
-hoodie.acount.signUp({
+hoodie.account.signUp({
   username: 'pat@Example.com',
   password: 'secret'
 }).then(function (accountAttributes) {
