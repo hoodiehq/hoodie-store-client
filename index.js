@@ -29,6 +29,7 @@ function Hoodie (options) {
   api.task = new Task('/hoodie/task/api')
   api.connectionStatus = new ConnectionStatus(api.url)
   api.log = new Log('hoodie')
+  api.plugin = require('./lib/plugin')
 
   api.on = require('./lib/events').on.bind(this, state)
   api.one = require('./lib/events').one.bind(this, state)
