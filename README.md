@@ -149,12 +149,6 @@ hoodie.request({
 
 ### hoodie.plugin
 
----
-
-🐕 **TO BE DONE**: [#2](https://github.com/hoodiehq/hoodie-client/issues/2)
-
----
-
 Initialise hoodie plugin
 
 ```js
@@ -173,6 +167,17 @@ hoodie.plugin({
 hoodie.plugin(function (hoodie) {
   hoodie.sayHi = function () { alert('hi') }
 })
+```
+
+```js
+  const sayHi = require('sayHi')
+  const grabADrink = require('grabADrink')
+
+  hoodie
+    .plugin(sayHi)
+    .plugin({
+      grabADrink: grabADrink
+    })
 ```
 
 ### hoodie.reset
