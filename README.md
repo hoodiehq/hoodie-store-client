@@ -47,74 +47,113 @@ hoodie.account.signUp({
 ### Constructor
 
 ```js
-new Hoodie({
-  // optional. set to hostname where Hoodie server runs, if your app runs on
-  // a different host
-  url: 'http://example.com',
-
-  // optional: account options
-  // https://github.com/hoodiehq/hoodie-client-account#constructor
-  // options.url is always set to hoodie.url + '/account/api'
-  account: {},
-
-  // optional: store options
-  // https://github.com/hoodiehq/hoodie-client-store#constructor
-  // options.dbName is always set to hoodie.id
-  // options.remote is always set to hoodie.url + '/store/api'
-  store: {},
-
-  // optional: task options
-  // https://github.com/hoodiehq/hoodie-client-test#constructor
-  // options.userId is always set to hoodie.id
-  // options.remote is always set to hoodie.url + '/task/api'
-  task: {},
-
-  // optional: connectionStatus options
-  // https://github.com/hoodiehq/hoodie-client-connection-status#constructor
-  // options.url is always set to hoodie.url + '/connection-status/api'
-  // options.method is always set to 'HEAD'
-  connectionStatus: {},
-
-  // optional: log options
-  // https://github.com/hoodiehq/hoodie-client-log#constructor
-  log: {}
-})
+new Hoodie(options)
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">options.url</th>
+    <td>String</td>
+    <td>
+      Set to hostname where Hoodie server runs, if your app runs on
+      a different host
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.account</th>
+    <td>String</td>
+    <td>
+      <a href="https://github.com/hoodiehq/hoodie-client-account#constructor">account options</a>.
+      <code>options.url</code> is always set to <code>hoodie.url</code> + '/account/api'
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.store</th>
+    <td>String</td>
+    <td>
+      <a href="https://github.com/hoodiehq/hoodie-client-store#constructor">store options</a>.
+      <code>options.dbName</code> is always set to <code>hoodie.id</code>.
+      <code>options.remote</code> is always set to <code>hoodie.url</code> + '/store/api'
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.task</th>
+    <td>String</td>
+    <td>
+      <a href="https://github.com/hoodiehq/hoodie-client-task#constructor">task options</a>.
+      <code>options.userId</code> is always set to <code>hoodie.id</code>.
+      <code>options.remote</code> is always set to <code>hoodie.url</code> + '/task/api'
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.connectionStatus</th>
+    <td>String</td>
+    <td>
+      <a href="https://github.com/hoodiehq/hoodie-client-connection-status#constructor">connectionStatus options</a>.
+      <code>options.url</code> is always set to <code>hoodie.url</code> + '/connection-status/api'.
+      <code>options.method</code> is always set to <code>HEAD</code>
+    </td>
+    <td>No</td>
+  </tr>
+</table>
 
 ### hoodie.id
 
-Read-only, unique, persistent identifier for the current user. It gets generated
+_Read-only_
+
+```js
+hoodie.id
+```
+
+Auto-generated, unique identifier for the current user. It gets generated
 on first load, it does not depend on an user account
 
 ### hoodie.url
 
-Read-only, full url to the hoodie server, e.g. `http://example.com/hoodie`
+_Read-only_
+
+```js
+hoodie.url
+```
+
+full url to the hoodie server, e.g. `http://example.com/hoodie`
 
 ### hoodie.account
 
-see [account API](https://github.com/hoodiehq/hoodie-client-account#api)
+`hoodie.account` is an instance of [hoodie-client-account](https://github.com/hoodiehq/hoodie-client-account).
+See [account API](https://github.com/hoodiehq/hoodie-client-account#api)
 
 ### hoodie.store
 
-see [store API](https://github.com/hoodiehq/hoodie-client-store#api)
+`hoodie.store` is an instance of [hoodie-client-store](https://github.com/hoodiehq/hoodie-client-store).
+See [store API](https://github.com/hoodiehq/hoodie-client-store#api)
 
 ### hoodie.task
 
-see [task API](https://github.com/hoodiehq/hoodie-client-account#api)
+`hoodie.task` is an instance of [hoodie-client-task](https://github.com/hoodiehq/hoodie-client-task).
+See [task API](https://github.com/hoodiehq/hoodie-client-task#api)
 
 ### hoodie.connectionStatus
 
-see [connectionStatus API](https://github.com/hoodiehq/hoodie-client-connection-status#api)
-
----
-
-🐕 **API DESIGN DISCUSSION IN PROGRESS**: [#6](https://github.com/hoodiehq/hoodie-client/issues/6)
-
----
+`hoodie.connectionStatus` is an instance of [hoodie-client-connection-status](https://github.com/hoodiehq/hoodie-client-connection-status).
+See [connectionStatus API](https://github.com/hoodiehq/hoodie-client-connection-status#api)
 
 ### hoodie.log
 
-see [log API](https://github.com/hoodiehq/hoodie-client-log#api)
+`hoodie.log` is an instance of [hoodie-client-log](https://github.com/hoodiehq/hoodie-client-log).
+See [log API](https://github.com/hoodiehq/hoodie-client-log#api)
 
 ### hoodie.request
 
@@ -124,11 +163,79 @@ see [log API](https://github.com/hoodiehq/hoodie-client-log#api)
 
 ---
 
-Sends a request, returns a promise
+Sends an http request
 
 ```js
+hoodie.request(url)
+// or
 hoodie.request(options)
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">url</th>
+    <td>String</td>
+    <td>
+      Relative path or full URL. A path must start with <code>/</code> and sends a <code>GET</code>
+      request to the path, prefixed by <code>hoodie.url</code>. In case a full URL is passed,
+      a <code>GET</code> request to the url is sent.
+    </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left">options.url</th>
+    <td>String</td>
+    <td>
+      Relative path or full URL. A path must start with <code>/</code> and sends a <code>GET</code>
+      request to the path, prefixed by <code>hoodie.url</code>. In case a full URL is passed,
+      a <code>GET</code> request to the url is sent.
+    </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left">options.method</th>
+    <td>String</td>
+    <td>
+      <em>Defaults to <code>GET</code></em>. One of <code>GET</code>,
+      <code>HEAD</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>.
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.data</th>
+    <td>Object, Array, String or Number</td>
+    <td>
+      For <code>PUT</code> and <code>POST</code> requests, a an optional payload
+      can be send. It will be stringified before sending the request.
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.headers</th>
+    <td>Object</td>
+    <td>
+      Map of Headers to be sent with the request.
+    </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <th align="left">options.data</th>
+    <td>Object, Array, String or Number</td>
+    <td>
+      For <code>PUT</code> and <code>POST</code> requests, a an optional payload
+      can be send. It will be stringified before sending the request.
+    </td>
+    <td>No</td>
+  </tr>
+</table>
 
 Examples
 
@@ -141,6 +248,9 @@ hoodie.request('https://example.com/foo/bar')
 hoodie.request({
   method: 'PATCH',
   url: '/foo/api/bar',
+  headers: {
+    'x-my-header': 'my value'
+  },
   data: {
     foo: 'bar'
   }
@@ -152,8 +262,39 @@ hoodie.request({
 Initialise hoodie plugin
 
 ```js
-hoodie.plugin(objectOrfunction)
+hoodie.plugin(methods)
+hoodie.plugin(plugin)
 ```
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Argument</th>
+      <th align="left">Type</th>
+      <th align="left">Description</th>
+      <th align="left">Required</th>
+    </tr>
+  </thead>
+  <tr>
+    <th align="left">methods</th>
+    <td>Object</td>
+    <td>
+      Method names as keys, functions as values. Methods get directly set on
+      <code>hoodie</code>, e.g. <code>hoodie.plugin({foo: function () {}})</code>
+      sets <code>hoodie.foo</code> to <code>function () {}</code>
+    </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th align="left">plugin</th>
+    <td>Function</td>
+    <td>
+      The passed function gets called with `hoodie` as first argument, and
+      can directly set new methods / properties on it.
+    </td>
+    <td>Yes</td>
+  </tr>
+</table>
 
 Examples
 
@@ -161,23 +302,9 @@ Examples
 hoodie.plugin({
   sayHi: function () { alert('hi') }
 })
-```
-
-```js
 hoodie.plugin(function (hoodie) {
   hoodie.sayHi = function () { alert('hi') }
 })
-```
-
-```js
-  const sayHi = require('sayHi')
-  const grabADrink = require('grabADrink')
-
-  hoodie
-    .plugin(sayHi)
-    .plugin({
-      grabADrink: grabADrink
-    })
 ```
 
 ### hoodie.reset
@@ -188,16 +315,17 @@ hoodie.plugin(function (hoodie) {
 
 ---
 
-Reset hoodie client and emit `reset` events so plugins can reset as well.
-Returns a promise
+Reset hoodie client and emit `reset` event so plugins can reset as well.
 
 ```js
 hoodie.reset()
 ```
 
+Resolves without argument.
+
 ### hoodie.on
 
-Subscribe to account event.
+Subscribe to event.
 
 ```js
 hoodie.on(eventName, handler)
@@ -213,7 +341,7 @@ hoodie.on('account:signin', function (accountProperties) {
 
 ### hoodie.one
 
-Call function once at given account event.
+Call function once at given event.
 
 ```js
 hoodie.one(eventName, handler)
@@ -243,7 +371,7 @@ hoodie.off(eventName, handler)
 Example
 
 ```js
-hoodie.off('connectionstatus:disconnected', showNotification)
+hoodie.off('connectionstatus:disconnect', showNotification)
 ```
 
 ### hoodie.trigger
@@ -266,7 +394,7 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
 <table>
   <tr>
     <th align="left"><code>reset</code></th>
-    <td>triggered when `hoodie.reset()` succeeded</td>
+    <td>triggered when <code>hoodie.reset()</code> succeeded</td>
   </tr>
   <tr>
     <th align="left"><code>account:*</code></th>
@@ -282,7 +410,7 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
   </tr>
   <tr>
     <th align="left"><code>connectionStatus:*</code></th>
-    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-connection-status#events">task events</a></td>
+    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-connection-status#events">connectionStatus events</a></td>
   </tr>
 </table>
 
