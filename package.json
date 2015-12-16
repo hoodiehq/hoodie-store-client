@@ -11,7 +11,9 @@
     "hoodie-client-log": "^1.0.0",
     "hoodie-client-store": "^3.0.0",
     "hoodie-client-task": "^1.0.0",
-    "humble-localstorage": "^1.4.2"
+    "humble-localstorage": "^1.4.2",
+    "lie": "^3.0.1",
+    "nets": "^3.2.0"
   },
   "devDependencies": {
     "browserify": "^12.0.1",
@@ -19,6 +21,7 @@
     "istanbul-coveralls": "^1.0.3",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^1.3.1",
+    "proxyquire": "^1.7.3",
     "rimraf": "^2.4.3",
     "semantic-release": "^4.3.5",
     "simple-mock": "^0.4.1",
