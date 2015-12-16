@@ -157,12 +157,6 @@ See [log API](https://github.com/hoodiehq/hoodie-client-log#api)
 
 ### hoodie.request
 
----
-
-🐕 **TO BE DONE**: [#9](https://github.com/hoodiehq/hoodie-client/issues/9)
-
----
-
 Sends an http request
 
 ```js
