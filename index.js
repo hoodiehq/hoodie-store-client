@@ -27,6 +27,7 @@ function Hoodie (options) {
 
   api.account = new Account({ url: api.url + '/account/api' })
   api.task = new Task('/hoodie/task/api')
+  api.request = require('./lib/request').bind(this, state)
   api.connectionStatus = new ConnectionStatus(api.url)
   api.log = new Log('hoodie')
   api.plugin = require('./lib/plugin')
