@@ -44,8 +44,12 @@ function Store (dbName, options) {
   var syncApi = db.hoodieSync({remote: remote})
   var storeApi = db.hoodieApi({emitter: emitter})
 
+  var state = {
+    objectTypeById: {}
+  }
+
   var api = merge(
-    scoped.bind(null, storeApi),
+    scoped.bind(null, state, storeApi),
     storeApi,
     {
       hasLocalChanges: hasLocalChanges.bind(db),
