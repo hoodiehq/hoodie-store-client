@@ -496,7 +496,7 @@ test('scoped Store .off()', function (t) {
 })
 
 test('when type change', function (t) {
-  t.plan(8)
+  t.plan(10)
 
   var store = new Store('test-db-type-change', merge({remote: 'test-db-type-change'}, options))
   var scopedStoreOldType = store('oldtype')
@@ -512,6 +512,10 @@ test('when type change', function (t) {
       t.is(object.type, 'oldtype', 'in remove event on scopedStoreOldType, type is "oldtype"')
       t.is(object.foo, undefined, 'in remove event on scopedStoreOldType, foo is undefined')
     })
+    scopedStoreOldType.on('change', function (object) {
+      t.assert(true, 'scopedStoreOldType fired change event on remove')
+    })
+
     scopedStoreNewType.on('add', function (object) {
       scopedStoreNewType
       .find(object.id)
@@ -523,6 +527,10 @@ test('when type change', function (t) {
       t.is(object.type, 'newtype', 'in add event on scopedStoreNewType, type is newtype')
       t.is(object.foo, 'bar', 'in add event on scopedStoreNewType, foo is bar')
     })
+    scopedStoreNewType.on('change', function (object) {
+      t.assert(true, 'scopedStoreNewType fired change event on remove')
+    })
+
     store.on('update', function (object) {
       t.is(object.type, 'newtype', 'in update event on global store, type is newtype')
       t.is(object.foo, 'bar', 'in update event on global store, foo is bar')
