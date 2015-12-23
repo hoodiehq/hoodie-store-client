@@ -48,6 +48,13 @@ function Store (dbName, options) {
     objectTypeById: {}
   }
 
+  // possible race condition...
+  storeApi.findAll().then(function (objects) {
+    objects.forEach(function (object) {
+      state.objectTypeById[object.id] = object.type
+    })
+  })
+
   var api = merge(
     scoped.bind(null, state, storeApi),
     storeApi,
