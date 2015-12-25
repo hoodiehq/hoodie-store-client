@@ -1,10 +1,9 @@
 module.exports = Store
 
-var API = require('pouchdb-hoodie-api')
 var EventEmitter = require('events').EventEmitter
+
 var merge = require('lodash.merge')
 var PouchDB = global.PouchDB || require('pouchdb')
-var Sync = require('pouchdb-hoodie-sync')
 
 var hasLocalChanges = require('./lib/has-local-changes')
 var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
@@ -12,10 +11,8 @@ var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 var syncWrapper = require('./lib/sync-wrapper')
 var scoped = require('./lib/scoped/')
 
-PouchDB.plugin({
-  hoodieApi: API.hoodieApi,
-  hoodieSync: Sync.hoodieSync
-})
+PouchDB.plugin(require('pouchdb-hoodie-api'))
+PouchDB.plugin(require('pouchdb-hoodie-sync'))
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -41,7 +38,7 @@ function Store (dbName, options) {
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
   var remote = options.remote
-  var syncApi = db.hoodieSync({remote: remote})
+  var syncApi = db.hoodieSync({remote: remote, ajax: options.ajax})
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var api = merge(
@@ -76,4 +73,3 @@ Store.defaults = function (defaultOpts) {
 
   return CustomStore
 }
-
