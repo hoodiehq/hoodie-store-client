@@ -22,6 +22,8 @@ store = new Store(dbName, options)
 // Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
 // store = new Store('mydb')
 
+// options.ajax: options or function that returns options to be passed to all replications
+
 // all methods return promises
 store.add(object)
 store.add([object1, id2])
@@ -107,7 +109,7 @@ Include this plugin in your HTML page:
 
 Since `pouchdb.js` is bundled into the plugin by default, there's no need to load it separately.
 If you want to load your own PouchDB, just add it before loading the plugin, and it'll use your version of `pouchdb.js`.  
-  
+
 ```html
 <script src="node_modules/pouchdb/dist/pouchdb.js"></script>
 ```
