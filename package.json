@@ -46,9 +46,9 @@
   "scripts": {
     "build": "npm-run-all -p build:raw:*",
     "build:dev": "npm-run-all prebuild build:raw:dev",
-    "build:min": "npm-run-all prebuild build:raw:min",
+    "disabled-build:min": "npm-run-all prebuild build:raw:min",
     "build:raw:dev": "browserify -s Hoodie index.js -o dist/hoodie.js",
-    "build:raw:min": "browserify -s Hoodie -g uglifyify index.js | uglifyjs -c -o dist/hoodie.min.js",
+    "disabled-build:raw:min": "browserify -s Hoodie -g uglifyify index.js | uglifyjs -c -o dist/hoodie.min.js",
     "prebuild": "rimraf dist && mkdirp dist",
     "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
