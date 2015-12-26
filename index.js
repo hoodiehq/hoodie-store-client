@@ -32,13 +32,20 @@ function Store (dbName, options) {
     }
   }
 
+  // options.ajax can be a function, which is causing problems in PouchDB
+  // when passed to PouchDB.defaults, so we workaround it.
+  var ajaxOptions = options.ajax
+  if (options.ajax) {
+    delete options.ajax
+  }
+
   // we use a custom PouchDB constructor as we derive another PouchDB to
   // interact with the remote store, and want it to inherit the options
   var CustomPouchDB = PouchDB.defaults(options)
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
   var remote = options.remote
-  var syncApi = db.hoodieSync({remote: remote, ajax: options.ajax})
+  var syncApi = db.hoodieSync({remote: remote, ajax: ajaxOptions})
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var api = merge(
