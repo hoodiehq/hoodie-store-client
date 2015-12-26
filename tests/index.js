@@ -1,4 +1,3 @@
-require('./specs/id')
 require('./specs/events')
 require('./specs/url')
 require('./specs/request')
