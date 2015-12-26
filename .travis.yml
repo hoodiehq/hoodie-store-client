@@ -14,3 +14,6 @@ before_script:
 after_success:
   - if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
   - npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
