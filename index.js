@@ -28,7 +28,7 @@ function Store (dbName, options) {
       options.remote = dbName
     }
     if (!/^https?:\/\//.test(options.remote)) {
-      options.remote = (options.remoteBaseUrl + '/' + options.remote)
+      options.remote = (options.remoteBaseUrl + '/' + encodeURIComponent(options.remote))
     }
   }
 
