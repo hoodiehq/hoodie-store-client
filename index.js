@@ -20,7 +20,10 @@ function Hoodie (options) {
   var account = new Account({ url: api.url + '/account/api' })
 
   var CustomStore = Store.defaults({
-    remoteBaseUrl: api.url + '/store/api',
+    remoteBaseUrl: api.url + '/store/api'
+  })
+  var dbName = 'user/' + account.id
+  var store = new CustomStore(dbName, {
     ajax: function () {
       var session = api.account.get('session')
       if (!session) {
@@ -34,8 +37,6 @@ function Hoodie (options) {
       }
     }
   })
-  var dbName = 'user/' + account.id
-  var store = new CustomStore(dbName)
 
   var task = new Task('/hoodie/task/api')
 
