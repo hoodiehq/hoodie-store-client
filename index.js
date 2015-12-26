@@ -54,5 +54,16 @@ function Hoodie (options) {
   api.off = require('./lib/events').off.bind(this, state)
   api.trigger = require('./lib/events').trigger.bind(this, state)
 
+  // glue code
+  account.on('signout', function () {
+    // TODO: prevent data loss on sign out:
+    //       https://github.com/hoodiehq/hoodie-client/issues/22
+    store.clear()
+  })
+
+  account.on('signin', function () {
+    store.connect()
+  })
+
   return api
 }
