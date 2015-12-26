@@ -28,7 +28,6 @@ hoodie.account.signUp({
 ## API
 
 - [Constructor](#constructor)
-- [hoodie.id](#hoodieid)
 - [hoodie.url](#hoodieurl)
 - [hoodie.account](#hoodieaccount)
 - [hoodie.store](#hoodiestore)
@@ -82,7 +81,7 @@ new Hoodie(options)
     <td>String</td>
     <td>
       <a href="https://github.com/hoodiehq/hoodie-client-store#constructor">store options</a>.
-      <code>options.dbName</code> is always set to <code>hoodie.id</code>.
+      <code>options.dbName</code> is always set to <code>hoodie.account.id</code>.
       <code>options.remote</code> is always set to <code>hoodie.url</code> + '/store/api'
     </td>
     <td>No</td>
@@ -92,7 +91,7 @@ new Hoodie(options)
     <td>String</td>
     <td>
       <a href="https://github.com/hoodiehq/hoodie-client-task#constructor">task options</a>.
-      <code>options.userId</code> is always set to <code>hoodie.id</code>.
+      <code>options.userId</code> is always set to <code>hoodie.account.id</code>.
       <code>options.remote</code> is always set to <code>hoodie.url</code> + '/task/api'
     </td>
     <td>No</td>
@@ -108,17 +107,6 @@ new Hoodie(options)
     <td>No</td>
   </tr>
 </table>
-
-### hoodie.id
-
-_Read-only_
-
-```js
-hoodie.id
-```
-
-Auto-generated, unique identifier for the current user. It gets generated
-on first load, it does not depend on an user account
 
 ### hoodie.url
 
