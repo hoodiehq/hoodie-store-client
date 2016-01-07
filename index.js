@@ -2,7 +2,6 @@ module.exports = Hoodie
 
 var Store = require('hoodie-client-store')
 var Account = require('hoodie-client-account')
-var Task = function () {}
 var ConnectionStatus = require('hoodie-client-connection-status')
 var Log = require('hoodie-client-log')
 
@@ -38,12 +37,9 @@ function Hoodie (options) {
     }
   })
 
-  var task = new Task('/hoodie/task/api')
-
   // core modules
   api.account = account
   api.store = store
-  api.task = task
   api.request = require('./lib/request').bind(this, state)
   api.connectionStatus = new ConnectionStatus(api.url)
   api.log = new Log('hoodie')
