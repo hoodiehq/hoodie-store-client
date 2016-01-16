@@ -495,9 +495,8 @@ test('scoped Store .off()', function (t) {
   })
 })
 
-// https://github.com/hoodiehq/hoodie-client-store/issues/45
-test.skip('when type change', function (t) {
-  t.plan(6)
+test('when type change', function (t) {
+  t.plan(10)
 
   var store = new Store('test-db-type-change', merge({remote: 'test-db-type-change'}, options))
   var scopedStoreOldType = store('oldtype')
@@ -506,16 +505,50 @@ test.skip('when type change', function (t) {
 
   .then(function () {
     scopedStoreOldType.on('remove', function (object) {
+      scopedStoreOldType
+      .find(object.id)
+      .catch(t.throws)
+
       t.is(object.type, 'oldtype', 'in remove event on scopedStoreOldType, type is "oldtype"')
-      t.is(object.foo, undefined, 'in remove event on scopedStoreOldType, foo is undefined')
+      t.is(object.foo, 'bar', 'in remove event on scopedStoreOldType, foo is "bar"')
     })
+    scopedStoreOldType.on('change', function (object) {
+      t.assert(true, 'scopedStoreOldType fired change event on remove')
+    })
+
     scopedStoreNewType.on('add', function (object) {
-      t.is(object.type, 'newtype', 'in remove event on scopedStoreNewType, type is newtype')
-      t.is(object.foo, 'bar', 'in remove event on scopedStoreNewType, foo is bar')
+      scopedStoreNewType
+      .find(object.id)
+      .then(function (foundObj) {
+        t.deepEqual(foundObj, object, 'in add event on scopedStoreNewType, object is present in store')
+      })
+      .catch(t.fail)
+
+      t.is(object.type, 'newtype', 'in add event on scopedStoreNewType, type is newtype')
+      t.is(object.foo, 'bar', 'in add event on scopedStoreNewType, foo is bar')
     })
+    scopedStoreNewType.on('change', function (object) {
+      t.assert(true, 'scopedStoreNewType fired change event on remove')
+    })
+
     store.on('update', function (object) {
       t.is(object.type, 'newtype', 'in update event on global store, type is newtype')
       t.is(object.foo, 'bar', 'in update event on global store, foo is bar')
+    })
+
+    store.on('add', function () {
+      t.fail('"add" must not be triggered on store when type changes')
+    })
+
+    store.on('remove', function () {
+      t.fail('"remove" must not be triggered on store when type changes')
+    })
+
+    scopedStoreOldType.on('update', function () {
+      t.fail('"update" must not be triggered on store(oldType) when type changes')
+    })
+    scopedStoreNewType.on('update', function () {
+      // t.fail('"update" must not be triggered on store(newType) when type changes')
     })
 
     return store.update('test', {type: 'newtype', foo: 'bar'})
@@ -536,4 +569,3 @@ function addEventToArray (array, object) {
     })
   }
 }
-
