@@ -48,8 +48,19 @@ function Store (dbName, options) {
   var syncApi = db.hoodieSync({remote: remote, ajax: ajaxOptions})
   var storeApi = db.hoodieApi({emitter: emitter})
 
+  var state = {
+    objectTypeById: {}
+  }
+
+  // possible race condition...
+  storeApi.findAll().then(function (objects) {
+    objects.forEach(function (object) {
+      state.objectTypeById[object.id] = object.type
+    })
+  })
+
   var api = merge(
-    scoped.bind(null, storeApi),
+    scoped.bind(null, state, storeApi),
     storeApi,
     {
       hasLocalChanges: hasLocalChanges.bind(db),
