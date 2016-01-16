@@ -2,7 +2,7 @@ module.exports = Store
 
 var EventEmitter = require('events').EventEmitter
 
-var merge = require('lodash.merge')
+var merge = require('lodash/merge')
 var PouchDB = global.PouchDB || require('pouchdb')
 
 var hasLocalChanges = require('./lib/has-local-changes')
