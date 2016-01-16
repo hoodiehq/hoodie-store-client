@@ -1,4 +1,4 @@
-var merge = require('lodash.merge')
+var merge = require('lodash/merge')
 var test = require('tape')
 
 var Store = require('../../')

@@ -1,4 +1,4 @@
-var merge = require('lodash.merge')
+var merge = require('lodash/merge')
 var rimraf = require('rimraf')
 var test = require('tape')
 

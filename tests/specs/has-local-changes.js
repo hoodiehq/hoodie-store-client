@@ -1,4 +1,4 @@
-var merge = require('lodash.merge')
+var merge = require('lodash/merge')
 var localStorageWrapper = require('humble-localstorage')
 var test = require('tape')
 
