@@ -94,6 +94,58 @@ test('store.one("add") with adding one', function (t) {
   .catch(t.fail)
 })
 
+test('store.reset creates empty instance of store', function (t) {
+  t.plan(3)
+
+  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var addEvents = []
+  store.on('add', addEvents.push.bind(addEvents))
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+  store.reset()
+
+  .then(function () {
+    return store.findAll()
+  })
+
+  .then(function (result) {
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+
+    return store.add({id: 'test', foo: 'bar'})
+  })
+
+  .then(function () {
+    t.is(addEvents.length, 1, 'triggers "add" event after "clear"')
+  })
+
+  .catch(t.fail)
+})
+
+test('store.reset creates empty instance of store with new options', function (t) {
+  t.plan(4)
+
+  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var newOptions = {
+    name: 'new-test-db-clear',
+    remote: 'new-test-db-clear'
+  }
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+
+  // merge in-memory adapter options
+  store.reset(merge({}, options, newOptions))
+
+  .then(function () {
+    return store.findAll()
+  })
+
+  .then(function (result) {
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+    t.is(store.db._db_name, newOptions.name, 'reset store has a new name')
+    t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
+  })
+
+  .catch(t.fail)
+})
+
 function addEventToArray (array, object) {
   if (arguments.length > 2) {
     arguments[0].push({

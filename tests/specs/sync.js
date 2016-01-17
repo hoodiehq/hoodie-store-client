@@ -322,3 +322,31 @@ test('triggers no "change" from remote if only local changes pushed', function (
 
   .catch(t.fail)
 })
+
+test('after "clear", store.on("push") for store.push()', function (t) {
+  t.plan(4)
+
+  var store = new Store('test-db-push', merge({remote: 'test-db-push-remote'}, options))
+  var pushEvents = []
+
+  store.on('push', pushEvents.push.bind(pushEvents))
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+
+  store.reset()
+
+  .then(function () {
+    return store.add({id: 'test', foo: 'bar'})
+  })
+
+  .then(function () {
+    return store.push()
+  })
+
+  .then(function () {
+    t.is(pushEvents.length, 1, 'triggers 1 push event')
+    t.is(pushEvents[0].id, 'test', 'event passes object')
+    t.is(pushEvents[0].foo, 'bar', 'event passes object')
+  })
+
+  .catch(t.fail)
+})
