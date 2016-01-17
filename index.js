@@ -63,7 +63,7 @@ function Store (dbName, options) {
     scoped.bind(null, state, storeApi),
     storeApi,
     {
-      hasLocalChanges: hasLocalChanges.bind(db),
+      hasLocalChanges: hasLocalChanges,
       push: syncWrapper.bind(syncApi, 'push'),
       pull: syncWrapper.bind(syncApi, 'pull'),
       sync: syncWrapper.bind(syncApi, 'sync'),
@@ -72,6 +72,8 @@ function Store (dbName, options) {
       isConnected: syncApi.isConnected
     }
   )
+
+  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, emitter, remote, ajaxOptions, PouchDB)
 
   subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)
