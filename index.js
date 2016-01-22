@@ -61,7 +61,21 @@ function Store (dbName, options) {
 
   var api = merge(
     scoped.bind(null, state, storeApi),
-    storeApi,
+    {
+      db: storeApi.db,
+      add: storeApi.add,
+      find: storeApi.find,
+      findAll: storeApi.findAll,
+      findOrAdd: storeApi.findOrAdd,
+      update: storeApi.update,
+      updateOrAdd: storeApi.updateOrAdd,
+      updateAll: storeApi.updateAll,
+      remove: storeApi.remove,
+      removeAll: storeApi.removeAll,
+      on: storeApi.on,
+      one: storeApi.one,
+      off: storeApi.off
+    },
     {
       hasLocalChanges: hasLocalChanges,
       push: syncWrapper.bind(syncApi, 'push'),
@@ -73,7 +87,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, emitter, remote, ajaxOptions, PouchDB)
+  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, remote, ajaxOptions, PouchDB)
 
   subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)

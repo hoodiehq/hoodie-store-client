@@ -49,7 +49,7 @@ test('.hasLocalChanges(filter)', function (t) {
     t.is(store.hasLocalChanges('test1'), true, 'returns "true" with id filter')
     t.is(store.hasLocalChanges({id: 'test2'}), true, 'returns "true" to with object filter')
 
-    return store.clear()
+    return store.reset()
   })
 
   .then(function () {
