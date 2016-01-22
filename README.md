@@ -48,7 +48,9 @@ store.remove(object)
 store.remove([object1, id2])
 store.removeAll()
 store.removeAll(filterFunction)
-store.clear() // removes all data without triggering events
+// removes all data only triggering the 'clear' event
+// options are passed to new PouchDB instance
+store.reset(options)
 
 // sync methods, return native promises
 store.pull() // pulls changes one-time
