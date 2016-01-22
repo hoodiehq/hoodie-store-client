@@ -131,3 +131,11 @@ function cleanupDb (store, t) {
     console.log(error)
   })
 }
+
+test('Store api exports', function (t) {
+  var store = new Store('test-db', merge({remote: 'test-db-remote'}, options))
+
+  t.is(store.clear, 'undefined', 'store doesnt expose clear method')
+
+  t.end()
+})
