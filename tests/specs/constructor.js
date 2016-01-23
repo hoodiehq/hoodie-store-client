@@ -80,17 +80,6 @@ test('new Store("name", {remote: "othername", remoteBaseUrl: "https://example.co
   t.end()
 })
 
-test('constructs a store object without options.adapter / options.db', function (t) {
-  var store = new Store('test-db-adapter', { remote: 'test-db-adapter-remote' })
-
-  t.is(typeof store, 'function', 'is object')
-  t.ok(store.db, '.db exists')
-  t.is(store.db._db_name, 'test-db-adapter', '.db is PouchDB object')
-
-  // clean up the files created by this test
-  cleanupDb(store, t)
-})
-
 test('Store.defaults({remote})', function (t) {
   var CustomStore = Store.defaults(merge({remote: 'test-db-custom-remote'}, options))
   var store = new CustomStore('test-db-custom')
@@ -111,26 +100,6 @@ test('Store.defaults({remoteBaseUrl})', function (t) {
 
   t.end()
 })
-
-function cleanupDb (store, t) {
-  // clean up the files created by this test
-  if (process.browser) {
-    return t.end()
-  }
-  store.db.then(function () {
-    rimraf(store.db._db_name, function (error) {
-      if (error) {
-        throw error
-      }
-
-      t.end()
-    })
-  })
-
-  .catch(function (error) {
-    console.log(error)
-  })
-}
 
 test('Store api exports', function (t) {
   var store = new Store('test-db', merge({remote: 'test-db-remote'}, options))
