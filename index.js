@@ -10,6 +10,7 @@ var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
 var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 var syncWrapper = require('./lib/sync-wrapper')
 var scoped = require('./lib/scoped/')
+var isPersistent = require('./lib/is-persistent')
 
 PouchDB.plugin(require('pouchdb-hoodie-api'))
 PouchDB.plugin(require('pouchdb-hoodie-sync'))
@@ -83,7 +84,8 @@ function Store (dbName, options) {
       sync: syncWrapper.bind(syncApi, 'sync'),
       connect: syncApi.connect,
       disconnect: syncApi.disconnect,
-      isConnected: syncApi.isConnected
+      isConnected: syncApi.isConnected,
+      isPersistent: isPersistent
     }
   )
 
