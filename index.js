@@ -59,7 +59,9 @@ function Hoodie (options) {
   })
 
   account.on('signin', function () {
-    store.connect()
+    store.reset().then(
+      store.connect
+    )
   })
 
   return api
