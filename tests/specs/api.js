@@ -150,7 +150,12 @@ test('store.reset creates empty instance of store with new options', function (t
 test('store.reset creates empty instance of store with new options passed as arguments', function (t) {
   t.plan(1)
 
-  var CustomPouchDB = PouchDB.defaults({remote: 'test-db-clear-arguments-remote'})
+  var options = process.browser ? {
+    adapter: 'memory'
+  } : {
+    db: require('memdown')
+  }
+  var CustomPouchDB = PouchDB.defaults(options)
   var reset = require('../../lib/reset')
   var clear = function () {
     return Promise.resolve()
