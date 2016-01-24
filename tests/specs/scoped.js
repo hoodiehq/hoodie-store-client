@@ -344,6 +344,18 @@ test('scoped Store .updateOrAdd([object]) with missing id throws an error', func
     })
 })
 
+test('scoped Store .updateOrAdd(string) with missing new object throws an error', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-update-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var testStore = store('test')
+
+  testStore.updateOrAdd('newstringid')
+    .catch(function (err) {
+      t.is(err.message, 'Missing ID', 'error has correct message')
+    })
+})
+
 test('scoped Store .updateAll()', function (t) {
   t.plan(2)
 
