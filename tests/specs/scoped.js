@@ -245,6 +245,18 @@ test('scoped Store .findOrAdd(string) with missing new object throws an error', 
     })
 })
 
+test('scoped Store .findOrAdd(string, object) with missing item sets id to new object', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var testStore = store('test')
+
+  testStore.findOrAdd('theidoftheobject', {})
+    .then(function (result) {
+      t.is(result.id, 'theidoftheobject', 'the object has the new id')
+    })
+})
+
 test('scoped Store .update()', function (t) {
   t.plan(2)
 
