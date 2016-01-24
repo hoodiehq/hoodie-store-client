@@ -160,7 +160,7 @@ test('store.reset creates empty instance of store with new options passed as arg
   var clear = function () {
     return Promise.resolve()
   }
-  reset('new-test-db-clear-arguments', CustomPouchDB, undefined, undefined, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, {})
+  reset('new-test-db-clear-arguments', CustomPouchDB, undefined, undefined, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, options)
     .then(function (store) {
       t.is(store.db._db_name, 'new-test-db-clear-arguments', 'reset store has a new name')
     })
