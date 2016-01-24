@@ -200,6 +200,22 @@ test('scoped Store .findOrAdd([object, object])', function (t) {
   .catch(t.fail)
 })
 
+test('scoped Store .findOrAdd() with missing id throws an error', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var testStore = store('test')
+
+  var testItem = {
+    foo: 'bar1'
+  }
+
+  testStore.findOrAdd(testItem)
+    .catch(function (err) {
+      t.is(err.message, 'Missing ID', 'error has correct message')
+    })
+})
+
 test('scoped Store .update()', function (t) {
   t.plan(2)
 
