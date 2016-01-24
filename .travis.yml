@@ -6,7 +6,9 @@ node_js:
   - 4
 before_script:
   - npm prune
-script: npm run $COMMAND
+script:
+  - npm run $COMMAND
+  - npm run lint
 after_success:
   - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then npm run test:coverage && npm run test:coverage:upload; fi
   - npm run semantic-release
