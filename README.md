@@ -12,16 +12,20 @@
 This plugin provides simple methods store and
 sync data. It combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync).
 
+## Example
+
+```js
+var Store = require('hoodie-client-store')
+var store = new Store('mydbname', { remote: 'http://localhost:5984/mydbname' })
+// or
+Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
+var store = new Store('mydb')
+```
+
 ## API
 
 ```js
 store = new Store(dbName, options)
-// example:
-// store = new Store('mydbname', { remote: 'http://localhost:5984/mydbname' })
-// or:
-// Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
-// store = new Store('mydb')
-
 // options.ajax: options or function that returns options to be passed to all replications
 
 // all methods return promises
@@ -87,7 +91,6 @@ store.off(event, handler)
 Install via npm
 
 ```
-npm install --save pouchdb
 npm install --save hoodie-client-store
 ```
 
@@ -142,7 +145,7 @@ npm run test:node
 ### In the browser
 
 ```
-test:browser:local
+npm run test:browser:local
 ```
 
 This will start a local server. All tests and coverage will be run at [http://localhost:8080/__zuul](http://localhost:8080/__zuul)
