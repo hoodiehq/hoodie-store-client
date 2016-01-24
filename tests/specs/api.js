@@ -146,6 +146,19 @@ test('store.reset creates empty instance of store with new options', function (t
   .catch(t.fail)
 })
 
+test('ajax property of options should be removed', function (t) {
+  t.plan(2)
+
+  var opts = merge({remote: 'test-db-clear'}, options)
+  opts.ajax = function () {}
+
+  t.isNot(opts.ajax, undefined, 'ajax option is present')
+
+  Store('test-db-clear', opts)
+
+  t.is(opts.ajax, undefined, 'ajax option has been removed')
+})
+
 function addEventToArray (array, object) {
   if (arguments.length > 2) {
     arguments[0].push({
