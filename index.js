@@ -4,8 +4,8 @@ var Store = require('hoodie-client-store')
 var Account = require('hoodie-client-account')
 var ConnectionStatus = require('hoodie-client-connection-status')
 var Log = require('hoodie-client-log')
-
 var getState = require('./lib/get-state')
+var init = require('./lib/init')
 
 function Hoodie (options) {
   var state = getState(options)
@@ -51,18 +51,7 @@ function Hoodie (options) {
   api.off = require('./lib/events').off.bind(this, state)
   api.trigger = require('./lib/events').trigger.bind(this, state)
 
-  // glue code
-  account.on('signout', function () {
-    // TODO: prevent data loss on sign out:
-    //       https://github.com/hoodiehq/hoodie-client/issues/22
-    store.clear()
-  })
-
-  account.on('signin', function () {
-    store.reset().then(
-      store.connect
-    )
-  })
+  init(api)
 
   return api
 }
