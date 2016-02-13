@@ -9,7 +9,8 @@ test('is "reset" triggered on "signin"', function (t) {
   var hoodie = {
     account: {
       id: 0,
-      on: simple.stub()
+      on: simple.stub(),
+      isSignedIn: simple.stub()
     },
     store: {
       connect: function () {
@@ -46,7 +47,8 @@ test('is "reset" triggered on "signout"', function (t) {
   var hoodie = {
     account: {
       id: 0,
-      on: simple.stub()
+      on: simple.stub(),
+      isSignedIn: simple.stub()
     },
     store: {
       reset: function (options) {
