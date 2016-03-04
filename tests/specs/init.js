@@ -1,6 +1,8 @@
 var simple = require('simple-mock')
 var test = require('tape')
 var init = require('../../lib/init')
+var getApi = require('../../lib/get-api')
+var getState = require('../../lib/get-state')
 
 test('is "reset" triggered on "signin"', function (t) {
   t.plan(6)
@@ -106,3 +108,50 @@ test('"hoodie.store.connect()" is *not* called when "hoodie.account.isSignedIn()
        'does not hoodie account.connect')
 })
 
+test('hoodie.store gets initialized with options.ajax', function (t) {
+  t.plan(1)
+
+  var CustomStoreMock = simple.stub()
+  simple.mock(getApi.internals, 'Account', function () {
+    return {
+      get: function (path) {
+        return {
+          id: path + '123'
+        }
+      }
+    }
+  })
+  simple.mock(getApi.internals, 'Store', {
+    defaults: function () { return CustomStoreMock }
+  })
+
+  var state = getState()
+  getApi(state)
+
+  var storeAjaxParam = CustomStoreMock.lastCall.args[1]
+  t.is(storeAjaxParam.ajax().headers.authorization, 'Bearer session123',
+    'sets ajax authorization header')
+})
+
+test('hoodie.store initialization without session', function (t) {
+  t.plan(1)
+
+  var CustomStoreMock = simple.stub()
+  simple.mock(getApi.internals, 'Account', function () {
+    return {
+      get: function (path) {
+        return undefined
+      }
+    }
+  })
+  simple.mock(getApi.internals, 'Store', {
+    defaults: function () { return CustomStoreMock }
+  })
+
+  var state = getState()
+  getApi(state)
+
+  var storeAjaxParam = CustomStoreMock.lastCall.args[1]
+  t.is(storeAjaxParam.ajax(), undefined,
+    'no authorization header without session')
+})
