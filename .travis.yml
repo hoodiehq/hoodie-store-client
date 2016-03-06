@@ -7,7 +7,7 @@ node_js:
 before_script:
   - npm prune
 after_success:
-  - if [[ $COMMAND = test:coverage ]]; then npm run test:coverage:upload; fi
+  - npm run test:coverage && npm run test:coverage:upload
   - npm run semantic-release
 branches:
   except:
