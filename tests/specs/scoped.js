@@ -592,7 +592,7 @@ test('scoped Store .off()', function (t) {
   })
 })
 
-test('when type change', function (t) {
+test.only('when type change', function (t) {
   t.plan(10)
 
   var store = new Store('test-db-type-change', merge({remote: 'test-db-type-change'}, options))
@@ -604,7 +604,9 @@ test('when type change', function (t) {
     scopedStoreOldType.on('remove', function (object) {
       scopedStoreOldType
       .find(object.id)
-      .catch(t.throws)
+      .catch(function () {
+        t.pass('cannot find object in scopedStoreOldType')
+      })
 
       t.is(object.type, 'oldtype', 'in remove event on scopedStoreOldType, type is "oldtype"')
       t.is(object.foo, 'bar', 'in remove event on scopedStoreOldType, foo is "bar"')
