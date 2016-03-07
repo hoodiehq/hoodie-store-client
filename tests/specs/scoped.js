@@ -592,7 +592,7 @@ test('scoped Store .off()', function (t) {
   })
 })
 
-test.only('when type change', function (t) {
+test('when type change', function (t) {
   t.plan(10)
 
   var store = new Store('test-db-type-change', merge({remote: 'test-db-type-change'}, options))
