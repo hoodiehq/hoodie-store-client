@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
-    "build": "browserify index.js > dist/hoodie-client-store.js",
+    "build": "browserify -s Store index.js > dist/hoodie-client-store.js",
     "pretest": "standard",
     "test": "npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests",
