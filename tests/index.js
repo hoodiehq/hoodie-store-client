@@ -1,7 +1,0 @@
-require('./specs/constructor')
-require('./specs/api')
-require('./specs/has-local-changes')
-require('./specs/subscribe-to-internal-events')
-require('./specs/sync')
-require('./specs/scoped')
-require('./specs/is-persistent')
