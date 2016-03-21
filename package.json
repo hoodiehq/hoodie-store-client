@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
-    "build": "browserify -s Store index.js > dist/hoodie-client-store.js",
+    "build": "browserify -s Store index.js > dist/hoodie-store-client.js",
     "pretest": "standard",
     "test": "npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoodiehq/hoodie-client-store.git"
+    "url": "https://github.com/hoodiehq/hoodie-store-client.git"
   },
   "keywords": [
     "hoodie",
@@ -30,9 +30,9 @@
   "author": "The Hoodie Community and other contributors | http://hood.ie/",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hoodiehq/hoodie-client-store/issues"
+    "url": "https://github.com/hoodiehq/hoodie-store-client/issues"
   },
-  "homepage": "https://github.com/hoodiehq/hoodie-client-store#readme",
+  "homepage": "https://github.com/hoodiehq/hoodie-store-client#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
     "istanbul": "^0.4.2",
