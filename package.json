@@ -1,5 +1,5 @@
 {
-  "name": "hoodie-client-store",
+  "name": "@hoodie/store-client",
   "description": "pouchdb with Hoodie's Store API",
   "main": "index.js",
   "scripts": {
@@ -54,5 +54,8 @@
     "pouchdb": "^5.2.0",
     "pouchdb-hoodie-api": "^1.6.0",
     "pouchdb-hoodie-sync": "^1.4.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
