@@ -1,13 +1,13 @@
-# hoodie-client-store
+# hoodie-store-client
 
 > Hoodie-like Store & Sync API on top of PouchDB
 
-[![Build Status](https://travis-ci.org/hoodiehq/hoodie-client-store.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-client-store)
-[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-client-store/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-client-store?branch=master)
-[![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client-store.svg)](https://david-dm.org/hoodiehq/hoodie-client-store)
-[![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client-store/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client-store#info=devDependencies)
+[![Build Status](https://travis-ci.org/hoodiehq/hoodie-store-client.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-store-client)
+[![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-store-client/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-store-client?branch=master)
+[![Dependency Status](https://david-dm.org/hoodiehq/hoodie-store-client.svg)](https://david-dm.org/hoodiehq/hoodie-store-client)
+[![devDependency Status](https://david-dm.org/hoodiehq/hoodie-store-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-store-client#info=devDependencies)
 
-[![NPM](https://nodei.co/npm/hoodie-client-store.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/hoodie-client-store/)
+[![NPM](https://nodei.co/npm/@hoodie/store-client.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/@hoodie/store-client/)
 
 This plugin provides simple methods store and
 sync data. It combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync).
@@ -15,7 +15,7 @@ sync data. It combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-
 ## Example
 
 ```js
-var Store = require('hoodie-client-store')
+var Store = require('@hoodie/store-client')
 var store = new Store('mydbname', { remote: 'http://localhost:5984/mydbname' })
 // or
 Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
@@ -91,7 +91,7 @@ store.off(event, handler)
 Install via npm
 
 ```
-npm install --save hoodie-client-store
+npm install --save @hoodie/store-client
 ```
 
 ### Including the plugin
@@ -101,7 +101,7 @@ npm install --save hoodie-client-store
 Attach this plugin to the `PouchDB` object:
 
 ```js
-var Store = require('hoodie-client-store')
+var Store = require('@hoodie/store-client')
 ```
 
 #### In the browser
@@ -109,7 +109,7 @@ var Store = require('hoodie-client-store')
 Include this plugin in your HTML page:
 
 ```html
-<script src="node_modules/hoodie-client-store/dist/hoodie-client-store.js"></script>
+<script src="node_modules/@hoodie/store-client/dist/hoodie-store-client.js"></script>
 ```
 
 Since `pouchdb.js` is bundled into the plugin by default, there's no need to load it separately.
