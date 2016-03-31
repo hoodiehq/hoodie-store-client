@@ -195,8 +195,8 @@ hoodie.request(options)
     <th align="left">options.data</th>
     <td>Object, Array, String or Number</td>
     <td>
-      For <code>PUT</code> and <code>POST</code> requests, a an optional payload
-      can be send. It will be stringified before sending the request.
+      For <code>PUT</code> and <code>POST</code> requests, an optional payload
+      can be sent. It will be stringified before sending the request.
     </td>
     <td>No</td>
   </tr>
@@ -212,8 +212,8 @@ hoodie.request(options)
     <th align="left">options.data</th>
     <td>Object, Array, String or Number</td>
     <td>
-      For <code>PUT</code> and <code>POST</code> requests, a an optional payload
-      can be send. It will be stringified before sending the request.
+      For <code>PUT</code> and <code>POST</code> requests, an optional payload
+      can be sent. It will be stringified before sending the request.
     </td>
     <td>No</td>
   </tr>
