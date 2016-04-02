@@ -401,7 +401,7 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
 Local setup
 
 ```
-git clone git@github.com:hoodiehq/hoodie-client.git
+git clone https://github.com/hoodiehq/hoodie-client.git
 cd hoodie-client
 npm install
 ```
