@@ -7,7 +7,7 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
 
-Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-client-account), [store](https://github.com/hoodiehq/hoodie-client-store) and [task](https://github.com/hoodiehq/hoodie-client-task)
+Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-account-client), [store](https://github.com/hoodiehq/hoodie-store) and [task](https://github.com/hoodiehq/hoodie-client-task)
 
 ## Example
 
@@ -71,7 +71,7 @@ new Hoodie(options)
     <th align="left">options.account</th>
     <td>String</td>
     <td>
-      <a href="https://github.com/hoodiehq/hoodie-client-account#constructor">account options</a>.
+      <a href="https://github.com/hoodiehq/hoodie-account-client#constructor">account options</a>.
       <code>options.url</code> is always set to <code>hoodie.url</code> + '/account/api'
     </td>
     <td>No</td>
@@ -80,7 +80,7 @@ new Hoodie(options)
     <th align="left">options.store</th>
     <td>String</td>
     <td>
-      <a href="https://github.com/hoodiehq/hoodie-client-store#constructor">store options</a>.
+      <a href="https://github.com/hoodiehq/hoodie-store#constructor">store options</a>.
       <code>options.dbName</code> is always set to <code>hoodie.account.id</code>.
       <code>options.remote</code> is always set to <code>hoodie.url</code> + '/store/api'
     </td>
@@ -100,7 +100,7 @@ new Hoodie(options)
     <th align="left">options.connectionStatus</th>
     <td>String</td>
     <td>
-      <a href="https://github.com/hoodiehq/hoodie-client-connection-status#constructor">connectionStatus options</a>.
+      <a href="https://github.com/hoodiehq/hoodie-connection-status#constructor">connectionStatus options</a>.
       <code>options.url</code> is always set to <code>hoodie.url</code> + '/connection-status/api'.
       <code>options.method</code> is always set to <code>HEAD</code>
     </td>
@@ -120,13 +120,13 @@ full url to the hoodie server, e.g. `http://example.com/hoodie`
 
 ### hoodie.account
 
-`hoodie.account` is an instance of [hoodie-client-account](https://github.com/hoodiehq/hoodie-client-account).
-See [account API](https://github.com/hoodiehq/hoodie-client-account#api)
+`hoodie.account` is an instance of [hoodie-account-client](https://github.com/hoodiehq/hoodie-account-client).
+See [account API](https://github.com/hoodiehq/hoodie-account-client#api)
 
 ### hoodie.store
 
-`hoodie.store` is an instance of [hoodie-client-store](https://github.com/hoodiehq/hoodie-client-store).
-See [store API](https://github.com/hoodiehq/hoodie-client-store#api)
+`hoodie.store` is an instance of [hoodie-store](https://github.com/hoodiehq/hoodie-store).
+See [store API](https://github.com/hoodiehq/hoodie-store#api)
 
 ### hoodie.task
 
@@ -135,13 +135,13 @@ See [task API](https://github.com/hoodiehq/hoodie-client-task#api)
 
 ### hoodie.connectionStatus
 
-`hoodie.connectionStatus` is an instance of [hoodie-client-connection-status](https://github.com/hoodiehq/hoodie-client-connection-status).
-See [connectionStatus API](https://github.com/hoodiehq/hoodie-client-connection-status#api)
+`hoodie.connectionStatus` is an instance of [hoodie-connection-status](https://github.com/hoodiehq/hoodie-connection-status).
+See [connectionStatus API](https://github.com/hoodiehq/hoodie-connection-status#api)
 
 ### hoodie.log
 
-`hoodie.log` is an instance of [hoodie-client-log](https://github.com/hoodiehq/hoodie-client-log).
-See [log API](https://github.com/hoodiehq/hoodie-client-log#api)
+`hoodie.log` is an instance of [hoodie-log](https://github.com/hoodiehq/hoodie-log).
+See [log API](https://github.com/hoodiehq/hoodie-log#api)
 
 ### hoodie.request
 
@@ -380,11 +380,11 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
   </tr>
   <tr>
     <th align="left"><code>account:*</code></th>
-    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-account#events">account events</a></td>
+    <td>events, see <a href="https://github.com/hoodiehq/hoodie-account-client#events">account events</a></td>
   </tr>
   <tr>
     <th align="left"><code>store:*</code></th>
-    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-store#events">store events</a></td>
+    <td>events, see <a href="https://github.com/hoodiehq/hoodie-store#events">store events</a></td>
   </tr>
   <tr>
     <th align="left"><code>task:*</code></th>
@@ -392,7 +392,7 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
   </tr>
   <tr>
     <th align="left"><code>connectionStatus:*</code></th>
-    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-connection-status#events">connectionStatus events</a></td>
+    <td>events, see <a href="https://github.com/hoodiehq/hoodie-connection-status#events">connectionStatus events</a></td>
   </tr>
 </table>
 
