@@ -656,6 +656,101 @@ test('when type change', function (t) {
   .catch(t.fail)
 })
 
+test('store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
+  t.plan(3)
+  var store = new Store('test-db-scoped-off', merge({remote: 'test-db-scoped-off'}, options))
+  var onEvents = []
+
+  store.on('add', function () {
+    onEvents.push('add')
+  })
+
+  store.on('remove', function () {
+    onEvents.push('remove')
+  })
+
+  store.on('update', function () {
+    onEvents.push('update')
+  })
+
+  store.on('change', function (event) {
+    onEvents.push('change ' + event)
+  })
+
+  store.add({'name': 'Knut'}).then(function () {
+    t.is(onEvents.length, 2, 'There should be two Elements in the onEvents array')
+    t.is(onEvents[0], 'add', '"add" should trigger')
+    t.is(onEvents[1], 'change add', '"change add" should trigger')
+  })
+  .catch(t.fail)
+})
+
+// prepared for https://github.com/hoodiehq/camp/issues/30
+test.skip('scoped store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
+  t.plan(3)
+  var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
+  var onEvents = []
+
+  store('test').on('add', function (person) {
+    onEvents.push('add')
+  })
+
+  store('test').on('remove', function (person) {
+    onEvents.push('remove')
+  })
+
+  store('test').on('update', function (person) {
+    onEvents.push('update')
+  })
+
+  store('test').on('change', function (event, person) {
+    onEvents.push('change ' + event)
+  })
+
+  store('test').add({'name': 'Knut'}).then(function () {
+    t.is(onEvents.length, 2, 'There should be two Elements in the onEvents array')
+    t.is(onEvents[0], 'add', '"add" should trigger')
+    t.is(onEvents[1], 'change add', '"change add" should trigger')
+  })
+  .catch(t.fail)
+})
+
+// prepared for https://github.com/hoodiehq/camp/issues/30
+test.skip('scoped store.removeAll should invoke store.on("remove")', function (t) {
+  t.plan(2)
+  var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
+  var onEvents = []
+
+  store('test').on('add', function () {
+    onEvents.push('add')
+  })
+
+  store('test').on('remove', function () {
+    onEvents.push('remove')
+  })
+
+  store('test').on('update', function () {
+    onEvents.push('update')
+  })
+
+  store('test').on('change', function (event) {
+    onEvents.push('change ' + event)
+  })
+
+  store('test').add({'name': 'Knut'})
+
+  .then(function () {
+    return store('test').removeAll()
+  })
+
+  .then(function () {
+    t.is(onEvents.length, 4, 'There should be two Elements in the onEvents array')
+    t.is(onEvents[3], 'remove', '"remove" should trigger')
+  })
+
+  .catch(t.fail)
+})
+
 function addEventToArray (array, object) {
   if (arguments.length > 2) {
     arguments[0].push({
