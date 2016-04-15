@@ -1,4 +1,5 @@
 var merge = require('lodash/merge')
+var simple = require('simple-mock')
 var test = require('tape')
 var PouchDB = global.PouchDB || require('pouchdb')
 
@@ -160,10 +161,18 @@ test('store.reset creates empty instance of store with new options passed as arg
   var clear = function () {
     return Promise.resolve()
   }
-  reset('new-test-db-clear-arguments', CustomPouchDB, undefined, undefined, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, options)
-    .then(function (store) {
-      t.is(store.db._db_name, 'new-test-db-clear-arguments', 'reset store has a new name')
-    })
+
+  var store = {
+    disconnect: simple.stub().returnWith(Promise.resolve())
+  }
+
+  reset('new-test-db-clear-arguments', CustomPouchDB, undefined, store, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, options)
+
+  .then(function () {
+    t.is(store.db._db_name, 'new-test-db-clear-arguments', 'reset store has a new name')
+  })
+
+  .catch(t.error)
 })
 
 test('ajax property of options should be removed', function (t) {
@@ -191,4 +200,3 @@ function addEventToArray (array, object) {
     })
   }
 }
-
