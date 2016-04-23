@@ -12,7 +12,7 @@ Hoodie’s client glue code that integrates Hoodie’s client core modules: [acc
 ## Example
 
 ```js
-var Hoodie = require('hoodie-client')
+var Hoodie = require('@hoodie/client')
 var hoodie = new Hoodie(options)
 
 hoodie.account.signUp({
@@ -127,11 +127,6 @@ See [account API](https://github.com/hoodiehq/hoodie-account-client#api)
 
 `hoodie.store` is an instance of [hoodie-store](https://github.com/hoodiehq/hoodie-store).
 See [store API](https://github.com/hoodiehq/hoodie-store#api)
-
-### hoodie.task
-
-`hoodie.task` is an instance of [hoodie-client-task](https://github.com/hoodiehq/hoodie-client-task).
-See [task API](https://github.com/hoodiehq/hoodie-client-task#api)
 
 ### hoodie.connectionStatus
 
@@ -385,10 +380,6 @@ hoodie.trigger('mycustomevent', { foo: 'bar' })
   <tr>
     <th align="left"><code>store:*</code></th>
     <td>events, see <a href="https://github.com/hoodiehq/hoodie-store#events">store events</a></td>
-  </tr>
-  <tr>
-    <th align="left"><code>task:*</code></th>
-    <td>events, see <a href="https://github.com/hoodiehq/hoodie-client-task#events">task events</a></td>
   </tr>
   <tr>
     <th align="left"><code>connectionStatus:*</code></th>
