@@ -1,5 +1,5 @@
 {
-  "name": "hoodie-client",
+  "name": "@hoodie/client",
   "description": "Hoodie Client Core",
   "author": "The Hoodie Community and other contributors | http://hood.ie/",
   "bugs": {
@@ -39,6 +39,9 @@
   ],
   "license": "Apache-2.0",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hoodiehq/hoodie-client.git"
