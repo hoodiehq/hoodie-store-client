@@ -1,6 +1,6 @@
 # hoodie-store-client
 
-> Hoodie Client for data persistence & offline API
+> Hoodie Client for data persistence & offline sync
 
 [![Build Status](https://travis-ci.org/hoodiehq/hoodie-store-client.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-store-client)
 [![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-store-client/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-store-client?branch=master)
