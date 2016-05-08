@@ -17,119 +17,1099 @@ store API.
 var Store = require('@hoodie/store-client')
 var store = new Store('mydbname', { remote: 'http://localhost:5984/mydbname' })
 // or
-Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
-var store = new Store('mydb')
+var PresetStore = Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
+var store = new PresetStore('mydb')
 ```
 
 ## API
 
+- [Store.defaults](#storedefaults)
+- [Constructor](#constructor)
+- [store.add(properties)](#storeaddproperties)
+- [store.add(arrayOfProperties)](#storeaddarrayofproperties)
+- [store.find(id)](#storefindid)
+- [store.find(doc)](#storefinddoc)
+- [store.find(idsOrDocs)](#storefindidsordocs)
+- [store.findOrAdd(id, doc)](#storefindoraddiddoc)
+- [store.findOrAdd(doc)](#storefindoradddoc)
+- [store.findOrAdd(idsOrDocs)](#storefindoraddidsordocs)
+- [store.findAll()](#storefindall)
+- [store.update(id, changedProperties)](#storeupdateidchangedproperties)
+- [store.update(id, updateFunction)](#storeupdateidupdatefunction)
+- [store.update(doc)](#storeupdatedoc)
+- [store.update(arrayOfDocs)](#storeupdatearrayofdocs)
+- [store.updateOrAdd(id, doc)](#storeupdateoraddiddoc)
+- [store.updateOrAdd(doc)](#storeupdateoradddoc)
+- [store.updateOrAdd(arrayOfDocs)](#storeupdateoraddarrayofdocs)
+- [store.updateAll(changedProperties)](#storeupdateallchangedproperties)
+- [store.updateAll(updateFunction)](#storeupdateallupdatefunction)
+- [store.remove(id)](#storeremoveid)
+- [store.remove(doc)](#storeremovedoc)
+- [store.remove(idsOrDocs)](#storeremoveidsordocs)
+- [store.removeAll()](#storeremoveall)
+- [store.pull()](#storepull)
+- [store.push()](#storepush)
+- [store.sync()](#storesync)
+- [store.connect()](#storeconnect)
+- [store.disconnect()](#storedisconnect)
+- [store.isConnected()](#storeisconnected)
+- [store.hasLocalChanges()](#storehaslocalchanges)
+- [store.on()](#storeon)
+- [store.one()](#storeone)
+- [store.off()](#storeoff)
+- [store()](#typed-store)
+- [Events](#events)
+
+### Store.defaults
+
 ```js
-store = new Store(dbName, options)
-// options.ajax: options or function that returns options to be passed to all replications
-
-// all methods return promises
-store.add(object)
-store.add([object1, id2])
-store.find(id)
-store.find(object) // with id property
-store.findOrAdd(id, object)
-store.findOrAdd(object)
-store.findOrAdd([object1, id2])
-store.findAll()
-store.findAll(filterFunction)
-store.update(id, changedProperties)
-store.update(id, updateFunction)
-store.update(object)
-store.update([object1, id2])
-store.updateOrAdd(id, object)
-store.updateOrAdd(object)
-store.updateOrAdd([object1, id2])
-store.updateAll(changedProperties)
-store.updateAll(updateFunction)
-store.remove(id)
-store.remove(object)
-store.remove([object1, id2])
-store.removeAll()
-store.removeAll(filterFunction)
-// removes all data only triggering the 'clear' event
-// options are passed to new PouchDB instance
-store.reset(options)
-
-// sync methods, return native promises
-store.pull() // pulls changes one-time
-store.push() // pushes changes one-time
-store.sync() // pulls and pushes changes one-time
-store.connect() // starts continuous replication
-store.disconnect() // stops continuous replication and all pending requests
-store.isConnected()
-// pull / push / sync can be filtered by id, object, array
-store.pull('objectId')
-store.push(object)
-store.push(['object1Id', object2])
-
-store.hasLocalChanges()
-store.hasLocalChanges(id)
-store.hasLocalChanges(object)
-store.hasLocalChanges([object1, id2])
-
-// events
-store.on('add', function(object, options) {})
-store.on('update', function(object, options) {})
-store.on('remove', function(object, options) {})
-store.on('change', function(eventName, object, options) {})
-store.on('pull', function(object) {})
-store.on('push', function(object) {})
-store.on('connect', function(object) {})
-store.on('disconnect', function(object) {})
-store.one(event, handler)
-store.off(event, handler)
+Store.defaults(options)
 ```
 
-## Installation
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`remoteBaseUrl`** | String | Base url to CouchDB. Will be used as remote prefix for store instances | No
+| **`options.ajax`** | Object or Function | Ajax request options (see [PouchDB](https://pouchdb.com/api.html#create_database)). If function passed, it gets executed and returned values is used | No
 
-Install via npm
+Returns a custom Store Constructor with passed default options.
 
+Example
+
+```js
+var PresetStore = Store.defaults({
+  remoteBaseUrl: 'http://localhost:5984'
+})
+var store = new PresetStore('mydb')
+store.sync() // will sync with http://localhost:5984/mydb
 ```
-npm install --save @hoodie/store-client
+
+### Constructor
+
+```js
+new Store(dbName, options)
 ```
 
-### Including the plugin
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`dbName`** | String | name of the database | Yes
+| **`options.remote`** | String | name or URL of remote database | Yes (unless `remoteBaseUrl` is preset, see [Store.defaults](storedefaults))
+| **`options.ajax`** | Object or Function | Ajax request options (see [PouchDB](https://pouchdb.com/api.html#create_database)). If function passed, it gets executed and returned values is used | No
 
-#### With browserify or on node.js/io.js
+Returns `store` API.
 
-Attach this plugin to the `PouchDB` object:
+Example
 
 ```js
 var Store = require('@hoodie/store-client')
+var store = new Store('mydb', { remote: 'http://localhost:5984/mydb' })
+store.sync() // will sync with http://localhost:5984/mydb
 ```
 
-#### In the browser
+### store.add(properties)
 
-Include this plugin in your HTML page:
-
-```html
-<script src="node_modules/@hoodie/store-client/dist/hoodie-store-client.js"></script>
+```js
+store.add(properties)
 ```
 
-Since `pouchdb.js` is bundled into the plugin by default, there's no need to load it separately.
-If you want to load your own PouchDB, just add it before loading the plugin, and it'll use your version of `pouchdb.js`.  
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`properties`** | Object | properties of document | Yes
+| **`properties.id`** | String | If set, the document will be stored at given id | No
 
-```html
-<script src="node_modules/pouchdb/dist/pouchdb.js"></script>
+Resolves with `properties` and adds `id` (unless provided), `createdAt` and
+`updatedAt` properties.
+
+```json
+{
+  "id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "bar",
+  "createdAt": "2016-05-09T12:00:00.000Z",
+  "updatedAt": "2016-05-09T12:00:00.000Z"
+}
 ```
 
-Additionally we will distribute a "without PouchDB" version `hoodie-client-store-without-pouchdb.js` which you  
-should use if you specify your own pouchdb version.
+Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+store.add({foo: 'bar'}).then(function (doc) {
+  alert(doc.foo) // bar
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+### store.add(arrayOfProperties)
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`arrayOfProperties`** | Array | Array of `properties`, see store.add(properties) | Yes
+
+Resolves with `properties` and adds `id` (unless provided), `createdAt` and
+`updatedAt` properties. Resolves with array of `properties` items if called
+with `propertiesArray`.
+
+```json
+{
+  "id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "bar",
+  "createdAt": "2016-05-09T12:00:00.000Z",
+  "updatedAt": "2016-05-09T12:00:00.000Z"
+}
+```
+
+Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example: add single document
+
+```js
+store.add({foo: 'bar'}).then(function (doc) {
+  alert(doc.foo) // bar
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+Example: add multiple documents
+
+```js
+store.add([{foo: 'bar'}, {bar: 'baz'}]).then(function (docs) {
+  alert(docs.length) // 2
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+### store.find(id)
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`id`** | String | Unique id of document | Yes
+
+Resolves with `properties`
+
+```json
+{
+  "id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "bar",
+  "createdAt": "2016-05-09T12:00:00.000Z",
+  "updatedAt": "2016-05-09T12:00:00.000Z"
+}
+```
+
+Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+store.find('12345678-1234-1234-1234-123456789ABC').then(function (doc) {
+  alert(doc.id)
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+### store.find(doc)
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`doc`** | Object | document with `id` property | Yes
+
+Resolves with `properties`
+
+```json
+{
+  "id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "bar",
+  "createdAt": "2016-05-09T12:00:00.000Z",
+  "updatedAt": "2016-05-09T12:00:00.000Z"
+}
+```
+
+Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+store.find(doc).then(function (doc) {
+  alert(doc.id)
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+### store.find(idsOrDocs)
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+| **`idsOrDocs`** | Array | Array of `id` (String) or `doc` (Object) items | Yes
+
+Resolves with array of `properties`
+
+```json
+[{
+  "id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "bar",
+  "createdAt": "2016-05-09T12:00:00.000Z",
+  "updatedAt": "2016-05-09T12:00:00.000Z"
+}]
+```
+
+Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+store.find(doc).then(function (doc) {
+  alert(doc.id)
+}).catch(function (error) {
+  alert(error)
+})
+```
+
+### store.findOrAdd(id, doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.findOrAdd(doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.findOrAdd(idsOrDocs)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.findAll()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.update(id, changedProperties)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.update(id, updateFunction)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.update(doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.update(arrayOfDocs)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.updateOrAdd(id, doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.updateOrAdd(doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.updateOrAdd(arrayOfDocs)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.updateAll(changedProperties)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.updateAll(updateFunction)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.remove(id)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.remove(doc)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.remove(idsOrDocs)
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.removeAll()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.pull()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.push()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.sync()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.connect()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.disconnect()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Resolves with ``:
+
+```json
+{
+
+}
+```
+
+Rejects with:
+
+| Name | Description  |
+| :-- | :-- |
+| Error | ... |
+
+Example
+
+```js
+```
+
+### store.isConnected()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `true` / `false`
+
+Example
+
+```js
+```
+
+### store.hasLocalChanges()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `true` / `false`
+
+Example
+
+```js
+```
+
+### store.on()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `store` API.
+
+Example
+
+```js
+```
+
+### store.one()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `store` API.
+
+Example
+
+```js
+```
+
+### store.off()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `store` API.
+
+Example
+
+```js
+```
+
+### <a name="typed-store"></a>store()
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Argument | Type | Description | Required
+| :------- | :--- | :---------- | :-------
+
+Returns `store` API with `type` property preset in all methods to given type name.
+
+Example
+
+```js
+```
+
+### Events
+
+---
+
+🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
+| Event | Description | Arguments
+| :---- | :---------- | :--------
 
 ## Testing
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/hoodie-pouch.svg)](https://saucelabs.com/u/hoodie-pouch)
+Local setup
 
-_Test are currently not running on >IE10 and mobile Safari. This is likely an error with the setup and we would be more than happy if you'd want to fix that :)_
+```
+git clone https://github.com/hoodiehq/hoodie-store-client.git
+cd hoodie-store-client
+npm install
+```
 
-### In Node.js
+In Node.js
 
-Run all tests and validates JavaScript Code Style using [standard](https://www.npmjs.com/package/standard)
+Run all tests and validate JavaScript Code Style using [standard](https://www.npmjs.com/package/standard)
 
 ```
 npm test
@@ -141,7 +1121,7 @@ To run only the tests
 npm run test:node
 ```
 
-### In the browser
+Run tests in browser
 
 ```
 npm run test:browser:local
