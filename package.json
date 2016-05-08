@@ -1,6 +1,6 @@
 {
   "name": "@hoodie/store-client",
-  "description": "pouchdb with Hoodie's Store API",
+  "description": "Hoodie Client ford data persistence & offline API",
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
