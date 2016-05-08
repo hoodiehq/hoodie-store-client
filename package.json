@@ -1,6 +1,6 @@
 {
   "name": "@hoodie/store-client",
-  "description": "Hoodie Client for data persistence & offline API",
+  "description": "Hoodie Client for data persistence & offline sync",
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
