@@ -413,6 +413,11 @@ Run test from one file only
 node tests/specs/id
 ```
 
+## Contributing
+
+Have a look at the Hoodie project's [contribution guidelines](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md).
+If you want to hang out you can join our [Hoodie Community Chat](http://hood.ie/chat/).
+
 ## License
 
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
