@@ -1,13 +1,18 @@
 # hoodie-client
 
-> Hoodie’s client for the browser
+> Client API for the Hoodie server
 
 [![Build Status](https://travis-ci.org/hoodiehq/hoodie-client.svg?branch=master)](https://travis-ci.org/hoodiehq/hoodie-client)
 [![Coverage Status](https://coveralls.io/repos/hoodiehq/hoodie-client/badge.svg?branch=master)](https://coveralls.io/r/hoodiehq/hoodie-client?branch=master)
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
 
-Hoodie’s client glue code that integrates Hoodie’s client core modules: [account](https://github.com/hoodiehq/hoodie-account-client), [store](https://github.com/hoodiehq/hoodie-store) and [task](https://github.com/hoodiehq/hoodie-client-task)
+`hoodie-client` integrates Hoodie’s client core modules:
+
+- [account-client](https://github.com/hoodiehq/hoodie-account-client)
+- [store-client](https://github.com/hoodiehq/hoodie-store)
+- [connection-status](https://github.com/hoodiehq/hoodie-connection-status)
+- [log](https://github.com/hoodiehq/hoodie-log)
 
 ## Example
 
@@ -31,7 +36,6 @@ hoodie.account.signUp({
 - [hoodie.url](#hoodieurl)
 - [hoodie.account](#hoodieaccount)
 - [hoodie.store](#hoodiestore)
-- [hoodie.task](#hoodietask)
 - [hoodie.connectionStatus](#hoodieconnectionstatus)
 - [hoodie.log](#hoodielog)
 - [hoodie.request](#hoodierequest)
