@@ -1,6 +1,6 @@
 {
   "name": "@hoodie/client",
-  "description": "Hoodie Client Core",
+  "description": "Client API for the Hoodie server",
   "author": "The Hoodie Community and other contributors | http://hood.ie/",
   "bugs": {
     "url": "https://github.com/hoodiehq/hoodie-client/issues"
@@ -35,7 +35,7 @@
   "keywords": [
     "hoodie",
     "nobackend",
-    "offline-first"
+    "offlinefirst"
   ],
   "license": "Apache-2.0",
   "main": "index.js",
