@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "browserify": "^13.0.0",
+    "greenkeeper-postpublish": "^1.0.0",
     "istanbul": "^0.4.1",
     "istanbul-coveralls": "^1.0.3",
     "lodash": "^4.11.1",
@@ -59,6 +60,7 @@
     "test": "npm run -s test:node | tap-spec",
     "test:coverage": "istanbul cover tests",
     "test:coverage:upload": "istanbul-coveralls",
-    "test:node": "node tests"
+    "test:node": "node tests",
+    "postpublish": "greenkeeper-postpublish"
   }
 }
