@@ -60,6 +60,41 @@ test('scoped Store .on("change") with adding one', function (t) {
   })
 })
 
+test('scoped Store event lifecycle', function (t) {
+  t.plan(6)
+
+  var store = new Store('test-db-aaron-db', merge({remote: 'test-db-aaron-db'}, options))
+  var testStore = store('test')
+  var mainEvents = []
+  var testEvents = []
+
+  store.on('change', addEventToArray.bind(null, mainEvents))
+  testStore.on('change', addEventToArray.bind(null, testEvents))
+
+  testStore.add({
+    foo: 'bar'
+  })
+
+  .then(function (record) {
+    record.foo = 'baz'
+    return testStore.update(record)
+  })
+
+  .then(function (record) {
+    return testStore.remove(record)
+  })
+
+  .then(function () {
+    t.is(mainEvents[0].eventName, 'add', 'adds')
+    t.is(mainEvents[1].eventName, 'update', 'then updates')
+    t.is(mainEvents[2].eventName, 'remove', 'then removes')
+
+    t.is(testEvents[0].eventName, 'add', 'adds')
+    t.is(testEvents[1].eventName, 'update', 'then updates')
+    t.is(testEvents[2].eventName, 'remove', 'then removes')
+  })
+})
+
 test('scoped Store .find()', function (t) {
   t.plan(2)
 
