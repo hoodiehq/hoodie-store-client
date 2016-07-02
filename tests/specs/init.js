@@ -172,7 +172,7 @@ test('hoodie.store gets initialized with options.ajax', function (t) {
   getApi(state)
 
   var storeAjaxParam = CustomStoreMock.lastCall.args[1]
-  t.is(storeAjaxParam.ajax().headers.authorization, 'Bearer session123',
+  t.is(storeAjaxParam.ajax().headers.authorization, 'Session session123',
     'sets ajax authorization header')
 })
 
