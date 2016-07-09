@@ -89,7 +89,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, remote, ajaxOptions, PouchDB)
+  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote, ajaxOptions, PouchDB)
 
   subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)
