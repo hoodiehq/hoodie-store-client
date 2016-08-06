@@ -7,10 +7,10 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-client.svg)](https://david-dm.org/hoodiehq/hoodie-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-client#info=devDependencies)
 
-`hoodie-client` integrates Hoodie’s client core modules:
+`@hoodie/client` integrates Hoodie’s client core modules:
 
 - [account-client](https://github.com/hoodiehq/hoodie-account-client)
-- [store-client](https://github.com/hoodiehq/hoodie-store)
+- [store-client](https://github.com/hoodiehq/hoodie-store-client)
 - [connection-status](https://github.com/hoodiehq/hoodie-connection-status)
 - [log](https://github.com/hoodiehq/hoodie-log)
 
