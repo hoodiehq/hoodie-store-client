@@ -538,6 +538,21 @@ test('scoped Store .removeAll(filterFunction)', function (t) {
   .catch(t.fail)
 })
 
+test('.removeAll() with a non-existent scope returns empty list', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-remove-all-bad-scope', merge({remote: 'test-remove-all-bad-scope'}, options))
+  var testStore = store('test')
+
+  return testStore.removeAll()
+
+  .then(function (removedItems) {
+    t.is(removedItems.length, 0, 'removedItems is empty')
+  })
+
+  .catch(t.fail)
+})
+
 test('scoped Store .one()', function (t) {
   t.plan(2)
 
