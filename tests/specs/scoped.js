@@ -424,6 +424,36 @@ test('scoped Store .remove()', function (t) {
   })
 })
 
+test('scoped Store .remove() non-existent object', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  return testStore.remove('foo')
+
+  .then(function (removedItem) {
+    t.is(removedItem, null, 'remove non-existent item returns null')
+  })
+
+  .catch(t.fail)
+})
+
+test('scoped Store .remove() Error other than not found', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  return testStore.remove({ foo: 'I have no ID, so I should reject' })
+
+  .then(t.fail)
+
+  .catch(function (error) {
+    t.true(error instanceof Error, 'non-404 errors should cause rejection')
+  })
+})
+
 test('scoped Store .remove(change)', function (t) {
   t.plan(2)
 
@@ -451,6 +481,90 @@ test('scoped Store .remove(change)', function (t) {
   })
 })
 
+test('scoped Store .remove(change) non-existent object', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  return testStore.remove('foo', { foo: 'bar' })
+
+  .then(t.fail)
+
+  .catch(function (removedItem) {
+    t.true(removedItem instanceof Error, 'remove non-existent item returns error')
+    t.is(removedItem.name, 'Not found', 'Error returned is a not found error')
+  })
+})
+
+test('scoped Store .remove(array) with non-existent object', function (t) {
+  t.plan(4)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  var testItems = [
+    {
+      foo: 'bar1'
+    },
+    {
+      foo: 'bar2'
+    }
+  ]
+
+  var itemsAdded
+  return testStore.add(testItems)
+
+  .then(function (addedItems) {
+    itemsAdded = addedItems
+    return testStore.remove(['non-existent id', addedItems[0].id])
+  })
+
+  .then(function (removedItem) {
+    t.is(removedItem.length, 2)
+    t.is(removedItem[0], null, 'null is returned for non-existent item')
+
+    t.is(removedItem[1].id, itemsAdded[0].id, 'existing item is in removed items array')
+    t.is(removedItem[1]._deleted, true, 'existing item is removed')
+  })
+
+  .catch(t.fail)
+})
+
+test('scoped Store .remove(array) with Error other than not found', function (t) {
+  t.plan(4)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  var testItems = [
+    {
+      foo: 'bar1'
+    },
+    {
+      foo: 'bar2'
+    }
+  ]
+
+  var itemsAdded
+  return testStore.add(testItems)
+
+  .then(function (addedItems) {
+    itemsAdded = addedItems
+    return testStore.remove([{ foo: 'I have no ID, so I should reject' }, addedItems[0].id])
+  })
+
+  .then(function (removedItems) {
+    t.is(removedItems.length, 2)
+    t.true(removedItems[0] instanceof Error, 'non-404 errors should cause rejection')
+
+    t.is(removedItems[1].id, itemsAdded[0].id, 'existing item is in removed items array')
+    t.is(removedItems[1]._deleted, true, 'existing item is removed')
+  })
+
+  .catch(t.fail)
+})
+
 test('scoped Store .remove(array, change)', function (t) {
   t.plan(2)
 
@@ -476,6 +590,42 @@ test('scoped Store .remove(array, change)', function (t) {
     t.is(removedItems[1].foo, 'bar3', 'returns correctly removed item')
     t.is(removedItems[0]._deleted, true, 'returns item as removed')
   })
+})
+
+test('scoped Store .remove(array, change) with non-existent object', function (t) {
+  t.plan(6)
+
+  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var testStore = store('test')
+
+  var testItems = [
+    {
+      foo: 'bar1'
+    },
+    {
+      foo: 'bar2'
+    }
+  ]
+
+  var itemsAdded
+  return testStore.add(testItems)
+
+  .then(function (addedItems) {
+    itemsAdded = addedItems
+    return testStore.remove(['non-existent id', addedItems[0].id], { foo: 'bar3' })
+  })
+
+  .then(function (removedItems) {
+    t.is(removedItems.length, 2)
+    t.true(removedItems[0] instanceof Error, 'remove non-existent item returns error')
+    t.is(removedItems[0].name, 'Not found', 'Error returned is a not found error')
+
+    t.is(removedItems[1].id, itemsAdded[0].id, 'existing item is in removed items array')
+    t.is(removedItems[1].foo, 'bar3', 'existing item is updated')
+    t.is(removedItems[1]._deleted, true, 'existing item is removed')
+  })
+
+  .catch(t.fail)
 })
 
 test('scoped Store .removeAll()', function (t) {
