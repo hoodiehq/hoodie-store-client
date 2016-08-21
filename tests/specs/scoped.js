@@ -334,6 +334,43 @@ test('scoped Store .update()', function (t) {
   })
 })
 
+test('scoped Store .update() updates the correct scope', function (t) {
+  t.plan(7)
+
+  var store = new Store('test-db-scoped-update', merge({remote: 'test-db-scoped-update'}, options))
+
+  var testItems = [
+    { foo: 'bar1', id: 'id1', type: 'test2' },
+    { foo: 'bar2', id: 'id2', type: 'test1' },
+    { foo: 'bar3', id: 'id3', type: 'test2' }
+  ]
+
+  store.add(testItems)
+
+  .then(function (items) {
+    return store('test2').update([
+      { id: 'id1', foo: 'bar20' },
+      { id: 'id2', foo: 'bar10' },
+      { id: 'id3', foo: 'bar100' }
+    ])
+  })
+
+  .then(function (newItem) {
+    t.is(newItem.length, 3, 'returns results for both items')
+
+    t.is(newItem[0].foo, 'bar20', 'returns updated testStore2 item')
+    t.is(newItem[0].type, 'test2', 'returns correctly typed item')
+
+    t.true(newItem[1] instanceof Error, 'returns error for item out of scope')
+    t.is(newItem[1].name, 'Not found', 'returns not found error')
+
+    t.is(newItem[2].foo, 'bar100', 'returns updated testStore2 item')
+    t.is(newItem[2].type, 'test2', 'returns correctly typed item')
+  })
+
+  .catch(t.fail)
+})
+
 test('scoped Store .updateOrAdd()', function (t) {
   t.plan(2)
 
