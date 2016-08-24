@@ -310,6 +310,51 @@ test('scoped Store .updateOrAdd()', function (t) {
   })
 })
 
+test('scoped Store .updateOrAdd(item) with item found updates', function (t) {
+  t.plan(1)
+
+  var store = new Store('test-db-scoped-update-or-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var testStore = store('test')
+
+  var testItem = {
+    foo: 'bar1'
+  }
+
+  return testStore.add(testItem)
+
+  .then(function (addedItem) {
+    addedItem.foo = 'bar10'
+    return testStore.updateOrAdd(addedItem)
+  })
+
+  .then(function (updatedItem) {
+    t.is(updatedItem.foo, 'bar10', 'first item updated')
+  })
+})
+
+test('scoped Store .updateOrAdd(array) with no items found adds all items', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-db-scoped-update-or-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var testStore = store('test')
+
+  var testItems = [
+    {
+      foo: 'bar1'
+    },
+    {
+      bar: 'baz1'
+    }
+  ]
+
+  return testStore.updateOrAdd(testItems)
+
+  .then(function (items) {
+    t.is(items[0].foo, 'bar1', 'first item added')
+    t.is(items[1].bar, 'baz1', 'second item added')
+  })
+})
+
 test('scoped Store .updateOrAdd(item)', function (t) {
   t.plan(1)
 
