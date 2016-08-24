@@ -293,7 +293,7 @@ test('scoped Store .updateOrAdd()', function (t) {
 
   .then(function (addedItem) {
     testItems[0] = {
-      id: addedItem.id,
+      id: addedItem[0].id,
       foo: 'bar3'
     }
     testItems.push({
