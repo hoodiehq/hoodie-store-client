@@ -82,6 +82,63 @@ test('scoped Store .find()', function (t) {
   .catch(t.fail)
 })
 
+test('scoped Store .find(array) items not found', function (t) {
+  t.plan(5)
+
+  var store = new Store('test-db-scoped-find', merge({remote: 'test-db-scoped-find'}, options))
+  var testStore = store('test')
+
+  var testItems = [{ id: 'bar1' }, { id: 'bar2' }]
+
+  testStore.add(testItems)
+
+  .then(function (items) {
+    return testStore.find([{ id: 'non-existing1' }, { id: 'non-existing2' }])
+  })
+
+  .then(function (notFoundErrors) {
+    t.is(notFoundErrors.length, 2, 'not found error returned for each item')
+
+    t.true(notFoundErrors[0] instanceof Error, 'first rejects with an error object')
+    t.is(notFoundErrors[0].name, 'Not found', 'first error message is correct')
+
+    t.true(notFoundErrors[1] instanceof Error, 'second rejects with an error object')
+    t.is(notFoundErrors[1].name, 'Not found', 'second error message is correct')
+  })
+
+  .catch(t.fail)
+})
+
+test('scoped Store .find() not found error for out of scope items', function (t) {
+  t.plan(6)
+
+  var store = new Store('test-db-scoped-find', merge({remote: 'test-db-scoped-find'}, options))
+
+  var testItems = [{ foo: 'bar1', type: 'test1' }, { foo: 'bar2', type: 'test2' }]
+  var addedItems
+
+  store.add(testItems)
+
+  .then(function (items) {
+    addedItems = items
+    return store('test2').find(items)
+  })
+
+  .then(function (results) {
+    t.is(results.length, 2, 'returns array of the same size as input array')
+
+    t.true(results[0] instanceof Error, 'out of scope item in the correct array position')
+    var expectedMessage = 'Object with type "test2" and id "' + addedItems[0].id + '" is missing'
+    t.is(results[0].name, 'Not found', 'out of scope item not found')
+    t.is(results[0].status, 404, 'out of scope item status of 404')
+    t.is(results[0].message, expectedMessage, 'out of scope error as expected')
+
+    t.is(results[1].id, addedItems[1].id, 'in-scope item found and in correct array position')
+  })
+
+  .catch(t.fail)
+})
+
 test('scoped Store .findAll()', function (t) {
   t.plan(2)
 
