@@ -8,8 +8,9 @@ before_script:
   - npm prune
 script: npm run $COMMAND
 after_success:
-  - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then npm run test:coverage && npm run test:coverage:upload; fi
   - npm run semantic-release
+  - npm run test:coverage
+  - npm run test:coverage:upload
 env:
   matrix:
   - COMMAND=test
