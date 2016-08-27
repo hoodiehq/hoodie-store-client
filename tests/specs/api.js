@@ -175,6 +175,80 @@ test('store.reset creates empty instance of store with new options passed as arg
   .catch(t.error)
 })
 
+test('store.reset creates empty instance of store with new name and remoteBaseUrl', function (t) {
+  t.plan(3)
+
+  var CustomStore = Store.defaults({remoteBaseUrl: 'http://example.com/'})
+  var store = new CustomStore('test-db-clear', options)
+  var newOptions = {
+    name: 'new-test-db-clear'
+  }
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+
+  // merge in-memory adapter options
+  store.reset(merge({}, options, newOptions))
+
+  .then(function () {
+    return store.findAll()
+  })
+
+  .then(function (result) {
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+    t.is(store.db._db_name, 'new-test-db-clear', 'reset store has a new name')
+  })
+
+  .catch(t.fail)
+})
+
+test('store.reset creates empty instance of store with new name', function (t) {
+  t.plan(3)
+
+  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var newOptions = {
+    name: 'new-test-db-clear'
+  }
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+
+  // merge in-memory adapter options
+  store.reset(merge({}, options, newOptions))
+
+  .then(function () {
+    return store.findAll()
+  })
+
+  .then(function (result) {
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+    t.is(store.db._db_name, 'new-test-db-clear', 'reset store has a new name')
+  })
+
+  .catch(t.fail)
+})
+
+test('store.reset creates empty instance of store with new remote name', function (t) {
+  t.plan(4)
+
+  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var newOptions = {
+    remote: 'new-test-db-clear'
+  }
+  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+
+  // merge in-memory adapter options
+  store.reset(merge({}, options, newOptions))
+
+  .then(function () {
+    return store.findAll()
+  })
+
+  .then(function (result) {
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+    t.is(store.db._db_name, 'test-db-clear', 'reset store has a new name')
+    t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
+  })
+
+  .catch(t.fail)
+})
+
 test('ajax property of options should be removed', function (t) {
   t.plan(2)
 
