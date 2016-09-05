@@ -16,7 +16,7 @@ test('new Store(db, options)', function (t) {
 
   t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
-  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
+  t.is(store.db.name, testDB.name, '.db is PouchDB object')
 
   t.end()
 })
@@ -27,7 +27,7 @@ test('Store(db, options) w/o new', function (t) {
 
   t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
-  t.is(store.db._db_name, testDB._db_name, '.db is PouchDB object')
+  t.is(store.db.name, testDB.name, '.db is PouchDB object')
 
   t.end()
 })

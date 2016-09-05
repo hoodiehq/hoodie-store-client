@@ -141,7 +141,7 @@ test('store.reset creates empty instance of store with new options', function (t
 
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-    t.is(store.db._db_name, newOptions.name, 'reset store has a new name')
+    t.is(store.db.name, newOptions.name, 'reset store has a new name')
     t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
   })
 
@@ -169,7 +169,7 @@ test('store.reset creates empty instance of store with new options passed as arg
   reset('new-test-db-clear-arguments', CustomPouchDB, undefined, store, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, options)
 
   .then(function () {
-    t.is(store.db._db_name, 'new-test-db-clear-arguments', 'reset store has a new name')
+    t.is(store.db.name, 'new-test-db-clear-arguments', 'reset store has a new name')
   })
 
   .catch(t.error)
@@ -194,7 +194,7 @@ test('store.reset creates empty instance of store with new name and remoteBaseUr
 
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-    t.is(store.db._db_name, 'new-test-db-clear', 'reset store has a new name')
+    t.is(store.db.name, 'new-test-db-clear', 'reset store has a new name')
   })
 
   .catch(t.fail)
@@ -218,7 +218,7 @@ test('store.reset creates empty instance of store with new name', function (t) {
 
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-    t.is(store.db._db_name, 'new-test-db-clear', 'reset store has a new name')
+    t.is(store.db.name, 'new-test-db-clear', 'reset store has a new name')
   })
 
   .catch(t.fail)
@@ -242,7 +242,7 @@ test('store.reset creates empty instance of store with new remote name', functio
 
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-    t.is(store.db._db_name, 'test-db-clear', 'reset store has a new name')
+    t.is(store.db.name, 'test-db-clear', 'reset store has a new name')
     t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
   })
 
