@@ -356,3 +356,74 @@ test('"signin" with Error', function (t) {
   })
   .then(postHooks[0])
 })
+
+test('options.account passed into Account constructor', function (t) {
+  t.plan(2)
+
+  var state = {
+    url: 'http://example.com',
+    account: {
+      id: 123
+    }
+  }
+  getApi.internals.Account = simple.stub().returnWith(state.account)
+
+  getApi(state)
+
+  var expectedAccountArgs = {
+    id: 123,
+    url: 'http://example.com/hoodie/account/api'
+  }
+  t.is(getApi.internals.Account.callCount, 1, 'Account constructor called')
+  t.deepEqual(
+    getApi.internals.Account.lastCall.args[0],
+    expectedAccountArgs,
+    'Account options passed into constructor'
+  )
+})
+
+test('options.ConnectionStatus passed into ConnectionStatus constructor', function (t) {
+  t.plan(2)
+
+  var state = {
+    url: 'http://example.com',
+    connectionStatus: {
+      interval: 10
+    }
+  }
+  getApi.internals.ConnectionStatus = simple.stub()
+
+  getApi(state)
+
+  var expectedConnectionStatusArgs = {
+    interval: 10,
+    url: 'http://example.com/hoodie'
+  }
+  t.is(getApi.internals.ConnectionStatus.callCount, 1, 'ConnectionStatus constructor called')
+  t.deepEqual(
+    getApi.internals.ConnectionStatus.lastCall.args[0],
+    expectedConnectionStatusArgs,
+    'ConnectionStatus options passed into constructor'
+  )
+})
+
+test('options.Log passed into Log constructor', function (t) {
+  t.plan(2)
+
+  var state = {
+    url: 'http://example.com',
+    log: {
+      styles: false
+    }
+  }
+  getApi.internals.Log = simple.stub()
+
+  getApi(state)
+
+  var expectedLogArgs = {
+    styles: false,
+    prefix: 'hoodie'
+  }
+  t.is(getApi.internals.Log.callCount, 1, 'Log constructor called')
+  t.deepEqual(getApi.internals.Log.lastCall.args[0], expectedLogArgs, 'Log options passed into constructor')
+})
