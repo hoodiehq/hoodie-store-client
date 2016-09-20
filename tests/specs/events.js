@@ -14,7 +14,7 @@ test('"on" without listener', function (t) {
   var hoodie = new Hoodie()
   t.throws(function () {
     hoodie.on('account:signin')
-  }, /listener must be a function/, 'throws exception when listener is not a function')
+  }, /must be a function/, 'throws exception when listener is not a function')
 })
 
 test('"on" returns an object', function (t) {
@@ -44,7 +44,7 @@ test('"one" without listener', function (t) {
   var hoodie = new Hoodie()
   t.throws(function () {
     hoodie.one('account:signin')
-  }, /listener must be a function/, 'throws exception when listener is not a function')
+  }, /must be a function/, 'throws exception when listener is not a function')
 })
 
 test('has "off" method', function (t) {
@@ -67,7 +67,7 @@ test('"off" without listener', function (t) {
   var hoodie = new Hoodie()
   t.throws(function () {
     hoodie.off('account:signin')
-  }, /listener must be a function/, 'throws exception when listener is not a function')
+  }, /must be a function/, 'throws exception when listener is not a function')
 })
 
 test('has "trigger" method', function (t) {
