@@ -839,6 +839,20 @@ test('store.add should invoke store.on("add") and store.on("change") with event 
   .catch(t.fail)
 })
 
+test('.store() without a type throws a TypeError', function (t) {
+  t.plan(2)
+
+  var store = new Store('test-type-error', merge({remote: 'test-type-error'}, options))
+
+  try {
+    store().add({ foo: 'bar' })
+    t.fail()
+  } catch (error) {
+    t.true(error instanceof TypeError, 'throws TypeError')
+    t.is(error.message, 'type must be set for scoped stores', 'Correct error message is passed')
+  }
+})
+
 test('scoped store methods with type conflict', function (t) {
   t.plan(22)
   var store = new Store('test-type-conflicts', merge({remote: 'test-type-conflicts'}, options))
