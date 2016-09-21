@@ -839,6 +839,63 @@ test('store.add should invoke store.on("add") and store.on("change") with event 
   .catch(t.fail)
 })
 
+test('scoped store methods with type conflict', function (t) {
+  t.plan(22)
+  var store = new Store('test-type-conflicts', merge({remote: 'test-type-conflicts'}, options))
+  var fooStore = store('foo')
+  var expectedMessage = 'type field in document does not match scoped store type of \'foo\''
+
+  function verifyError (methodType, error) {
+    t.true(error instanceof TypeError, 'TypeError on scoped .' + methodType + '() type conflict')
+    t.is(error.message, expectedMessage, 'correct error message is displayed')
+  }
+
+  fooStore.add({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'add'))
+
+  fooStore.find({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'find'))
+
+  fooStore.findOrAdd({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'findOrAdd'))
+
+  fooStore.update({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'update'))
+
+  fooStore.updateOrAdd({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'updateOrAdd'))
+
+  fooStore.updateAll({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'updateAll'))
+
+  fooStore.remove({ type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'remove'))
+
+  // test second argument
+  fooStore.findOrAdd('abc123', { type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'findOrAdd'))
+
+  fooStore.update('abc123', { type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'update'))
+
+  fooStore.updateOrAdd('abc123', { type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'updateOrAdd'))
+
+  fooStore.remove('abc123', { type: 'bar' })
+    .then(t.fail)
+    .catch(verifyError.bind(null, 'remove'))
+})
+
 // prepared for https://github.com/hoodiehq/camp/issues/30
 test.skip('scoped store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
   t.plan(3)
