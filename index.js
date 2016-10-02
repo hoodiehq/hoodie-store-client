@@ -50,7 +50,8 @@ function Store (dbName, options) {
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var state = {
-    objectTypeById: {}
+    objectTypeById: {},
+    scopedApis: {}
   }
 
   // possible race condition...

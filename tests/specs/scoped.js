@@ -910,8 +910,7 @@ test('scoped store methods with type conflict', function (t) {
     .catch(verifyError.bind(null, 'remove'))
 })
 
-// prepared for https://github.com/hoodiehq/camp/issues/30
-test.skip('scoped store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
+test('scoped store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
   t.plan(3)
   var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
   var onEvents = []
@@ -937,11 +936,15 @@ test.skip('scoped store.add should invoke store.on("add") and store.on("change")
     t.is(onEvents[0], 'add', '"add" should trigger')
     t.is(onEvents[1], 'change add', '"change add" should trigger')
   })
+
+  .then(function () {
+    store.reset()
+  })
+
   .catch(t.fail)
 })
 
-// prepared for https://github.com/hoodiehq/camp/issues/30
-test.skip('scoped store.removeAll should invoke store.on("remove")', function (t) {
+test('scoped store.removeAll should invoke store.on("remove")', function (t) {
   t.plan(2)
   var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
   var onEvents = []
@@ -966,11 +969,15 @@ test.skip('scoped store.removeAll should invoke store.on("remove")', function (t
 
   .then(function () {
     return store('test').removeAll()
+
+    .then(function () {
+      t.is(onEvents.length, 4, 'There should be four Elements in the onEvents array')
+      t.is(onEvents[2], 'remove', '"remove" should trigger')
+    })
   })
 
   .then(function () {
-    t.is(onEvents.length, 4, 'There should be two Elements in the onEvents array')
-    t.is(onEvents[3], 'remove', '"remove" should trigger')
+    store.reset()
   })
 
   .catch(t.fail)
