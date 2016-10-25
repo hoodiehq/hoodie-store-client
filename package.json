@@ -6,10 +6,10 @@
     "url": "https://github.com/hoodiehq/hoodie-client/issues"
   },
   "dependencies": {
-    "@hoodie/account-client": "^2.8.0",
+    "@hoodie/account-client": "^4.4.0",
     "@hoodie/connection-status": "^3.0.0",
     "@hoodie/log": "^2.1.0",
-    "@hoodie/store-client": "^1.0.0",
+    "@hoodie/store-client": "^5.0.12",
     "humble-localstorage": "^1.4.2",
     "lie": "^3.0.1",
     "lodash": "^4.11.1",
