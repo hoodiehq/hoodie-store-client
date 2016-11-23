@@ -41,6 +41,9 @@
     "istanbul-coveralls": "^1.0.3",
     "memdown": "^1.1.0",
     "mkdirp": "^0.5.1",
+    "pouchdb-adapter-memory": "^6.0.7",
+    "pouchdb-core": "^6.0.7",
+    "pouchdb-replication": "^6.0.7",
     "rimraf": "^2.4.4",
     "semantic-release": "^6.1.0",
     "simple-mock": "^0.7.0",
@@ -53,7 +56,6 @@
     "hoodie-zuul-config": "^2.0.0",
     "humble-localstorage": "^1.4.2",
     "lodash": "^4.6.0",
-    "pouchdb": "^6.0.7",
     "pouchdb-hoodie-api": "^1.6.2",
     "pouchdb-hoodie-sync": "^1.4.1"
   },
