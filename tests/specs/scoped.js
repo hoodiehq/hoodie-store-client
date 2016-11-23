@@ -1,17 +1,15 @@
-var merge = require('lodash/merge')
 var test = require('tape')
 
+var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
-var options = process.browser ? {
-  adapter: 'memory'
-} : {
-  db: require('memdown')
-}
 
 test('scoped method', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped', merge({remote: 'test-db-scoped'}, options))
+  var store = new Store('test-db-scoped', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped'
+  })
 
   t.is(typeof store, 'function', 'has "scoped" method')
 })
@@ -19,7 +17,10 @@ test('scoped method', function (t) {
 test('store("test") with methods', function (t) {
   t.plan(12)
 
-  var store = new Store('test-db-scoped-store', merge({remote: 'test-db-scoped-store'}, options))
+  var store = new Store('test-db-scoped-store', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-store'
+  })
   var testStore = store('test')
 
   t.is(typeof testStore.add, 'function', 'has "add" method')
@@ -39,7 +40,10 @@ test('store("test") with methods', function (t) {
 test('scoped Store .on("change") with adding one', function (t) {
   t.plan(4)
 
-  var store = new Store('test-db-scoped-add', merge({remote: 'test-db-scoped-add'}, options))
+  var store = new Store('test-db-scoped-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-add'
+  })
   var testStore = store('test')
   var otherStore = store('other')
   var changeEvents = []
@@ -63,7 +67,10 @@ test('scoped Store .on("change") with adding one', function (t) {
 test('scoped Store .find()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-find', merge({remote: 'test-db-scoped-find'}, options))
+  var store = new Store('test-db-scoped-find', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find'
+  })
   var testStore = store('test')
 
   var testItems = [{ foo: 'bar1' }, { foo: 'bar2' }]
@@ -85,7 +92,10 @@ test('scoped Store .find()', function (t) {
 test('scoped Store .find(array) items not found', function (t) {
   t.plan(5)
 
-  var store = new Store('test-db-scoped-find', merge({remote: 'test-db-scoped-find'}, options))
+  var store = new Store('test-db-scoped-find', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find'
+  })
   var testStore = store('test')
 
   var testItems = [{ id: 'bar1' }, { id: 'bar2' }]
@@ -112,7 +122,10 @@ test('scoped Store .find(array) items not found', function (t) {
 test('scoped Store .find() not found error for out of scope items', function (t) {
   t.plan(6)
 
-  var store = new Store('test-db-scoped-find', merge({remote: 'test-db-scoped-find'}, options))
+  var store = new Store('test-db-scoped-find', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find'
+  })
 
   var testItems = [{ foo: 'bar1', type: 'test1' }, { foo: 'bar2', type: 'test2' }]
   var addedItems
@@ -142,7 +155,10 @@ test('scoped Store .find() not found error for out of scope items', function (t)
 test('scoped Store .findAll()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-find-all', merge({remote: 'test-db-scoped-find-all'}, options))
+  var store = new Store('test-db-scoped-find-all', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-all'
+  })
   var testStore = store('test')
 
   var testItems = [{ foo: 'bar1' }, { foo: 'bar2' }]
@@ -162,7 +178,10 @@ test('scoped Store .findAll()', function (t) {
 test('scoped Store .findAll(filterFunction)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-find-all-filtered', merge({remote: 'test-db-scoped-find-all-filtered'}, options))
+  var store = new Store('test-db-scoped-find-all-filtered', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-all-filtered'
+  })
   var testStore = store('test')
 
   var testItems = [{ foo: 'bar1' }, { foo: 'bar2' }]
@@ -184,7 +203,10 @@ test('scoped Store .findAll(filterFunction)', function (t) {
 test('scoped Store .findOrAdd(object)', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
   var otherStore = store('other')
   var changeEvents = []
@@ -212,7 +234,10 @@ test('scoped Store .findOrAdd(object)', function (t) {
 test('scoped Store .findOrAdd(id, object)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
 
   var testId = 'new'
@@ -233,7 +258,10 @@ test('scoped Store .findOrAdd(id, object)', function (t) {
 test('scoped Store .findOrAdd([object, object])', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -260,7 +288,10 @@ test('scoped Store .findOrAdd([object, object])', function (t) {
 test('scoped Store .findOrAdd([object]) with missing item calls add', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-find-add-missing', merge({remote: 'test-db-scoped-find-add-missing'}, options))
+  var store = new Store('test-db-scoped-find-add-missing', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add-missing'
+  })
   var testStore = store('test')
 
   var testItem = {
@@ -277,7 +308,10 @@ test('scoped Store .findOrAdd([object]) with missing item calls add', function (
 test('scoped Store .findOrAdd() with missing id throws an error', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
 
   var testItem = {
@@ -293,7 +327,10 @@ test('scoped Store .findOrAdd() with missing id throws an error', function (t) {
 test('scoped Store .findOrAdd(string) with missing new object throws an error', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
 
   testStore.findOrAdd('newstringid')
@@ -305,7 +342,10 @@ test('scoped Store .findOrAdd(string) with missing new object throws an error', 
 test('scoped Store .findOrAdd(string, object) with missing item sets id to new object', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-find-add', merge({remote: 'test-db-scoped-find-add'}, options))
+  var store = new Store('test-db-scoped-find-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-find-add'
+  })
   var testStore = store('test')
 
   testStore.findOrAdd('theidoftheobject', {})
@@ -317,7 +357,10 @@ test('scoped Store .findOrAdd(string, object) with missing item sets id to new o
 test('scoped Store .update()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-update', merge({remote: 'test-db-scoped-update'}, options))
+  var store = new Store('test-db-scoped-update', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update'
+  })
   var testStore = store('test')
 
   var testItem = { foo: 'bar1' }
@@ -337,7 +380,10 @@ test('scoped Store .update()', function (t) {
 test('scoped Store .update() updates the correct scope', function (t) {
   t.plan(7)
 
-  var store = new Store('test-db-scoped-update', merge({remote: 'test-db-scoped-update'}, options))
+  var store = new Store('test-db-scoped-update', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update'
+  })
 
   var testItems = [
     { foo: 'bar1', id: 'id1', type: 'test2' },
@@ -374,7 +420,10 @@ test('scoped Store .update() updates the correct scope', function (t) {
 test('scoped Store .updateOrAdd()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-update-or-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-or-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -407,7 +456,10 @@ test('scoped Store .updateOrAdd()', function (t) {
 test('scoped Store .updateOrAdd(item) with item found updates', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-update-or-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-or-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   var testItem = {
@@ -429,7 +481,10 @@ test('scoped Store .updateOrAdd(item) with item found updates', function (t) {
 test('scoped Store .updateOrAdd(array) with no items found adds all items', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-update-or-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-or-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -452,7 +507,10 @@ test('scoped Store .updateOrAdd(array) with no items found adds all items', func
 test('scoped Store .updateOrAdd(item)', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-update-add-item', merge({remote: 'test-db-scoped-update-add-item'}, options))
+  var store = new Store('test-db-scoped-update-add-item', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add-item'
+  })
   var testStore = store('test')
 
   var testItem = {
@@ -470,7 +528,10 @@ test('scoped Store .updateOrAdd(item)', function (t) {
 test('scoped Store .updateOrAdd(object) with missing id throws an error', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-update-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   var testItem = {
@@ -486,7 +547,10 @@ test('scoped Store .updateOrAdd(object) with missing id throws an error', functi
 test('scoped Store .updateOrAdd(string) with missing new object throws an error', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-update-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   testStore.updateOrAdd('newstringid')
@@ -498,7 +562,10 @@ test('scoped Store .updateOrAdd(string) with missing new object throws an error'
 test('scoped Store .updateOrAdd(string, object) with missing item sets id to new object', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-scoped-update-add', merge({remote: 'test-db-scoped-update-add'}, options))
+  var store = new Store('test-db-scoped-update-add', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-add'
+  })
   var testStore = store('test')
 
   testStore.updateOrAdd('theidoftheobject', {})
@@ -510,7 +577,10 @@ test('scoped Store .updateOrAdd(string, object) with missing item sets id to new
 test('scoped Store .updateAll()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-update-all', merge({remote: 'test-db-scoped-update-all'}, options))
+  var store = new Store('test-db-scoped-update-all', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-update-all'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -539,7 +609,10 @@ test('scoped Store .updateAll()', function (t) {
 test('scoped Store .remove()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-remove', merge({remote: 'test-db-scoped-remove'}, options))
+  var store = new Store('test-db-scoped-remove', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-remove'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -566,7 +639,10 @@ test('scoped Store .remove()', function (t) {
 test('scoped Store .remove(change)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-remove-change', merge({remote: 'test-db-scoped-remove-change'}, options))
+  var store = new Store('test-db-scoped-remove-change', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-remove-change'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -593,7 +669,10 @@ test('scoped Store .remove(change)', function (t) {
 test('scoped Store .remove(array, change)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-remove-array-change', merge({remote: 'test-db-scoped-remove-array-change'}, options))
+  var store = new Store('test-db-scoped-remove-array-change', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-remove-array-change'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -620,7 +699,10 @@ test('scoped Store .remove(array, change)', function (t) {
 test('scoped Store .removeAll()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-remove-all', merge({remote: 'test-db-scoped-remove-all'}, options))
+  var store = new Store('test-db-scoped-remove-all', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-remove-all'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -649,7 +731,10 @@ test('scoped Store .removeAll()', function (t) {
 test('scoped Store .removeAll(filterFunction)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-remove-all-filter', merge({remote: 'test-db-scoped-remove-all-filter'}, options))
+  var store = new Store('test-db-scoped-remove-all-filter', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-remove-all-filter'
+  })
   var testStore = store('test')
 
   var testItems = [
@@ -680,7 +765,10 @@ test('scoped Store .removeAll(filterFunction)', function (t) {
 test('.removeAll() with a non-existent scope returns empty list', function (t) {
   t.plan(1)
 
-  var store = new Store('test-remove-all-bad-scope', merge({remote: 'test-remove-all-bad-scope'}, options))
+  var store = new Store('test-remove-all-bad-scope', {
+    PouchDB: PouchDB,
+    remote: 'test-remove-all-bad-scope'
+  })
   var testStore = store('test')
 
   return testStore.removeAll()
@@ -695,7 +783,10 @@ test('.removeAll() with a non-existent scope returns empty list', function (t) {
 test('scoped Store .one()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-one', merge({remote: 'test-db-scoped-one'}, options))
+  var store = new Store('test-db-scoped-one', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-one'
+  })
   var testStore = store('test')
   var changeEvents = []
 
@@ -719,7 +810,10 @@ test('scoped Store .one()', function (t) {
 test('scoped Store .off()', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-scoped-off', merge({remote: 'test-db-scoped-off'}, options))
+  var store = new Store('test-db-scoped-off', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-off'
+  })
   var testStore = store('test')
   var changeEvents = []
 
@@ -749,7 +843,10 @@ test('scoped Store .off()', function (t) {
 test('when type change', function (t) {
   t.plan(10)
 
-  var store = new Store('test-db-type-change', merge({remote: 'test-db-type-change'}, options))
+  var store = new Store('test-db-type-change', {
+    PouchDB: PouchDB,
+    remote: 'test-db-type-change'
+  })
   var scopedStoreOldType = store('oldtype')
   var scopedStoreNewType = store('newtype')
   store.add({ id: 'test', type: 'oldtype' })
@@ -812,7 +909,10 @@ test('when type change', function (t) {
 
 test('store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
   t.plan(3)
-  var store = new Store('test-db-scoped-off', merge({remote: 'test-db-scoped-off'}, options))
+  var store = new Store('test-db-scoped-off', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-off'
+  })
   var onEvents = []
 
   store.on('add', function () {
@@ -842,7 +942,10 @@ test('store.add should invoke store.on("add") and store.on("change") with event 
 test('.store() without a type throws a TypeError', function (t) {
   t.plan(2)
 
-  var store = new Store('test-type-error', merge({remote: 'test-type-error'}, options))
+  var store = new Store('test-type-error', {
+    PouchDB: PouchDB,
+    remote: 'test-type-error'
+  })
 
   try {
     store().add({ foo: 'bar' })
@@ -855,7 +958,10 @@ test('.store() without a type throws a TypeError', function (t) {
 
 test('scoped store methods with type conflict', function (t) {
   t.plan(22)
-  var store = new Store('test-type-conflicts', merge({remote: 'test-type-conflicts'}, options))
+  var store = new Store('test-type-conflicts', {
+    PouchDB: PouchDB,
+    remote: 'test-type-conflicts'
+  })
   var fooStore = store('foo')
   var expectedMessage = 'type field in document does not match scoped store type of \'foo\''
 
@@ -912,7 +1018,10 @@ test('scoped store methods with type conflict', function (t) {
 
 test('scoped store.add should invoke store.on("add") and store.on("change") with event "add"', function (t) {
   t.plan(3)
-  var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
+  var store = new Store('test-db-scoped-on', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-on'
+  })
   var onEvents = []
 
   store('test').on('add', function (person) {
@@ -946,7 +1055,10 @@ test('scoped store.add should invoke store.on("add") and store.on("change") with
 
 test('scoped store.removeAll should invoke store.on("remove")', function (t) {
   t.plan(2)
-  var store = new Store('test-db-scoped-on', merge({remote: 'test-db-scoped-on'}, options))
+  var store = new Store('test-db-scoped-on', {
+    PouchDB: PouchDB,
+    remote: 'test-db-scoped-on'
+  })
   var onEvents = []
 
   store('test').on('add', function () {

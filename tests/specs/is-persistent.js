@@ -1,17 +1,16 @@
-var merge = require('lodash/merge')
 var test = require('tape')
 var simple = require('simple-mock')
+
 var isPersistent = require('../../lib/is-persistent')
 var internals = isPersistent.internals
+var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
-var options = process.browser ? {
-  adapter: 'memory'
-} : {
-  db: require('memdown')
-}
 
 test('.isPersistent()', function (t) {
-  var store = new Store('test-db-is-persistent', merge({remote: 'test-db-is-persistent-remote'}, options))
+  var store = new Store('test-db-is-persistent', {
+    PouchDB: PouchDB,
+    remote: 'test-db-is-persistent-remote'
+  })
   t.is(typeof store.isPersistent, 'function', 'exists')
 
   simple.mock(internals, 'humbleLocalStorage', {isPersistent: true})
