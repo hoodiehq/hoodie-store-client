@@ -7,17 +7,22 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-store-client.svg)](https://david-dm.org/hoodiehq/hoodie-store-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-store-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-store-client#info=devDependencies)
 
-`hoodie-store-client` combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync). It adds
-a few other methods like `.isPersistent()` or `.hasLocalChanges()` and a scoped
-store API.
+`hoodie-store-client` combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync). It adds a few other methods like `.isPersistent()` or `.hasLocalChanges()` and a scoped store API.
 
 ## Example
 
 ```js
 var Store = require('@hoodie/store-client')
-var store = new Store('mydbname', { remote: 'http://localhost:5984/mydbname' })
+var store = new Store('mydbname', {
+  PouchDB: require('pouchdb'),
+  remote: 'http://localhost:5984/mydbname'
+})
+
 // or
-var PresetStore = Store.defaults({remoteBaseUrl: 'http://localhost:5984' })
+var PresetStore = Store.defaults({
+  PouchDB: require('pouchdb'),
+  remoteBaseUrl: 'http://localhost:5984'
+})
 var store = new PresetStore('mydb')
 ```
 
@@ -68,8 +73,8 @@ Store.defaults(options)
 
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
-| **`remoteBaseUrl`** | String | Base url to CouchDB. Will be used as remote prefix for store instances | No
-| **`options.ajax`** | Object or Function | Ajax request options (see [PouchDB](https://pouchdb.com/api.html#create_database)). If function passed, it gets executed and returned values is used | No
+| **`options.remoteBaseUrl`** | String | Base url to CouchDB. Will be used as remote prefix for store instances | No
+| **`options.PouchDB`** | Constructor | [PouchDB custom builds](https://pouchdb.com/custom.html) | Yes
 
 Returns a custom Store Constructor with passed default options.
 
@@ -93,7 +98,7 @@ new Store(dbName, options)
 | :------- | :--- | :---------- | :-------
 | **`dbName`** | String | name of the database | Yes
 | **`options.remote`** | String | name or URL of remote database | Yes (unless `remoteBaseUrl` is preset, see [Store.defaults](storedefaults))
-| **`options.ajax`** | Object or Function | Ajax request options (see [PouchDB](https://pouchdb.com/api.html#create_database)). If function passed, it gets executed and returned values is used | No
+| **`options.PouchDB`** | Constructor | [PouchDB custom builds](https://pouchdb.com/custom.html) | Yes (unless preset using [Store.defaults](storedefaults)))
 
 Returns `store` API.
 
