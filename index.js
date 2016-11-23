@@ -3,7 +3,6 @@ module.exports = Store
 var EventEmitter = require('events').EventEmitter
 
 var merge = require('lodash/merge')
-var PouchDB = global.PouchDB || require('pouchdb')
 
 var hasLocalChanges = require('./lib/has-local-changes')
 var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
@@ -11,9 +10,6 @@ var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 var syncWrapper = require('./lib/sync-wrapper')
 var scoped = require('./lib/scoped/')
 var isPersistent = require('./lib/is-persistent')
-
-PouchDB.plugin(require('pouchdb-hoodie-api'))
-PouchDB.plugin(require('pouchdb-hoodie-sync'))
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -33,20 +29,15 @@ function Store (dbName, options) {
     }
   }
 
-  // options.ajax can be a function, which is causing problems in PouchDB
-  // when passed to PouchDB.defaults, so we workaround it.
-  var ajaxOptions = options.ajax
-  if (options.ajax) {
-    delete options.ajax
-  }
-
   // we use a custom PouchDB constructor as we derive another PouchDB to
   // interact with the remote store, and want it to inherit the options
-  var CustomPouchDB = PouchDB.defaults(options)
+  var CustomPouchDB = options.PouchDB
+    .plugin(require('pouchdb-hoodie-api'))
+    .plugin(require('pouchdb-hoodie-sync'))
   var db = new CustomPouchDB(dbName)
   var emitter = new EventEmitter()
   var remote = options.remote
-  var syncApi = db.hoodieSync({remote: remote, ajax: ajaxOptions})
+  var syncApi = db.hoodieSync({remote: remote})
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var state = {
@@ -90,7 +81,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote, ajaxOptions, PouchDB)
+  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote)
 
   subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)
