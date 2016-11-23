@@ -1,18 +1,16 @@
-var merge = require('lodash/merge')
 var localStorageWrapper = require('humble-localstorage')
 var test = require('tape')
 
+var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
-var options = process.browser ? {
-  adapter: 'memory'
-} : {
-  db: require('memdown')
-}
 
 test('.hasLocalChanges()', function (t) {
   t.plan(4)
 
-  var store = new Store('test-db-local', merge({remote: 'test-db-local-remote'}, options))
+  var store = new Store('test-db-local', {
+    PouchDB: PouchDB,
+    remote: 'test-db-local-remote'
+  })
   t.is(typeof store.hasLocalChanges, 'function', 'exsits')
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
@@ -38,7 +36,10 @@ test('.hasLocalChanges()', function (t) {
 test('.hasLocalChanges(filter)', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-local-filter', merge({remote: 'test-db-local-filter-remote'}, options))
+  var store = new Store('test-db-local-filter', {
+    PouchDB: PouchDB,
+    remote: 'test-db-local-filter-remote'
+  })
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
   var localObj2 = {id: 'test2', foo: 'bar2'}
@@ -62,7 +63,10 @@ test('.hasLocalChanges(filter)', function (t) {
 test('.hasLocalChanges() after changing same object twice', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-reference', merge({remote: 'test-db-reference-remote'}, options))
+  var store = new Store('test-db-reference', {
+    PouchDB: PouchDB,
+    remote: 'test-db-reference-remote'
+  })
 
   var localObj1 = {id: 'test1', foo: 'bar1'}
 
@@ -82,7 +86,10 @@ test('.hasLocalChanges() after changing same object twice', function (t) {
 test('.hasLocalChanges(unknownId)', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-unmark', merge({remote: 'test-db-unmark-remote'}, options))
+  var store = new Store('test-db-unmark', {
+    PouchDB: PouchDB,
+    remote: 'test-db-unmark-remote'
+  })
 
   var localObj = {_id: 'pouchdb-put-doc', foo: 'bar1'}
 

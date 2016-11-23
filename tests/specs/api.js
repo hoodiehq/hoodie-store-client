@@ -1,19 +1,16 @@
-var merge = require('lodash/merge')
 var simple = require('simple-mock')
 var test = require('tape')
-var PouchDB = global.PouchDB || require('pouchdb')
 
+var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
-var options = process.browser ? {
-  adapter: 'memory'
-} : {
-  db: require('memdown')
-}
 
 test('API methods', function (t) {
   t.plan(12)
 
-  var store = new Store('test-db-api', merge({remote: 'test-db-api'}, options))
+  var store = new Store('test-db-api', {
+    PouchDB: PouchDB,
+    remote: 'test-db-api'
+  })
 
   t.is(typeof store.add, 'function', 'has "add" method')
   t.is(typeof store.find, 'function', 'has "find" method')
@@ -32,7 +29,10 @@ test('API methods', function (t) {
 test('store.on("change") with adding one', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-change', merge({remote: 'test-db-change'}, options))
+  var store = new Store('test-db-change', {
+    PouchDB: PouchDB,
+    remote: 'test-db-change'
+  })
   var changeEvents = []
 
   store.on('change', addEventToArray.bind(null, changeEvents))
@@ -53,7 +53,10 @@ test('store.on("change") with adding one', function (t) {
 test('store.off("add") with one add handler', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-off', merge({remote: 'test-db-off'}, options))
+  var store = new Store('test-db-off', {
+    PouchDB: PouchDB,
+    remote: 'test-db-off'
+  })
   var addEvents = []
   var changeEvents = []
 
@@ -79,7 +82,10 @@ test('store.off("add") with one add handler', function (t) {
 test('store.one("add") with adding one', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-one', merge({remote: 'test-db-one'}, options))
+  var store = new Store('test-db-one', {
+    PouchDB: PouchDB,
+    remote: 'test-db-one'
+  })
   var addEvents = []
 
   store.one('add', addEventToArray.bind(null, addEvents))
@@ -99,7 +105,10 @@ test('store.one("add") with adding one', function (t) {
 test('store.reset creates empty instance of store', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var store = new Store('test-db-clear', {
+    PouchDB: PouchDB,
+    remote: 'test-db-clear'
+  })
   var addEvents = []
   store.on('add', addEvents.push.bind(addEvents))
   store.on('clear', t.pass.bind(null, '"clear" event emitted'))
@@ -123,9 +132,12 @@ test('store.reset creates empty instance of store', function (t) {
 })
 
 test('store.reset creates empty instance of store with new options', function (t) {
-  t.plan(4)
+  t.plan(3)
 
-  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var store = new Store('test-db-clear', {
+    PouchDB: PouchDB,
+    remote: 'test-db-clear'
+  })
   var newOptions = {
     name: 'new-test-db-clear',
     remote: 'new-test-db-clear'
@@ -133,7 +145,7 @@ test('store.reset creates empty instance of store with new options', function (t
   store.on('clear', t.pass.bind(null, '"clear" event emitted'))
 
   // merge in-memory adapter options
-  store.reset(merge({}, options, newOptions))
+  store.reset(newOptions)
 
   .then(function () {
     return store.findAll()
@@ -142,7 +154,6 @@ test('store.reset creates empty instance of store with new options', function (t
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
     t.is(store.db.name, newOptions.name, 'reset store has a new name')
-    t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
   })
 
   .catch(t.fail)
@@ -151,12 +162,6 @@ test('store.reset creates empty instance of store with new options', function (t
 test('store.reset creates empty instance of store with new options passed as arguments', function (t) {
   t.plan(1)
 
-  var options = process.browser ? {
-    adapter: 'memory'
-  } : {
-    db: require('memdown')
-  }
-  var CustomPouchDB = PouchDB.defaults(options)
   var reset = require('../../lib/reset')
   var clear = function () {
     return Promise.resolve()
@@ -166,7 +171,7 @@ test('store.reset creates empty instance of store with new options passed as arg
     disconnect: simple.stub().returnWith(Promise.resolve())
   }
 
-  reset('new-test-db-clear-arguments', CustomPouchDB, undefined, store, clear, undefined, 'new-test-db-clear-arguments-remote', {}, PouchDB, options)
+  reset('new-test-db-clear-arguments', PouchDB, undefined, store, clear, undefined, 'new-test-db-clear-arguments-remote', {})
 
   .then(function () {
     t.is(store.db.name, 'new-test-db-clear-arguments', 'reset store has a new name')
@@ -178,15 +183,18 @@ test('store.reset creates empty instance of store with new options passed as arg
 test('store.reset creates empty instance of store with new name and remoteBaseUrl', function (t) {
   t.plan(3)
 
-  var CustomStore = Store.defaults({remoteBaseUrl: 'http://example.com/'})
-  var store = new CustomStore('test-db-clear', options)
+  var CustomStore = Store.defaults({
+    PouchDB: PouchDB,
+    remoteBaseUrl: 'http://example.com/'
+  })
+  var store = new CustomStore('test-db-clear')
   var newOptions = {
     name: 'new-test-db-clear'
   }
   store.on('clear', t.pass.bind(null, '"clear" event emitted'))
 
   // merge in-memory adapter options
-  store.reset(merge({}, options, newOptions))
+  store.reset(newOptions)
 
   .then(function () {
     return store.findAll()
@@ -203,14 +211,17 @@ test('store.reset creates empty instance of store with new name and remoteBaseUr
 test('store.reset creates empty instance of store with new name', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
+  var store = new Store('test-db-clear', {
+    PouchDB: PouchDB,
+    remote: 'test-db-clear'
+  })
   var newOptions = {
     name: 'new-test-db-clear'
   }
   store.on('clear', t.pass.bind(null, '"clear" event emitted'))
 
   // merge in-memory adapter options
-  store.reset(merge({}, options, newOptions))
+  store.reset(newOptions)
 
   .then(function () {
     return store.findAll()
@@ -222,44 +233,6 @@ test('store.reset creates empty instance of store with new name', function (t) {
   })
 
   .catch(t.fail)
-})
-
-test('store.reset creates empty instance of store with new remote name', function (t) {
-  t.plan(4)
-
-  var store = new Store('test-db-clear', merge({remote: 'test-db-clear'}, options))
-  var newOptions = {
-    remote: 'new-test-db-clear'
-  }
-  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
-
-  // merge in-memory adapter options
-  store.reset(merge({}, options, newOptions))
-
-  .then(function () {
-    return store.findAll()
-  })
-
-  .then(function (result) {
-    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-    t.is(store.db.name, 'test-db-clear', 'reset store has a new name')
-    t.is(store.db.__opts.remote, newOptions.remote, 'reset store has a new remote')
-  })
-
-  .catch(t.fail)
-})
-
-test('ajax property of options should be removed', function (t) {
-  t.plan(2)
-
-  var opts = merge({remote: 'test-db-clear'}, options)
-  opts.ajax = function () {}
-
-  t.isNot(opts.ajax, undefined, 'ajax option is present')
-
-  Store('test-db-clear', opts)
-
-  t.is(opts.ajax, undefined, 'ajax option has been removed')
 })
 
 function addEventToArray (array, object) {

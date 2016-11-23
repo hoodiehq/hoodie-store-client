@@ -1,18 +1,15 @@
-var merge = require('lodash/merge')
 var test = require('tape')
 
 var Store = require('../../')
-var PouchDB = global.PouchDB || require('pouchdb')
-var options = process.browser ? {
-  adapter: 'memory'
-} : {
-  db: require('memdown')
-}
+var PouchDB = require('../utils/pouchdb.js')
 
 test('has "sync" methods', function (t) {
   t.plan(6)
 
-  var store = new Store('test-db-sync', merge({remote: 'test-db-sync-remote'}, options))
+  var store = new Store('test-db-sync', {
+    PouchDB: PouchDB,
+    remote: 'test-db-sync-remote'
+  })
 
   t.is(typeof store.pull, 'function', 'had "pull" method')
   t.is(typeof store.push, 'function', 'had "push" method')
@@ -25,7 +22,10 @@ test('has "sync" methods', function (t) {
 test('store.push() returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push-return', merge({remote: 'test-db-push-return-remote'}, options))
+  var store = new Store('test-db-push-return', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-return-remote'
+  })
   var obj1 = {id: 'test1', foo: 'bar1'}
   var obj2 = {id: 'test2', foo: 'bar2'}
 
@@ -47,7 +47,10 @@ test('store.push() returns hoodie objects', function (t) {
 test('store.push(docsOrIds) returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push-objects-return', merge({remote: 'test-db-push-objects-return-remote'}, options))
+  var store = new Store('test-db-push-objects-return', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-objects-return-remote'
+  })
   var obj1 = {id: 'test1', foo: 'bar1'}
   var obj2 = {id: 'test2', foo: 'bar2'}
 
@@ -69,7 +72,10 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
 test('store.sync() returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-sync-return', merge({remote: 'test-db-sync-return-remote'}, options))
+  var store = new Store('test-db-sync-return', {
+    PouchDB: PouchDB,
+    remote: 'test-db-sync-return-remote'
+  })
   var obj1 = {id: 'test1', foo: 'bar1'}
   var obj2 = {id: 'test2', foo: 'bar2'}
 
@@ -91,7 +97,10 @@ test('store.sync() returns hoodie objects', function (t) {
 test('store.on("push") for store.push()', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push', merge({remote: 'test-db-push-remote'}, options))
+  var store = new Store('test-db-push', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-remote'
+  })
   var pushEvents = []
 
   store.on('push', pushEvents.push.bind(pushEvents))
@@ -114,7 +123,10 @@ test('store.on("push") for store.push()', function (t) {
 test('api.off("push")', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-push-off', merge({remote: 'test-db-push-off-remote'}, options))
+  var store = new Store('test-db-push-off', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-off-remote'
+  })
   var pushEvents = []
 
   store.on('push', pushHandler)
@@ -148,7 +160,10 @@ test('api.off("push")', function (t) {
 test('api.one("push")', function (t) {
   t.plan(4)
 
-  var store = new Store('test-db-push-one', merge({remote: 'test-db-push-one-remote'}, options))
+  var store = new Store('test-db-push-one', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-one-remote'
+  })
   var pushEvents = []
 
   store.one('push', pushEvents.push.bind(pushEvents))
@@ -182,7 +197,10 @@ test('api.one("push")', function (t) {
 test('api.on("connect") for api.connect()', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-on-connect', merge({remote: 'test-db-on-connect-remote'}, options))
+  var store = new Store('test-db-on-connect', {
+    PouchDB: PouchDB,
+    remote: 'test-db-on-connect-remote'
+  })
   var numConnectEvents = 0
 
   store.on('connect', function () {
@@ -201,8 +219,11 @@ test('api.on("connect") for api.connect()', function (t) {
 test('triggers "change" events on pull', function (t) {
   t.plan(13)
 
-  var store = new Store('test-db-remote-changes-local', merge({remote: 'test-db-remote-changes-remote'}, options))
-  var remoteDb = new PouchDB('test-db-remote-changes-remote', options)
+  var store = new Store('test-db-remote-changes-local', {
+    PouchDB: PouchDB,
+    remote: 'test-db-remote-changes-remote'
+  })
+  var remoteDb = new PouchDB('test-db-remote-changes-remote')
 
   var changeEvents = []
   var addEvents = []
@@ -291,7 +312,10 @@ test('triggers "change" events on pull', function (t) {
 test('triggers no "change" from remote if only local changes pushed', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-remote-changes-local2', merge({remote: 'test-db-remote-changes-remote2'}, options))
+  var store = new Store('test-db-remote-changes-local2', {
+    PouchDB: PouchDB,
+    remote: 'test-db-remote-changes-remote2'
+  })
   var remoteChangeEvents = []
 
   store.on('change', function (event, object, options) {
@@ -326,7 +350,10 @@ test('triggers no "change" from remote if only local changes pushed', function (
 test('after "clear", store.on("push") for store.push()', function (t) {
   t.plan(4)
 
-  var store = new Store('test-db-push', merge({remote: 'test-db-push-remote'}, options))
+  var store = new Store('test-db-push', {
+    PouchDB: PouchDB,
+    remote: 'test-db-push-remote'
+  })
   var pushEvents = []
 
   store.on('push', pushEvents.push.bind(pushEvents))
