@@ -2,17 +2,22 @@ var simple = require('simple-mock')
 var test = require('tape')
 
 var Hoodie = require('../../index')
-
+var PouchDBMock = require('./utils/pouchdb')
 var request = require('../../lib/request')
 
-var state = Object.freeze({
+var state = {
+  PouchDB: PouchDBMock,
   url: 'http://example.com'
-})
+}
 
 test('has "request" method', function (t) {
   t.plan(1)
 
-  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
+  var hoodie = new Hoodie({
+    PouchDB: PouchDBMock,
+    url: 'http://localhost:1234/hoodie'
+  })
+
   t.is(typeof hoodie.request, 'function', 'has method')
 })
 

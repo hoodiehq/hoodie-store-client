@@ -9,7 +9,8 @@ test('getState preserves "account" property', function (t) {
     url: 'http://localhost:1234/hoodie',
     account: {
       id: 'id1'
-    }
+    },
+    PouchDB: function () {}
   }
 
   var state = getState(options)
