@@ -57,7 +57,7 @@
     "humble-localstorage": "^1.4.2",
     "lodash": "^4.6.0",
     "pouchdb-hoodie-api": "^1.6.2",
-    "pouchdb-hoodie-sync": "^1.4.1"
+    "pouchdb-hoodie-sync": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
