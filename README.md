@@ -18,7 +18,10 @@
 
 ```js
 var Hoodie = require('@hoodie/client')
-var hoodie = new Hoodie(options)
+var hoodie = new Hoodie({
+  url: 'https://myhoodieapp.com',
+  PouchDB: require('pouchdb')
+})
 
 hoodie.account.signUp({
   username: 'pat@Example.com',
@@ -63,6 +66,14 @@ new Hoodie(options)
     </tr>
   </thead>
   <tr>
+    <th align="left">options.PouchDB</th>
+    <td>Constructor</td>
+    <td>
+      PouchDB constructor, see also <a href="https://pouchdb.com/custom.html">PouchDB custom builds</a>
+    </td>
+    <td>Yes</td>
+  </tr>
+  <tr>
     <th align="left">options.url</th>
     <td>String</td>
     <td>
@@ -85,8 +96,9 @@ new Hoodie(options)
     <td>String</td>
     <td>
       <a href="https://github.com/hoodiehq/hoodie-store#constructor">store options</a>.
+      <code>options.PouchDB</code> is always set to <a href="#constructor">Hoodie Client’s constructor</a>’s <code>options.PouchDB</code>.
       <code>options.dbName</code> is always set to <code>hoodie.account.id</code>.
-      <code>options.remote</code> is always set to <code>hoodie.url</code> + '/store/api'
+      <code>options.remote</code> is always set to <code>hoodie.url</code> + '/store/api'.
     </td>
     <td>No</td>
   </tr>
