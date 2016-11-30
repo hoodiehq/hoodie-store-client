@@ -4,14 +4,14 @@ var Hoodie = require('../../index')
 test('has "plugin" method', function (t) {
   t.plan(1)
 
-  var hoodie = new Hoodie()
+  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
   t.is(typeof hoodie.plugin, 'function', 'has method')
 })
 
 test('can define a plugin as a function', function (t) {
   t.plan(2)
 
-  var hoodie = new Hoodie()
+  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
   var sayHiPlugin = function (hoodie) {
     hoodie.sayHi = function () {
       return 'hi'
@@ -26,7 +26,7 @@ test('can define a plugin as a function', function (t) {
 test('can chain plugins calls', function (t) {
   t.plan(4)
 
-  var hoodie = new Hoodie()
+  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
   var sayHiPlugin = function (hoodie) {
     hoodie.sayHi = function () {
       return 'hi'
@@ -51,7 +51,7 @@ test('can chain plugins calls', function (t) {
 test('can define a plugin as an object', function (t) {
   t.plan(4)
 
-  var hoodie = new Hoodie()
+  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
   var sayHiPlugin = {
     sayHi: function () {
       return 'hi'

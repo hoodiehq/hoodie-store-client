@@ -168,7 +168,7 @@ test('hoodie.store gets initialized with options.ajax', function (t) {
     defaults: function () { return CustomStoreMock }
   })
 
-  var state = getState()
+  var state = getState({url: 'http://localhost:1234/hoodie'})
   getApi(state)
 
   var storeAjaxParam = CustomStoreMock.lastCall.args[1]
@@ -191,7 +191,7 @@ test('hoodie.store initialization without session', function (t) {
     defaults: function () { return CustomStoreMock }
   })
 
-  var state = getState()
+  var state = getState({url: 'http://localhost:1234/hoodie'})
   getApi(state)
 
   var storeAjaxParam = CustomStoreMock.lastCall.args[1]

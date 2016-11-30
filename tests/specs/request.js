@@ -12,7 +12,7 @@ var state = Object.freeze({
 test('has "request" method', function (t) {
   t.plan(1)
 
-  var hoodie = new Hoodie()
+  var hoodie = new Hoodie({url: 'http://localhost:1234/hoodie'})
   t.is(typeof hoodie.request, 'function', 'has method')
 })
 
