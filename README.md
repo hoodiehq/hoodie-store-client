@@ -80,7 +80,7 @@ new Hoodie(options)
       Set to hostname where Hoodie server runs, if your app runs on
       a different host
     </td>
-    <td>No</td>
+    <td>Yes</td>
   </tr>
   <tr>
     <th align="left">options.account</th>
