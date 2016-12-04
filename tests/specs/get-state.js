@@ -19,10 +19,22 @@ test('getState preserves "account" property', function (t) {
   t.is(state.account.id, 'id1', 'account id is preserved')
 })
 
+test('getState without "PouchDB" option', function (t) {
+  t.plan(1)
+
+  t.throws(function () {
+    getState({
+      url: 'http://localhost:1234/hoodie'
+    })
+  }, /options.PouchDB is required/, 'throws exception when "PouchDB" option is not defined')
+})
+
 test('getState without "url" option', function (t) {
   t.plan(1)
 
   t.throws(function () {
-    getState()
-  }, /"url" option is not defined/, 'throws exception when "url" option is not defined')
+    getState({
+      PouchDB: function () {}
+    })
+  }, /options.url is required/, 'throws exception when "url" option is not defined')
 })

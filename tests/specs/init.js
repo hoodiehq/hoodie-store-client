@@ -163,10 +163,10 @@ test('hoodie.store gets initialized with options.PouchDB', function (t) {
       }
     }
   })
+  var CustomStoreMock = simple.stub()
   simple.mock(getApi.internals, 'Store', {
     defaults: function () { return CustomStoreMock }
   })
-  var CustomStoreMock = simple.stub()
   simple.mock(getApi.internals.Store, 'defaults').returnWith(CustomStoreMock)
 
   var PouchDB = simple.stub()
