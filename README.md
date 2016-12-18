@@ -7,7 +7,7 @@
 [![Dependency Status](https://david-dm.org/hoodiehq/hoodie-store-client.svg)](https://david-dm.org/hoodiehq/hoodie-store-client)
 [![devDependency Status](https://david-dm.org/hoodiehq/hoodie-store-client/dev-status.svg)](https://david-dm.org/hoodiehq/hoodie-store-client#info=devDependencies)
 
-`hoodie-store-client` combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync). It adds a few other methods like `.isPersistent()` or `.hasLocalChanges()` and a scoped store API.
+`hoodie-store-client` combines [pouchdb-hoodie-api](https://github.com/hoodiehq/pouchdb-hoodie-api) and [pouchdb-hoodie-sync](https://github.com/hoodiehq/pouchdb-hoodie-sync).
 
 ## Example
 
@@ -58,7 +58,6 @@ var store = new PresetStore('mydb')
 - [store.connect()](#storeconnect)
 - [store.disconnect()](#storedisconnect)
 - [store.isConnected()](#storeisconnected)
-- [store.hasLocalChanges()](#storehaslocalchanges)
 - [store.on()](#storeon)
 - [store.one()](#storeone)
 - [store.off()](#storeoff)
@@ -984,24 +983,6 @@ Example
 ```
 
 ### store.isConnected()
-
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Returns `true` / `false`
-
-Example
-
-```js
-```
-
-### store.hasLocalChanges()
 
 ---
 
