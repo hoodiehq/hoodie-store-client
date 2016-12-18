@@ -1,8 +1,6 @@
 var test = require('tape')
 var simple = require('simple-mock')
 
-var isPersistent = require('../../lib/is-persistent')
-var internals = isPersistent.internals
 var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
 
@@ -13,11 +11,11 @@ test('.isPersistent()', function (t) {
   })
   t.is(typeof store.isPersistent, 'function', 'exists')
 
-  simple.mock(internals, 'humbleLocalStorage', {isPersistent: true})
-  t.is(store.isPersistent(), true, 'returns true if humbleLocalStorage.isPersistent is true')
+  simple.mock(store.db, 'adapter', 'memory')
+  t.is(store.isPersistent(), false, 'returns true if PouchDB adapter is memory')
 
-  simple.mock(internals, 'humbleLocalStorage', {isPersistent: false})
-  t.is(store.isPersistent(), false, 'returns false if humbleLocalStorage.isPersistent is false')
+  simple.mock(store.db, 'adapter', 'idb')
+  t.is(store.isPersistent(), true, 'returns true if PouchDB adapter is idb')
 
   simple.restore()
   t.end()
