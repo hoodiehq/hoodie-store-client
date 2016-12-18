@@ -4,8 +4,6 @@ var EventEmitter = require('events').EventEmitter
 
 var merge = require('lodash/merge')
 
-var hasLocalChanges = require('./lib/has-local-changes')
-var subscribeToInternalEvents = require('./lib/subscribe-to-internal-events')
 var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 var syncWrapper = require('./lib/sync-wrapper')
 var scoped = require('./lib/scoped/')
@@ -71,7 +69,6 @@ function Store (dbName, options) {
       off: storeApi.off
     },
     {
-      hasLocalChanges: hasLocalChanges,
       push: syncWrapper.bind(syncApi, 'push'),
       pull: syncWrapper.bind(syncApi, 'pull'),
       sync: syncWrapper.bind(syncApi, 'sync'),
@@ -85,7 +82,6 @@ function Store (dbName, options) {
   api.reset = require('./lib/reset').bind(null, dbName, options.PouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote)
 
   subscribeToSyncEvents(syncApi, emitter)
-  subscribeToInternalEvents(emitter)
 
   return api
 }
