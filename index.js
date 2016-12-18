@@ -42,7 +42,8 @@ function Store (dbName, options) {
 
   var state = {
     objectTypeById: {},
-    scopedApis: {}
+    scopedApis: {},
+    db: db
   }
 
   // possible race condition...
@@ -77,7 +78,7 @@ function Store (dbName, options) {
       connect: syncApi.connect,
       disconnect: syncApi.disconnect,
       isConnected: syncApi.isConnected,
-      isPersistent: isPersistent
+      isPersistent: isPersistent.bind(null, state)
     }
   )
 
