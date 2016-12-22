@@ -29,12 +29,12 @@ function Store (dbName, options) {
     }
   }
 
-  // we use a custom PouchDB constructor as we derive another PouchDB to
-  // interact with the remote store, and want it to inherit the options
-  var CustomPouchDB = options.PouchDB
+  // plugins are directly applied to `options.PouchDB`
+  options.PouchDB
     .plugin(require('pouchdb-hoodie-api'))
     .plugin(require('pouchdb-hoodie-sync'))
-  var db = new CustomPouchDB(dbName)
+
+  var db = new options.PouchDB(dbName)
   var emitter = new EventEmitter()
   var remote = options.remote
   var syncApi = db.hoodieSync({remote: remote})
@@ -82,7 +82,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, CustomPouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote)
+  api.reset = require('./lib/reset').bind(null, dbName, options.PouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote)
 
   subscribeToSyncEvents(syncApi, emitter)
   subscribeToInternalEvents(emitter)
