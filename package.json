@@ -9,7 +9,7 @@
     "@hoodie/account-client": "^4.4.0",
     "@hoodie/connection-status": "^3.0.0",
     "@hoodie/log": "^2.1.0",
-    "@hoodie/store-client": "^6.0.0",
+    "@hoodie/store-client": "^7.0.0",
     "humble-localstorage": "^1.4.2",
     "lie": "^3.0.1",
     "lodash": "^4.11.1",
