@@ -2,6 +2,7 @@
   "name": "@hoodie/store-client",
   "description": "Hoodie Client for data persistence & offline sync",
   "main": "index.js",
+  "files": ["index.js", "lib", "dist"],
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify -s Store index.js > dist/hoodie-store-client.js",
