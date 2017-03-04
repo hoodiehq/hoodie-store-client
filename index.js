@@ -5,8 +5,6 @@ var EventEmitter = require('events').EventEmitter
 var merge = require('lodash/merge')
 
 var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
-var syncWrapper = require('./lib/sync-wrapper')
-var scoped = require('./lib/scoped/')
 var isPersistent = require('./lib/is-persistent')
 
 function Store (dbName, options) {
@@ -40,7 +38,6 @@ function Store (dbName, options) {
 
   var state = {
     objectTypeById: {},
-    scopedApis: {},
     db: db
   }
 
@@ -52,7 +49,6 @@ function Store (dbName, options) {
   })
 
   var api = merge(
-    scoped.bind(null, state, storeApi),
     {
       db: storeApi.db,
       add: storeApi.add,
@@ -66,12 +62,13 @@ function Store (dbName, options) {
       removeAll: storeApi.removeAll,
       on: storeApi.on,
       one: storeApi.one,
-      off: storeApi.off
+      off: storeApi.off,
+      withIdPrefix: storeApi.withIdPrefix
     },
     {
-      push: syncWrapper.bind(syncApi, 'push'),
-      pull: syncWrapper.bind(syncApi, 'pull'),
-      sync: syncWrapper.bind(syncApi, 'sync'),
+      push: syncApi.push,
+      pull: syncApi.pull,
+      sync: syncApi.sync,
       connect: syncApi.connect,
       disconnect: syncApi.disconnect,
       isConnected: syncApi.isConnected,
@@ -93,7 +90,7 @@ Store.defaults = function (defaultOpts) {
 
     options = merge({}, defaultOpts, options)
 
-    return Store(dbName, options)
+    return new Store(dbName, options)
   }
 
   return CustomStore
