@@ -5,7 +5,7 @@ var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
 
 test('API methods', function (t) {
-  t.plan(12)
+  t.plan(13)
 
   var store = new Store('test-db-api', {
     PouchDB: PouchDB,
@@ -24,27 +24,24 @@ test('API methods', function (t) {
   t.is(typeof store.on, 'function', 'has "on" method')
   t.is(typeof store.one, 'function', 'has "one" method')
   t.is(typeof store.off, 'function', 'has "off" method')
+  t.is(typeof store.withIdPrefix, 'function', 'has "withIdPrefix" method')
 })
 
 test('store.on("change") with adding one', function (t) {
-  t.plan(3)
+  t.plan(2)
 
   var store = new Store('test-db-change', {
     PouchDB: PouchDB,
     remote: 'test-db-change'
   })
-  var changeEvents = []
 
-  store.on('change', addEventToArray.bind(null, changeEvents))
+  store.on('change', function (eventName, doc) {
+    t.is(eventName, 'add', 'passes the event name')
+    t.is(doc.foo, 'bar', 'event passes object')
+  })
 
   store.add({
     foo: 'bar'
-  })
-
-  .then(function () {
-    t.is(changeEvents.length, 1, 'triggers 1 change event')
-    t.is(changeEvents[0].eventName, 'add', 'passes the event name')
-    t.is(changeEvents[0].object.foo, 'bar', 'event passes object')
   })
 
   .catch(t.fail)
@@ -80,38 +77,39 @@ test('store.off("add") with one add handler', function (t) {
 })
 
 test('store.one("add") with adding one', function (t) {
-  t.plan(2)
+  t.plan(1)
 
   var store = new Store('test-db-one', {
     PouchDB: PouchDB,
     remote: 'test-db-one'
   })
-  var addEvents = []
 
-  store.one('add', addEventToArray.bind(null, addEvents))
+  store.one('add', function (doc) {
+    t.is(doc.foo, 'bar', 'event passes object')
+  })
 
   store.add({
     foo: 'bar'
-  })
-
-  .then(function () {
-    t.is(addEvents.length, 1, 'triggers 1 add event')
-    t.is(addEvents[0].object.foo, 'bar', 'event passes object')
   })
 
   .catch(t.fail)
 })
 
 test('store.reset creates empty instance of store', function (t) {
-  t.plan(3)
+  t.plan(2)
 
   var store = new Store('test-db-clear', {
     PouchDB: PouchDB,
     remote: 'test-db-clear'
   })
-  var addEvents = []
-  store.on('add', addEvents.push.bind(addEvents))
-  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
+  var clearTriggered = false
+  store.on('add', function (doc) {
+    t.ok(clearTriggered, 'triggers "add" event after "clear"')
+  })
+  store.on('clear', function () {
+    clearTriggered = true
+    t.pass('"clear" event emitted')
+  })
   store.reset()
 
   .then(function () {
@@ -122,10 +120,6 @@ test('store.reset creates empty instance of store', function (t) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
 
     return store.add({id: 'test', foo: 'bar'})
-  })
-
-  .then(function () {
-    t.is(addEvents.length, 1, 'triggers "add" event after "clear"')
   })
 
   .catch(t.fail)
