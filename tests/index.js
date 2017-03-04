@@ -1,4 +1,5 @@
-require('./specs/constructor')
 require('./specs/api')
-require('./specs/sync')
+require('./specs/constructor')
 require('./specs/is-persistent')
+require('./specs/reset')
+require('./specs/sync')
