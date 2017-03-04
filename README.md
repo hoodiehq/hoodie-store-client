@@ -61,7 +61,7 @@ var store = new PresetStore('mydb')
 - [store.on()](#storeon)
 - [store.one()](#storeone)
 - [store.off()](#storeoff)
-- [store()](#typed-store)
+- [store.withIdPrefix](#storewithidprefix)
 - [Events](#events)
 
 ### Store.defaults
@@ -1054,7 +1054,7 @@ Example
 ```js
 ```
 
-### <a name="typed-store"></a>store()
+### store.withIdPrefix()
 
 ---
 
@@ -1065,7 +1065,7 @@ Example
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
 
-Returns `store` API with `type` property preset in all methods to given type name.
+Returns subset of `store` API with `_id` property implicitly prefixed by passed string
 
 Example
 
