@@ -26,8 +26,8 @@ test('store.push() returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'test-db-push-return-remote'
   })
-  var obj1 = {id: 'test1', foo: 'bar1'}
-  var obj2 = {id: 'test2', foo: 'bar2'}
+  var obj1 = {_id: 'test1', foo: 'bar1'}
+  var obj2 = {_id: 'test2', foo: 'bar2'}
 
   store.add([obj1, obj2])
 
@@ -37,7 +37,7 @@ test('store.push() returns hoodie objects', function (t) {
 
   .then(function (pushedObjs) {
     t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0].id, 'test1', 'returns hoodie object')
+    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
 
@@ -51,8 +51,8 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'test-db-push-objects-return-remote'
   })
-  var obj1 = {id: 'test1', foo: 'bar1'}
-  var obj2 = {id: 'test2', foo: 'bar2'}
+  var obj1 = {_id: 'test1', foo: 'bar1'}
+  var obj2 = {_id: 'test2', foo: 'bar2'}
 
   store.add([obj1, obj2])
 
@@ -62,7 +62,7 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
 
   .then(function (pushedObjs) {
     t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0].id, 'test1', 'returns hoodie object')
+    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
 
@@ -76,8 +76,8 @@ test('store.sync() returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'test-db-sync-return-remote'
   })
-  var obj1 = {id: 'test1', foo: 'bar1'}
-  var obj2 = {id: 'test2', foo: 'bar2'}
+  var obj1 = {_id: 'test1', foo: 'bar1'}
+  var obj2 = {_id: 'test2', foo: 'bar2'}
 
   store.add([obj1, obj2])
 
@@ -87,7 +87,7 @@ test('store.sync() returns hoodie objects', function (t) {
 
   .then(function (pushedObjs) {
     t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0].id, 'test1', 'returns hoodie object')
+    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
     t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
 
@@ -105,7 +105,7 @@ test('store.on("push") for store.push()', function (t) {
 
   store.on('push', pushEvents.push.bind(pushEvents))
 
-  store.add({id: 'test', foo: 'bar'})
+  store.add({_id: 'test', foo: 'bar'})
 
   .then(function () {
     return store.push()
@@ -113,7 +113,7 @@ test('store.on("push") for store.push()', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0].id, 'test', 'event passes object')
+    t.is(pushEvents[0]._id, 'test', 'event passes object')
     t.is(pushEvents[0].foo, 'bar', 'event passes object')
   })
 
@@ -134,8 +134,8 @@ test('api.off("push")', function (t) {
     pushEvents.push(doc)
   }
 
-  var obj1 = {id: 'test1', foo1: 'bar1'}
-  var obj2 = {id: 'test2', foo1: 'bar2'}
+  var obj1 = {_id: 'test1', foo1: 'bar1'}
+  var obj2 = {_id: 'test2', foo1: 'bar2'}
 
   store.add([obj1, obj2])
 
@@ -168,8 +168,8 @@ test('api.one("push")', function (t) {
 
   store.one('push', pushEvents.push.bind(pushEvents))
 
-  var obj1 = {id: 'test1', foo: 'bar1'}
-  var obj2 = {id: 'test2', foo: 'bar2'}
+  var obj1 = {_id: 'test1', foo: 'bar1'}
+  var obj2 = {_id: 'test2', foo: 'bar2'}
 
   store.add([obj1, obj2])
 
@@ -179,7 +179,7 @@ test('api.one("push")', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0].id, 'test1', 'event passes object')
+    t.is(pushEvents[0]._id, 'test1', 'event passes object')
     t.is(pushEvents[0].foo, 'bar1', 'event passes object')
   })
 
@@ -217,7 +217,7 @@ test('api.on("connect") for api.connect()', function (t) {
 })
 
 test('triggers "change" events on pull', function (t) {
-  t.plan(13)
+  t.plan(9)
 
   var store = new Store('test-db-remote-changes-local', {
     PouchDB: PouchDB,
@@ -230,9 +230,9 @@ test('triggers "change" events on pull', function (t) {
   var updateEvents = []
   var removeEvents = []
 
-  store.on('change', function (event, object, options) {
+  store.on('change', function (eventName, object, options) {
     changeEvents.push({
-      event: event,
+      event: eventName,
       object: object,
       options: options
     })
@@ -259,7 +259,7 @@ test('triggers "change" events on pull', function (t) {
     })
   })
 
-  var doc = {_id: 'test', foo: 'bar'}
+  var doc = {_id: 'test', foo: 'bar', hoodie: {createdAt: '1970-01-01T00:00:00.000Z'}}
   remoteDb.put(doc)
 
   .then(function (response) {
@@ -269,6 +269,8 @@ test('triggers "change" events on pull', function (t) {
 
   .then(function () {
     doc.foo = 'baz'
+    doc.hoodie.updatedAt = '1970-01-01T00:00:00.000Z'
+
     return remoteDb.put(doc)
   })
 
@@ -279,6 +281,7 @@ test('triggers "change" events on pull', function (t) {
 
   .then(function () {
     doc._deleted = true
+    doc.hoodie.deletedAt = '1970-01-01T00:00:00.000Z'
     doc.foo = 'boo'
     return remoteDb.put(doc)
   })
@@ -291,19 +294,15 @@ test('triggers "change" events on pull', function (t) {
     t.is(changeEvents.length, 3, '"change" event triggered')
     t.is(changeEvents[0].event, 'add', '"change" triggered with event name')
     t.is(changeEvents[0].object.foo, 'bar', '"change" triggered with object')
-    t.deepEqual(changeEvents[0].options, {remote: true}, '"change" triggered with {remote: true}')
 
     t.is(addEvents.length, 1, '"add" event triggered')
     t.is(addEvents[0].object.foo, 'bar', '"add" triggered with object')
-    t.deepEqual(addEvents[0].options, {remote: true}, '"add" triggered with {remote: true}')
 
     t.is(updateEvents.length, 1, '"update" event triggered')
     t.is(updateEvents[0].object.foo, 'baz', '"update" triggered with object')
-    t.deepEqual(updateEvents[0].options, {remote: true}, '"update" triggered with {remote: true}')
 
     t.is(removeEvents.length, 1, '"remove" event triggered')
     t.is(removeEvents[0].object.foo, 'boo', '"remove" triggered with object')
-    t.deepEqual(removeEvents[0].options, {remote: true}, '"remove" triggered with {remote: true}')
   })
 
   .catch(t.fail)
@@ -362,7 +361,7 @@ test('after "clear", store.on("push") for store.push()', function (t) {
   store.reset()
 
   .then(function () {
-    return store.add({id: 'test', foo: 'bar'})
+    return store.add({_id: 'test', foo: 'bar'})
   })
 
   .then(function () {
@@ -371,7 +370,7 @@ test('after "clear", store.on("push") for store.push()', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0].id, 'test', 'event passes object')
+    t.is(pushEvents[0]._id, 'test', 'event passes object')
     t.is(pushEvents[0].foo, 'bar', 'event passes object')
   })
 

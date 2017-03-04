@@ -10,7 +10,6 @@ test('new Store(db, options)', function (t) {
     remote: 'test-db-remote'
   }))
 
-  t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
   t.is(store.db.name, 'test-db', '.db is PouchDB object')
 
@@ -23,7 +22,6 @@ test('Store(db, options) w/o new', function (t) {
     remote: 'test-db-remote'
   })
 
-  t.is(typeof store, 'function', 'is a constructor')
   t.ok(store.db, 'sets .db on instance')
   t.is(store.db.name, 'test-db', '.db is PouchDB object')
 
