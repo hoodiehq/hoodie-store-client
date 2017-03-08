@@ -308,44 +308,6 @@ test('triggers "change" events on pull', function (t) {
   .catch(t.fail)
 })
 
-test('triggers no "change" from remote if only local changes pushed', function (t) {
-  t.plan(2)
-
-  var store = new Store('test-db-remote-changes-local2', {
-    PouchDB: PouchDB,
-    remote: 'test-db-remote-changes-remote2'
-  })
-  var remoteChangeEvents = []
-
-  store.on('change', function (event, object, options) {
-    if (!options || !options.remote) {
-      return
-    }
-    remoteChangeEvents.push({
-      event: event,
-      object: object,
-      options: options
-    })
-  })
-
-  store.add({foo: 'bar'})
-
-  .then(function () {
-    return store.push()
-  })
-
-  .then(function () {
-    t.is(remoteChangeEvents.length, 0, 'no "change" events triggered')
-    return store.pull()
-  })
-
-  .then(function () {
-    t.is(remoteChangeEvents.length, 0, 'no "change" events triggered')
-  })
-
-  .catch(t.fail)
-})
-
 test('after "clear", store.on("push") for store.push()', function (t) {
   t.plan(4)
 
