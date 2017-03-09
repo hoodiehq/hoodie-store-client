@@ -32,8 +32,7 @@ function Store (dbName, options) {
 
   var db = new options.PouchDB(dbName)
   var emitter = new EventEmitter()
-  var remote = options.remote
-  var syncApi = db.hoodieSync({remote: remote})
+  var syncApi = db.hoodieSync(options)
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var state = {
@@ -76,7 +75,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, options.PouchDB, state, api, storeApi.clear, emitter, options.remoteBaseUrl, remote)
+  api.reset = require('./lib/reset').bind(null, dbName, options, state, api, storeApi.clear, emitter)
 
   subscribeToSyncEvents(syncApi, emitter)
 
