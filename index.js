@@ -11,7 +11,7 @@ function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
   if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
 
-  if (!options || (!options.remote && !options.remoteBaseUrl)) {
+  if (!options || (!('remote' in options) && !options.remoteBaseUrl)) {
     throw new Error('options.remote or options.remoteBaseUrl is required')
   }
 
