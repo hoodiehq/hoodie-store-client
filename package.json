@@ -1,5 +1,6 @@
 {
   "name": "@hoodie/store-client",
+  "version": "0.0.0-semantically-released",
   "description": "Hoodie Client for data persistence & offline sync",
   "main": "index.js",
   "files": ["index.js", "lib", "dist"],
