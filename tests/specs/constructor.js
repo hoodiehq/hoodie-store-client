@@ -50,3 +50,43 @@ test('Store api exports', function (t) {
 
   t.end()
 })
+
+test('new Store(db, options) with options.remote being a PouchDB instance', function (t) {
+  var store = new Store('test-db', merge({
+    PouchDB: PouchDB,
+    remote: new PouchDB('test-db2')
+  }))
+
+  t.ok(store.db, 'sets .db on instance')
+  t.is(store.db.name, 'test-db', '.db is PouchDB object')
+
+  t.end()
+})
+
+test('new Store(db, options) with options.remote being a function that returns a PouchDB instance', function (t) {
+  var store = new Store('test-db', merge({
+    PouchDB: PouchDB,
+    remote: function () {
+      return new PouchDB('test-db2')
+    }
+  }))
+
+  t.ok(store.db, 'sets .db on instance')
+  t.is(store.db.name, 'test-db', '.db is PouchDB object')
+
+  t.end()
+})
+
+test('new Store(db, options) with options.remote being a function that resolves with PouchDB instance', function (t) {
+  var store = new Store('test-db', merge({
+    PouchDB: PouchDB,
+    remote: function () {
+      return Promise.resolve(new PouchDB('test-db2'))
+    }
+  }))
+
+  t.ok(store.db, 'sets .db on instance')
+  t.is(store.db.name, 'test-db', '.db is PouchDB object')
+
+  t.end()
+})

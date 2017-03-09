@@ -291,7 +291,7 @@ test('triggers "change" events on pull', function (t) {
   })
 
   .then(function () {
-    t.is(changeEvents.length, 3, '"change" event triggered')
+    t.is(changeEvents.length, 3, '"change" events triggered')
     t.is(changeEvents[0].event, 'add', '"change" triggered with event name')
     t.is(changeEvents[0].object.foo, 'bar', '"change" triggered with object')
 
@@ -334,6 +334,32 @@ test('after "clear", store.on("push") for store.push()', function (t) {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
     t.is(pushEvents[0]._id, 'test', 'event passes object')
     t.is(pushEvents[0].foo, 'bar', 'event passes object')
+  })
+
+  .catch(t.fail)
+})
+
+test('store.sync() with options.remote being a promise', function (t) {
+  t.plan(3)
+
+  var remoteDb = new PouchDB('test-db-sync-promise-remote')
+  var store = new Store('test-db-sync-promise', {
+    PouchDB: PouchDB,
+    remote: Promise.resolve(remoteDb)
+  })
+  var obj1 = {_id: 'test1', foo: 'bar1'}
+  var obj2 = {_id: 'test2', foo: 'bar2'}
+
+  store.add([obj1, obj2])
+
+  .then(function () {
+    return store.sync()
+  })
+
+  .then(function (pushedObjs) {
+    t.is(pushedObjs.length, 2, '2 items returned')
+    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
+    t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
   })
 
   .catch(t.fail)
