@@ -96,16 +96,42 @@ new Store(dbName, options)
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
 | **`dbName`** | String | name of the database | Yes
-| **`options.remote`** | String | name or URL of remote database | Yes (unless `remoteBaseUrl` is preset, see [Store.defaults](storedefaults))
-| **`options.PouchDB`** | Constructor | [PouchDB custom builds](https://pouchdb.com/custom.html) | Yes (unless preset using [Store.defaults](storedefaults)))
+| **`options.remote`** | String | name or URL of remote database | Yes (unless `remoteBaseUrl` is preset, see [Store.defaults](#storedefaults))
+| **`options.remote`** | Object | PouchDB instance | Yes (ignores `remoteBaseUrl` from [Store.defaults](#storedefaults))
+| **`options.remote`** | Promise | Resolves to either string or PouchDB instance | see above
+| **`options.PouchDB`** | Constructor | [PouchDB custom builds](https://pouchdb.com/custom.html) | Yes (unless preset using [Store.defaults](#storedefaults)))
 
 Returns `store` API.
 
 Example
 
 ```js
-var Store = require('@hoodie/store-client')
-var store = new Store('mydb', { remote: 'http://localhost:5984/mydb' })
+var store = new Store('mydb', {
+  PouchDB: PouchDB,
+  remote: 'http://localhost:5984/mydb'
+})
+store.sync() // will sync with http://localhost:5984/mydb
+```
+
+Example with dynamic remote URL and ajax headers
+
+
+```js
+var loadAccount = require('./load-account')
+var store = new Store('mydb', {
+  PouchDB: PouchDB,
+  get remote () {
+    return loadAccount.then(function (account) {
+      return new PouchDB('http://localhost:5984/' + encodeURIComponent('user/' + account.id), {
+        ajax: {
+          headers: {
+            authorization: 'session ' + account.session.id
+          }
+        }
+      })
+    })
+  }
+})
 store.sync() // will sync with http://localhost:5984/mydb
 ```
 
