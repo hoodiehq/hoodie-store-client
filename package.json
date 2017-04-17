@@ -14,6 +14,7 @@
     "test:browser:local": "zuul --local 8080 -- tests",
     "test:browser:cloud": "zuul -- tests",
     "test:node": "node tests",
+    "lint": "./node_modules/eslint/bin/eslint.js -c .eslintrc index.js lib tests",
     "presemantic-release": "npm run -s build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "postpublish": "greenkeeper-postpublish"

@@ -6,7 +6,9 @@ node_js:
   - 4
 before_script:
   - npm prune
-script: npm run $COMMAND
+script:
+  - npm run $COMMAND
+  - npm run lint
 after_success:
   - npm run semantic-release
   - npm run test:coverage
