@@ -36,16 +36,8 @@ function Store (dbName, options) {
   var storeApi = db.hoodieApi({emitter: emitter})
 
   var state = {
-    objectTypeById: {},
     db: db
   }
-
-  // possible race condition...
-  storeApi.findAll().then(function (objects) {
-    objects.forEach(function (object) {
-      state.objectTypeById[object.id] = object.type
-    })
-  })
 
   var api = merge(
     {
