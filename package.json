@@ -58,7 +58,6 @@
   "dependencies": {
     "hoodie-zuul-config": "^2.0.0",
     "lodash": "^4.6.0",
-    "pouchdb-hoodie-api": "^2.0.0",
     "pouchdb-hoodie-sync": "^2.1.1"
   },
   "publishConfig": {
