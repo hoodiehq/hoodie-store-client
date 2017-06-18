@@ -2,13 +2,15 @@ var test = require('tape')
 
 var Store = require('../../')
 var PouchDB = require('../utils/pouchdb.js')
+var uniqueName = require('../utils/unique-name')
 
 test('scoped store calls should work after reset (hoodiehq/hoodie#612)', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-reset', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-reset'
+    remote: 'remote-' + name
   })
 
   store.reset()

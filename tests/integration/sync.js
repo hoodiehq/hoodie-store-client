@@ -2,13 +2,15 @@ var test = require('tape')
 
 var Store = require('../../')
 var PouchDB = require('../utils/pouchdb.js')
+var uniqueName = require('../utils/unique-name')
 
 test('has "sync" methods', function (t) {
   t.plan(6)
 
-  var store = new Store('test-db-sync', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-sync-remote'
+    remote: 'remote-' + name
   })
 
   t.is(typeof store.pull, 'function', 'had "pull" method')
@@ -22,9 +24,10 @@ test('has "sync" methods', function (t) {
 test('store.push() returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push-return', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-return-remote'
+    remote: 'remote-' + name
   })
   var obj1 = {_id: 'test1', foo: 'bar1'}
   var obj2 = {_id: 'test2', foo: 'bar2'}
@@ -47,9 +50,10 @@ test('store.push() returns hoodie objects', function (t) {
 test('store.push(docsOrIds) returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push-objects-return', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-objects-return-remote'
+    remote: 'remote-' + name
   })
   var obj1 = {_id: 'test1', foo: 'bar1'}
   var obj2 = {_id: 'test2', foo: 'bar2'}
@@ -72,9 +76,10 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
 test('store.sync() returns hoodie objects', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-sync-return', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-sync-return-remote'
+    remote: 'remote-' + name
   })
   var obj1 = {_id: 'test1', foo: 'bar1'}
   var obj2 = {_id: 'test2', foo: 'bar2'}
@@ -97,9 +102,10 @@ test('store.sync() returns hoodie objects', function (t) {
 test('store.on("push") for store.push()', function (t) {
   t.plan(3)
 
-  var store = new Store('test-db-push', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-remote'
+    remote: 'remote-' + name
   })
   var pushEvents = []
 
@@ -123,9 +129,10 @@ test('store.on("push") for store.push()', function (t) {
 test('api.off("push")', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-push-off', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-off-remote'
+    remote: 'remote-' + name
   })
   var pushEvents = []
 
@@ -160,9 +167,10 @@ test('api.off("push")', function (t) {
 test('api.one("push")', function (t) {
   t.plan(4)
 
-  var store = new Store('test-db-push-one', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-one-remote'
+    remote: 'remote-' + name
   })
   var pushEvents = []
 
@@ -197,9 +205,10 @@ test('api.one("push")', function (t) {
 test('api.on("connect") for api.connect()', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-on-connect', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-on-connect-remote'
+    remote: 'remote-' + name
   })
   var numConnectEvents = 0
 
@@ -219,11 +228,12 @@ test('api.on("connect") for api.connect()', function (t) {
 test('triggers "change" events on pull', function (t) {
   t.plan(9)
 
-  var store = new Store('test-db-remote-changes-local', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-remote-changes-remote'
+    remote: 'remote-' + name
   })
-  var remoteDb = new PouchDB('test-db-remote-changes-remote')
+  var remoteDb = new PouchDB('remote-' + name)
 
   var changeEvents = []
   var addEvents = []
@@ -308,17 +318,17 @@ test('triggers "change" events on pull', function (t) {
   .catch(t.fail)
 })
 
-test('after "clear", store.on("push") for store.push()', function (t) {
-  t.plan(4)
+test('after reset, store.on("push") for store.push()', function (t) {
+  t.plan(3)
 
-  var store = new Store('test-db-push', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-push-remote'
+    remote: 'remote-' + name
   })
   var pushEvents = []
 
   store.on('push', pushEvents.push.bind(pushEvents))
-  store.on('clear', t.pass.bind(null, '"clear" event emitted'))
 
   store.reset()
 
@@ -343,7 +353,8 @@ test('store.sync() with options.remote being a promise', function (t) {
   t.plan(3)
 
   var remoteDb = new PouchDB('test-db-sync-promise-remote')
-  var store = new Store('test-db-sync-promise', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
     remote: Promise.resolve(remoteDb)
   })
