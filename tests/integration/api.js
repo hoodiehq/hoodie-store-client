@@ -2,13 +2,15 @@ var test = require('tape')
 
 var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
+var uniqueName = require('../utils/unique-name')
 
 test('API methods', function (t) {
-  t.plan(13)
+  t.plan(14)
 
-  var store = new Store('test-db-api', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-api'
+    remote: 'remote-' + name
   })
 
   t.is(typeof store.add, 'function', 'has "add" method')
@@ -20,6 +22,7 @@ test('API methods', function (t) {
   t.is(typeof store.updateAll, 'function', 'has "updateAll" method')
   t.is(typeof store.remove, 'function', 'has "remove" method')
   t.is(typeof store.removeAll, 'function', 'has "removeAll" method')
+  t.is(typeof store.reset, 'function', 'has "reset" method')
   t.is(typeof store.on, 'function', 'has "on" method')
   t.is(typeof store.one, 'function', 'has "one" method')
   t.is(typeof store.off, 'function', 'has "off" method')
@@ -29,9 +32,10 @@ test('API methods', function (t) {
 test('store.on("change") with adding one', function (t) {
   t.plan(2)
 
-  var store = new Store('test-db-change', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-change'
+    remote: 'remote-' + name
   })
 
   store.on('change', function (eventName, doc) {
@@ -49,9 +53,10 @@ test('store.on("change") with adding one', function (t) {
 test('store.off("add") with one add handler', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-off', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-off'
+    remote: 'remote-' + name
   })
   var addEvents = []
   var changeEvents = []
@@ -78,9 +83,10 @@ test('store.off("add") with one add handler', function (t) {
 test('store.one("add") with adding one', function (t) {
   t.plan(1)
 
-  var store = new Store('test-db-one', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-one'
+    remote: 'remote-' + name
   })
 
   store.one('add', function (doc) {
@@ -95,21 +101,19 @@ test('store.one("add") with adding one', function (t) {
 })
 
 test('store.reset creates empty instance of store', function (t) {
-  t.plan(2)
+  t.plan(1)
 
-  var store = new Store('test-db-clear', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-clear'
+    remote: 'remote-' + name
   })
-  var clearTriggered = false
-  store.on('add', function (doc) {
-    t.ok(clearTriggered, 'triggers "add" event after "clear"')
+
+  store.add({id: 'test', foo: 'bar'})
+
+  .then(function () {
+    return store.reset()
   })
-  store.on('clear', function () {
-    clearTriggered = true
-    t.pass('"clear" event emitted')
-  })
-  store.reset()
 
   .then(function () {
     return store.findAll()
@@ -117,8 +121,6 @@ test('store.reset creates empty instance of store', function (t) {
 
   .then(function (result) {
     t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
-
-    return store.add({id: 'test', foo: 'bar'})
   })
 
   .catch(t.fail)

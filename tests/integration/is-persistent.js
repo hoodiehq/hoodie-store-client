@@ -3,11 +3,13 @@ var simple = require('simple-mock')
 
 var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
+var uniqueName = require('../utils/unique-name')
 
 test('.isPersistent()', function (t) {
-  var store = new Store('test-db-is-persistent', {
+  var name = uniqueName()
+  var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'test-db-is-persistent-remote'
+    remote: 'remote-' + name
   })
   t.is(typeof store.isPersistent, 'function', 'exists')
 

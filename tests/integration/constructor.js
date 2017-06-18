@@ -40,17 +40,6 @@ test('new Store(dbName)', function (t) {
   t.end()
 })
 
-test('Store api exports', function (t) {
-  var store = new Store('test-db', {
-    PouchDB: PouchDB,
-    remote: 'test-db-remote'
-  })
-
-  t.is(typeof store.clear, 'undefined', 'store doesnt expose clear method')
-
-  t.end()
-})
-
 test('new Store(db, options) with options.remote being a PouchDB instance', function (t) {
   var store = new Store('test-db', merge({
     PouchDB: PouchDB,

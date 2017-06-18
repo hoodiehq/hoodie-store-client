@@ -1,0 +1,547 @@
+var test = require('tape')
+
+var PouchDB = require('../utils/pouchdb.js')
+var Store = require('../../')
+var uniqueName = require('../utils/unique-name')
+
+test('store.withIdPrefix() exists', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+
+  t.is(typeof store.withIdPrefix, 'function', 'has method')
+  t.end()
+})
+
+test('store.withIdPrefix("test/") returns all methods but .clear', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test')
+
+  Object.keys(store).filter(function (key) {
+    return (typeof store[key] === 'function') && key !== 'clear'
+  }).forEach(function (key) {
+    t.is(typeof testStore[key], 'function', 'has method: ' + key)
+  })
+
+  t.end()
+})
+
+test('store.withIdPrefix("test/").add(properties)', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  testStore.add({
+    foo: 'bar'
+  })
+
+  .then(function (doc) {
+    t.ok(/^test\//.test(doc._id), 'prefixes id with "test/"')
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").add([doc1, doc2])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  testStore.add([{
+    foo: 'bar'
+  }, {
+    baz: 'ar'
+  }])
+
+  .then(function (docs) {
+    t.ok(/^test\//.test(docs[0]._id), 'prefixes id with "test/"')
+    t.ok(/^test\//.test(docs[1]._id), 'prefixes id with "test/"')
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").find("foo")', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo'
+  })
+
+  .then(function () {
+    return testStore.find('foo')
+  })
+
+  .then(function (doc) {
+    t.pass('finds doc')
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").find("test/foo")', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo'
+  })
+
+  .then(function () {
+    return testStore.find('test/foo')
+  })
+
+  .then(function (doc) {
+    t.pass('finds doc')
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").find(["foo", "test/bar"])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo'
+  }, {
+    _id: 'test/bar'
+  }])
+
+  .then(function () {
+    return testStore.find(['foo', 'test/bar'])
+  })
+
+  .then(function (docs) {
+    t.is(docs[0]._id, 'test/foo', 'finds doc with _id: test/foo')
+    t.is(docs[1]._id, 'test/bar', 'finds doc with _id: test/bar')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").findOrAdd(id, object) when found', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.findOrAdd('foo', {foo: 'baz'})
+  })
+
+  .then(function (doc) {
+    t.is(doc.foo, 'bar', 'finds doc')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").findOrAdd(id, object) when added', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  return testStore.findOrAdd('foo', {foo: 'baz'})
+
+  .then(function (doc) {
+    t.is(doc.foo, 'baz', 'adds doc')
+    t.ok(/^test\//.test(doc._id), 'prefixes ._id')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").findOrAdd([object1, object2])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.findOrAdd([{
+      _id: 'foo',
+      foo: 'baz'
+    }, {
+      _id: 'baz',
+      baz: 'ar'
+    }])
+  })
+
+  .then(function (docs) {
+    t.is(docs[0].foo, 'bar', 'finds doc with _id: test/foo')
+    t.is(docs[1].baz, 'ar', 'adds doc with _id: test/baz')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").findAll()', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo'
+  }, {
+    _id: 'bar'
+  }])
+
+  .then(function () {
+    return testStore.findAll()
+  })
+
+  .then(function (docs) {
+    t.is(docs.length, 1)
+    t.is(docs[0]._id, 'test/foo')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").update(id, changedProperties)', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.update('foo', {foo: 'baz'})
+  })
+
+  .then(function (doc) {
+    t.is(doc.foo, 'baz')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").update([object1, object2])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo',
+    foo: 'bar'
+  }, {
+    _id: 'test/bar',
+    bar: 'baz'
+  }])
+
+  .then(function () {
+    return testStore.update([{
+      _id: 'test/foo',
+      foo: 'bar2'
+    }, {
+      _id: 'test/bar',
+      bar: 'baz2'
+    }])
+  })
+
+  .then(function (docs) {
+    t.is(docs.length, 2)
+    t.is(docs[0].foo, 'bar2')
+    t.is(docs[1].bar, 'baz2')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").updateOrAdd(object) when found', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.updateOrAdd('foo', {foo: 'baz'})
+  })
+
+  .then(function (doc) {
+    t.is(doc.foo, 'baz', 'finds doc')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").updateOrAdd(object) when added', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  return testStore.updateOrAdd('foo', {foo: 'baz'})
+
+  .then(function (doc) {
+    t.ok(/^test\//.test(doc._id), 'adds doc')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").updateOrAdd([object1, object2])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.updateOrAdd([{
+      _id: 'foo',
+      foo: 'baz'
+    }, {
+      _id: 'baz',
+      baz: 'ar'
+    }])
+  })
+
+  .then(function (docs) {
+    t.is(docs[0].foo, 'baz', 'finds doc with _id: test/foo')
+    t.is(docs[1].baz, 'ar', 'adds doc with _id: test/baz')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").updateAll(changedProperties)', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo'
+  }, {
+    _id: 'bar'
+  }])
+
+  .then(function () {
+    return testStore.updateAll({foo: 'bar'})
+  })
+
+  .then(function (docs) {
+    t.is(docs.length, 1)
+    t.is(docs[0].foo, 'bar')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").remove(id)', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.put({
+    _id: 'test/foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return testStore.remove('foo')
+  })
+
+  .then(function (doc) {
+    t.is(doc._id, 'test/foo')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").remove([object1, id2])', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo',
+    foo: 'bar'
+  }, {
+    _id: 'test/bar',
+    bar: 'baz'
+  }])
+
+  .then(function () {
+    return testStore.remove([{
+      _id: 'test/foo',
+      foo: 'bar2'
+    }, 'test/bar'])
+  })
+
+  .then(function (docs) {
+    t.is(docs.length, 2)
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+test('store.withIdPrefix("test/").removeAll()', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  store.db.bulkDocs([{
+    _id: 'test/foo'
+  }, {
+    _id: 'bar'
+  }])
+
+  .then(function () {
+    return testStore.removeAll()
+  })
+
+  .then(function (docs) {
+    t.is(docs.length, 1)
+    t.is(docs[0]._id, 'test/foo')
+
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").withIdPrefix("onetwo/").add(properties)', function (t) {
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/').withIdPrefix('onetwo/')
+
+  testStore.add({
+    foo: 'bar'
+  })
+
+  .then(function (doc) {
+    t.ok(/^test\/onetwo\//.test(doc._id), 'prefixes id with "test/onetwo/"')
+    t.end()
+  })
+
+  .catch(t.error)
+})
+
+test('store.withIdPrefix("test/").on("change", handler) events', function (t) {
+  t.plan(2)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  var testStore = store.withIdPrefix('test/')
+
+  testStore.on('change', function (eventName, object) {
+    t.is(object._id, 'test/foo')
+  })
+
+  testStore.on('add', function (object) {
+    t.is(object._id, 'test/foo')
+  })
+
+  store.add({_id: 'foo'})
+  testStore.add({_id: 'foo'})
+})
