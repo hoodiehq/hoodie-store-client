@@ -4,8 +4,9 @@ var EventEmitter = require('events').EventEmitter
 
 var merge = require('lodash/merge')
 
-var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 var isPersistent = require('./lib/is-persistent')
+var startListenToChanges = require('./lib/helpers/start-listen-to-changes')
+var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -27,34 +28,36 @@ function Store (dbName, options) {
 
   // plugins are directly applied to `options.PouchDB`
   options.PouchDB
-    .plugin(require('pouchdb-hoodie-api'))
     .plugin(require('pouchdb-hoodie-sync'))
 
   var db = new options.PouchDB(dbName)
   var emitter = new EventEmitter()
   var syncApi = db.hoodieSync(options)
-  var storeApi = db.hoodieApi({emitter: emitter})
 
   var state = {
-    db: db
+    db: db,
+    emitter: emitter
   }
+
+  state.emitter.once('newListener', startListenToChanges.bind(null, state))
 
   var api = merge(
     {
-      db: storeApi.db,
-      add: storeApi.add,
-      find: storeApi.find,
-      findAll: storeApi.findAll,
-      findOrAdd: storeApi.findOrAdd,
-      update: storeApi.update,
-      updateOrAdd: storeApi.updateOrAdd,
-      updateAll: storeApi.updateAll,
-      remove: storeApi.remove,
-      removeAll: storeApi.removeAll,
-      on: storeApi.on,
-      one: storeApi.one,
-      off: storeApi.off,
-      withIdPrefix: storeApi.withIdPrefix
+      db: state.db,
+      add: require('./lib/add').bind(null, state, null),
+      find: require('./lib/find').bind(null, state, null),
+      findAll: require('./lib/find-all').bind(null, state, null),
+      findOrAdd: require('./lib/find-or-add').bind(null, state, null),
+      update: require('./lib/update').bind(null, state, null),
+      updateOrAdd: require('./lib/update-or-add').bind(null, state, null),
+      updateAll: require('./lib/update-all').bind(null, state, null),
+      remove: require('./lib/remove').bind(null, state, null),
+      removeAll: require('./lib/remove-all').bind(null, state, null),
+      withIdPrefix: require('./lib/with-id-prefix').bind(null, state),
+      on: require('./lib/on').bind(null, state),
+      one: require('./lib/one').bind(null, state),
+      off: require('./lib/off').bind(null, state),
+      clear: require('./lib/clear').bind(null, state)
     },
     {
       push: syncApi.push,
@@ -67,7 +70,7 @@ function Store (dbName, options) {
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, options, state, api, storeApi.clear, emitter)
+  api.reset = require('./lib/reset').bind(null, dbName, options, state, api, emitter)
 
   subscribeToSyncEvents(syncApi, emitter)
 
