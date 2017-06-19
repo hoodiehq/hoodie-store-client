@@ -15,7 +15,7 @@ test('store.withIdPrefix() exists', function (t) {
   t.end()
 })
 
-test('store.withIdPrefix("test/") returns all methods but .clear', function (t) {
+test('store.withIdPrefix("test/") returns scoped methods', function (t) {
   var name = uniqueName()
   var store = new Store(name, {
     PouchDB: PouchDB,
@@ -23,9 +23,21 @@ test('store.withIdPrefix("test/") returns all methods but .clear', function (t) 
   })
   var testStore = store.withIdPrefix('test')
 
-  Object.keys(store).filter(function (key) {
-    return (typeof store[key] === 'function') && key !== 'clear'
-  }).forEach(function (key) {
+  ;[
+    'add',
+    'find',
+    'findAll',
+    'findOrAdd',
+    'update',
+    'updateOrAdd',
+    'updateAll',
+    'remove',
+    'removeAll',
+    'withIdPrefix',
+    'on',
+    'one',
+    'off'
+  ].forEach(function (key) {
     t.is(typeof testStore[key], 'function', 'has method: ' + key)
   })
 
