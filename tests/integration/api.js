@@ -5,7 +5,7 @@ var Store = require('../../')
 var uniqueName = require('../utils/unique-name')
 
 test('API methods', function (t) {
-  t.plan(14)
+  t.plan(20)
 
   var name = uniqueName()
   var store = new Store(name, {
@@ -23,10 +23,16 @@ test('API methods', function (t) {
   t.is(typeof store.remove, 'function', 'has "remove" method')
   t.is(typeof store.removeAll, 'function', 'has "removeAll" method')
   t.is(typeof store.reset, 'function', 'has "reset" method')
+  t.is(typeof store.withIdPrefix, 'function', 'has "withIdPrefix" method')
+  t.is(typeof store.pull, 'function', 'had "pull" method')
+  t.is(typeof store.push, 'function', 'had "push" method')
+  t.is(typeof store.sync, 'function', 'had "sync" method')
+  t.is(typeof store.connect, 'function', 'had "connect" method')
+  t.is(typeof store.disconnect, 'function', 'had "disconnect" method')
+  t.is(typeof store.isConnected, 'function', 'had "isConnected" method')
   t.is(typeof store.on, 'function', 'has "on" method')
   t.is(typeof store.one, 'function', 'has "one" method')
   t.is(typeof store.off, 'function', 'has "off" method')
-  t.is(typeof store.withIdPrefix, 'function', 'has "withIdPrefix" method')
 })
 
 test('store.on("change") with adding one', function (t) {

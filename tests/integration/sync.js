@@ -4,23 +4,6 @@ var Store = require('../../')
 var PouchDB = require('../utils/pouchdb.js')
 var uniqueName = require('../utils/unique-name')
 
-test('has "sync" methods', function (t) {
-  t.plan(6)
-
-  var name = uniqueName()
-  var store = new Store(name, {
-    PouchDB: PouchDB,
-    remote: 'remote-' + name
-  })
-
-  t.is(typeof store.pull, 'function', 'had "pull" method')
-  t.is(typeof store.push, 'function', 'had "push" method')
-  t.is(typeof store.sync, 'function', 'had "sync" method')
-  t.is(typeof store.connect, 'function', 'had "connect" method')
-  t.is(typeof store.disconnect, 'function', 'had "disconnect" method')
-  t.is(typeof store.isConnected, 'function', 'had "isConnected" method')
-})
-
 test('store.push() returns hoodie objects', function (t) {
   t.plan(3)
 
@@ -29,22 +12,22 @@ test('store.push() returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'remote-' + name
   })
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var doc1 = {_id: 'test1', foo: 'bar1'}
+  var doc2 = {_id: 'test2', foo: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
   .then(function () {
     return store.push()
   })
 
-  .then(function (pushedObjs) {
-    t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
-    t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
+  .then(function (pushedDocs) {
+    t.is(pushedDocs.length, 2, '2 items returned')
+    t.is(pushedDocs[0]._id, 'test1', 'returns hoodie doc')
+    t.is(pushedDocs[1].foo, 'bar2', 'returns hoodie doc')
   })
 
-  .catch(t.fail)
+  .catch(t.error)
 })
 
 test('store.push(docsOrIds) returns hoodie objects', function (t) {
@@ -55,19 +38,19 @@ test('store.push(docsOrIds) returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'remote-' + name
   })
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var doc1 = {_id: 'test1', foo: 'bar1'}
+  var doc2 = {_id: 'test2', foo: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
-  .then(function (addedObjs) {
-    return store.push(addedObjs)
+  .then(function (addedDocs) {
+    return store.push(addedDocs)
   })
 
-  .then(function (pushedObjs) {
-    t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
-    t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
+  .then(function (pushedDocs) {
+    t.is(pushedDocs.length, 2, '2 items returned')
+    t.is(pushedDocs[0]._id, 'test1', 'returns hoodie doc')
+    t.is(pushedDocs[1].foo, 'bar2', 'returns hoodie doc')
   })
 
   .catch(t.fail)
@@ -81,19 +64,19 @@ test('store.sync() returns hoodie objects', function (t) {
     PouchDB: PouchDB,
     remote: 'remote-' + name
   })
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var doc1 = {_id: 'test1', foo: 'bar1'}
+  var doc2 = {_id: 'test2', foo: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
   .then(function () {
     return store.sync()
   })
 
-  .then(function (pushedObjs) {
-    t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
-    t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
+  .then(function (pushedDocs) {
+    t.is(pushedDocs.length, 2, '2 items returned')
+    t.is(pushedDocs[0]._id, 'test1', 'returns hoodie doc')
+    t.is(pushedDocs[1].foo, 'bar2', 'returns hoodie doc')
   })
 
   .catch(t.fail)
@@ -119,8 +102,8 @@ test('store.on("push") for store.push()', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0]._id, 'test', 'event passes object')
-    t.is(pushEvents[0].foo, 'bar', 'event passes object')
+    t.is(pushEvents[0]._id, 'test', 'event passes doc')
+    t.is(pushEvents[0].foo, 'bar', 'event passes doc')
   })
 
   .catch(t.fail)
@@ -141,10 +124,10 @@ test('api.off("push")', function (t) {
     pushEvents.push(doc)
   }
 
-  var obj1 = {_id: 'test1', foo1: 'bar1'}
-  var obj2 = {_id: 'test2', foo1: 'bar2'}
+  var doc1 = {_id: 'test1', foo1: 'bar1'}
+  var doc2 = {_id: 'test2', foo1: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
   .then(function () {
     return store.push('test2')
@@ -176,10 +159,10 @@ test('api.one("push")', function (t) {
 
   store.one('push', pushEvents.push.bind(pushEvents))
 
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var doc1 = {_id: 'test1', foo: 'bar1'}
+  var doc2 = {_id: 'test2', foo: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
   .then(function () {
     return store.push()
@@ -187,8 +170,8 @@ test('api.one("push")', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0]._id, 'test1', 'event passes object')
-    t.is(pushEvents[0].foo, 'bar1', 'event passes object')
+    t.is(pushEvents[0]._id, 'test1', 'event passes doc')
+    t.is(pushEvents[0].foo, 'bar1', 'event passes doc')
   })
 
   .then(function () {
@@ -240,31 +223,31 @@ test('triggers "change" events on pull', function (t) {
   var updateEvents = []
   var removeEvents = []
 
-  store.on('change', function (eventName, object, options) {
+  store.on('change', function (eventName, doc, options) {
     changeEvents.push({
       event: eventName,
-      object: object,
+      doc: doc,
       options: options
     })
   })
 
-  store.on('add', function (object, options) {
+  store.on('add', function (doc, options) {
     addEvents.push({
-      object: object,
+      doc: doc,
       options: options
     })
   })
 
-  store.on('update', function (object, options) {
+  store.on('update', function (doc, options) {
     updateEvents.push({
-      object: object,
+      doc: doc,
       options: options
     })
   })
 
-  store.on('remove', function (object, options) {
+  store.on('remove', function (doc, options) {
     removeEvents.push({
-      object: object,
+      doc: doc,
       options: options
     })
   })
@@ -303,16 +286,16 @@ test('triggers "change" events on pull', function (t) {
   .then(function () {
     t.is(changeEvents.length, 3, '"change" events triggered')
     t.is(changeEvents[0].event, 'add', '"change" triggered with event name')
-    t.is(changeEvents[0].object.foo, 'bar', '"change" triggered with object')
+    t.is(changeEvents[0].doc.foo, 'bar', '"change" triggered with doc')
 
     t.is(addEvents.length, 1, '"add" event triggered')
-    t.is(addEvents[0].object.foo, 'bar', '"add" triggered with object')
+    t.is(addEvents[0].doc.foo, 'bar', '"add" triggered with doc')
 
     t.is(updateEvents.length, 1, '"update" event triggered')
-    t.is(updateEvents[0].object.foo, 'baz', '"update" triggered with object')
+    t.is(updateEvents[0].doc.foo, 'baz', '"update" triggered with doc')
 
     t.is(removeEvents.length, 1, '"remove" event triggered')
-    t.is(removeEvents[0].object.foo, 'boo', '"remove" triggered with object')
+    t.is(removeEvents[0].doc.foo, 'boo', '"remove" triggered with doc')
   })
 
   .catch(t.fail)
@@ -342,8 +325,8 @@ test('after reset, store.on("push") for store.push()', function (t) {
 
   .then(function () {
     t.is(pushEvents.length, 1, 'triggers 1 push event')
-    t.is(pushEvents[0]._id, 'test', 'event passes object')
-    t.is(pushEvents[0].foo, 'bar', 'event passes object')
+    t.is(pushEvents[0]._id, 'test', 'event passes doc')
+    t.is(pushEvents[0].foo, 'bar', 'event passes doc')
   })
 
   .catch(t.fail)
@@ -358,20 +341,456 @@ test('store.sync() with options.remote being a promise', function (t) {
     PouchDB: PouchDB,
     remote: Promise.resolve(remoteDb)
   })
-  var obj1 = {_id: 'test1', foo: 'bar1'}
-  var obj2 = {_id: 'test2', foo: 'bar2'}
+  var doc1 = {_id: 'test1', foo: 'bar1'}
+  var doc2 = {_id: 'test2', foo: 'bar2'}
 
-  store.add([obj1, obj2])
+  store.add([doc1, doc2])
 
   .then(function () {
     return store.sync()
   })
 
-  .then(function (pushedObjs) {
-    t.is(pushedObjs.length, 2, '2 items returned')
-    t.is(pushedObjs[0]._id, 'test1', 'returns hoodie object')
-    t.is(pushedObjs[1].foo, 'bar2', 'returns hoodie object')
+  .then(function (pushedDocs) {
+    t.is(pushedDocs.length, 2, '2 items returned')
+    t.is(pushedDocs[0]._id, 'test1', 'returns hoodie doc')
+    t.is(pushedDocs[1].foo, 'bar2', 'returns hoodie doc')
   })
 
   .catch(t.fail)
+})
+
+test('store.sync()', function (t) {
+  t.plan(3)
+
+  var name = uniqueName()
+  var remoteDbName = 'remote-' + name
+  var remoteDb = new PouchDB(remoteDbName)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+
+  store.add([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return remoteDb.put({_id: 'test3', foo1: 'bar3'})
+  })
+
+  .then(function () {
+    return store.sync()
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 3, '3 objects synced in db1 and db2')
+  })
+  .then(function () {
+    return store.db.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '3 docs in db1')
+  })
+  .then(function () {
+    return remoteDb.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '3 docs in db2')
+  })
+})
+
+test('store.sync()', function (t) {
+  t.plan(7)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync() // empty
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 4, '4 objects synced in db3 and db4')
+    var ids = [
+      syncedDocs[0]._id,
+      syncedDocs[1]._id,
+      syncedDocs[2]._id,
+      syncedDocs[3]._id
+    ].sort()
+
+    t.equal(ids[0], 'test1', 'syncedDocs[0]._id match')
+    t.equal(ids[1], 'test2', 'syncedDocs[1]._id match')
+    t.equal(ids[2], 'test3', 'syncedDocs[2]._id match')
+    t.equal(ids[3], 'test4', 'syncedDocs[3]._id match')
+
+    return remoteDb.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 4, '4 docs in remoteDb')
+
+    return store.db.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 4, '4 docs in local db')
+  })
+
+  .catch(t.error)
+})
+
+test('store.sync(string)', function (t) {
+  t.plan(4)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync('test3') // string
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 1, '1 object synced to db6')
+    t.equal(syncedDocs[0]._id, 'test3', 'syncedDocs[0]._id match')
+  })
+
+  .then(function () {
+    return store.db.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 2, '2 docs in local db, like before sync')
+  })
+
+  .then(function () {
+    return remoteDb.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '3 docs in remote db, 1 obj from local db got synced')
+  })
+})
+
+test('store.sync(objects)', function (t) {
+  t.plan(5)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync([remoteDoc1, 'test3']) // objects
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 2, '2 objects synced')
+    var ids = [
+      syncedDocs[0]._id,
+      syncedDocs[1]._id
+    ].sort()
+
+    t.equal(ids[0], 'test1', 'syncedDocs[0]._id match')
+    t.equal(ids[1], 'test3', 'syncedDocs[1]._id match')
+  })
+
+  .then(function () {
+    return store.db.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '3 docs in local db, like before sync')
+  })
+
+  .then(function () {
+    return remoteDb.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '2 docs in remote DB, 1 obj from remote DB got synced')
+  })
+})
+
+test('store.sync(object)', function (t) {
+  t.plan(4)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync(remoteDoc2) // object
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 1, '1 object synced')
+    t.equal(syncedDocs[0]._id, 'test2', 'syncedDocs[0]._id match')
+  })
+  .then(function () {
+    return remoteDb.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 2, '2 docs in remote DB, like before sync')
+  })
+  .then(function () {
+    return store.db.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 3, '3 docs in localDB, 1 obj from remote Db got synced')
+  })
+})
+
+test('store.sync("inexistentID")', function (t) {
+  t.plan(3)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync('inexistentID') // string
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 0, '0 object synced to db11, object not found')
+  })
+  .then(function () {
+    return remoteDb.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 2, '2 docs in remote DB, like before sync')
+  })
+  .then(function () {
+    return store.db.info()
+  })
+  .then(function (info) {
+    t.equal(info.doc_count, 2, '3 docs in local DB, like before sync')
+  })
+})
+
+test('store.sync(), when local / remote in sync', function (t) {
+  t.plan(8)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync()
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 4, '4 objects synced to db13 / db14')
+    var ids = [
+      syncedDocs[0]._id,
+      syncedDocs[1]._id,
+      syncedDocs[2]._id,
+      syncedDocs[3]._id
+    ].sort()
+
+    t.equal(ids[0], 'test1', 'syncedDocs[0]._id match')
+    t.equal(ids[1], 'test2', 'syncedDocs[1]._id match')
+    t.equal(ids[2], 'test3', 'syncedDocs[2]._id match')
+    t.equal(ids[3], 'test4', 'syncedDocs[3]._id match')
+    return store.sync()
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 0, '0 object synced')
+  })
+
+  .then(function () {
+    return remoteDb.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 4, '4 docs in remote DB')
+  })
+
+  .then(function () {
+    return store.db.info()
+  })
+
+  .then(function (info) {
+    t.equal(info.doc_count, 4, '4 docs in local db')
+  })
+})
+
+test('store.sync({})', function (t) {
+  t.plan(2)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync({})
+  })
+
+  .catch(function (error) {
+    t.pass(error.message)
+  })
+
+  .then(function () {
+    return store.sync([1, 2, undefined])
+  })
+
+  .catch(function () {
+    t.pass('One object within the array is undefined')
+  })
+})
+
+test('store.sync(error)', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var remoteDoc1 = {_id: 'test1', foo1: 'bar1'}
+  var remoteDoc2 = {_id: 'test2', foo1: 'bar2'}
+  var localDoc1 = {_id: 'test3', foo1: 'bar3'}
+  var localDoc2 = {_id: 'test4', foo1: 'bar4'}
+
+  remoteDb.bulkDocs([remoteDoc1, remoteDoc2])
+
+  .then(function () {
+    return store.add([localDoc1, localDoc2])
+  })
+
+  .then(function () {
+    return store.sync({
+      get _id () {
+        throw new Error('ooops')
+      }
+    })
+  })
+
+  .catch(function () {
+    t.pass('The error event was fired!')
+  })
+})
+
+test('store.sync()', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var remoteDb = new PouchDB('remote-' + name)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  store.add({_id: 'test1', foo1: 'bar1'})
+
+  .then(function () {
+    return store.sync({_id: 'test1'})
+  })
+
+  .then(function (syncedDocs) {
+    t.equal(syncedDocs.length, 1, 'doc with ._id synced successfully')
+  })
 })
