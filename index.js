@@ -4,9 +4,7 @@ var EventEmitter = require('events').EventEmitter
 
 var merge = require('lodash/merge')
 
-var isPersistent = require('./lib/is-persistent')
 var startListenToChanges = require('./lib/helpers/start-listen-to-changes')
-var subscribeToSyncEvents = require('./lib/subscribe-to-sync-events')
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -26,17 +24,15 @@ function Store (dbName, options) {
     }
   }
 
-  // plugins are directly applied to `options.PouchDB`
-  options.PouchDB
-    .plugin(require('pouchdb-hoodie-sync'))
-
   var db = new options.PouchDB(dbName)
   var emitter = new EventEmitter()
-  var syncApi = db.hoodieSync(options)
 
   var state = {
     db: db,
-    emitter: emitter
+    dbName: dbName,
+    PouchDB: options.PouchDB,
+    emitter: emitter,
+    remote: options.remote
   }
 
   state.emitter.once('newListener', startListenToChanges.bind(null, state))
@@ -44,6 +40,7 @@ function Store (dbName, options) {
   var api = merge(
     {
       db: state.db,
+      isPersistent: require('./lib/is-persistent').bind(null, state),
       add: require('./lib/add').bind(null, state, null),
       find: require('./lib/find').bind(null, state, null),
       findAll: require('./lib/find-all').bind(null, state, null),
@@ -57,22 +54,17 @@ function Store (dbName, options) {
       on: require('./lib/on').bind(null, state),
       one: require('./lib/one').bind(null, state),
       off: require('./lib/off').bind(null, state),
-      clear: require('./lib/clear').bind(null, state)
-    },
-    {
-      push: syncApi.push,
-      pull: syncApi.pull,
-      sync: syncApi.sync,
-      connect: syncApi.connect,
-      disconnect: syncApi.disconnect,
-      isConnected: syncApi.isConnected,
-      isPersistent: isPersistent.bind(null, state)
+      pull: require('./lib/pull').bind(null, state),
+      push: require('./lib/push').bind(null, state),
+      sync: require('./lib/sync').bind(null, state),
+      connect: require('./lib/connect').bind(null, state),
+      disconnect: require('./lib/disconnect').bind(null, state),
+      isConnected: require('./lib/is-connected').bind(null, state),
+      reset: require('./lib/reset').bind(null, state)
     }
   )
 
-  api.reset = require('./lib/reset').bind(null, dbName, options, state, api, emitter)
-
-  subscribeToSyncEvents(syncApi, emitter)
+  state.api = api
 
   return api
 }
