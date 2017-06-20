@@ -3,7 +3,11 @@
   "version": "0.0.0-semantically-released",
   "description": "Hoodie Client for data persistence & offline sync",
   "main": "index.js",
-  "files": ["index.js", "lib", "dist"],
+  "files": [
+    "index.js",
+    "lib",
+    "dist"
+  ],
   "scripts": {
     "prebuild": "rimraf dist && mkdirp dist",
     "build": "browserify -s Store index.js > dist/hoodie-store-client.js",
@@ -57,6 +61,7 @@
   },
   "dependencies": {
     "hoodie-zuul-config": "^2.0.0",
+    "lie": "^3.1.1",
     "lodash": "^4.6.0"
   },
   "publishConfig": {
