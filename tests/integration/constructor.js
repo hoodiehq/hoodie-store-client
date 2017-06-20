@@ -1,11 +1,11 @@
-var merge = require('lodash/merge')
+var assign = require('lodash/assign')
 var test = require('tape')
 
 var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
 
 test('new Store(db, options)', function (t) {
-  var store = new Store('test-db', merge({
+  var store = new Store('test-db', assign({
     PouchDB: PouchDB,
     remote: 'test-db-remote'
   }))
@@ -41,7 +41,7 @@ test('new Store(dbName)', function (t) {
 })
 
 test('new Store(db, options) with options.remote being a PouchDB instance', function (t) {
-  var store = new Store('test-db', merge({
+  var store = new Store('test-db', assign({
     PouchDB: PouchDB,
     remote: new PouchDB('test-db2')
   }))
@@ -53,7 +53,7 @@ test('new Store(db, options) with options.remote being a PouchDB instance', func
 })
 
 test('new Store(db, options) with options.remote being a function that returns a PouchDB instance', function (t) {
-  var store = new Store('test-db', merge({
+  var store = new Store('test-db', assign({
     PouchDB: PouchDB,
     remote: function () {
       return new PouchDB('test-db2')
@@ -67,7 +67,7 @@ test('new Store(db, options) with options.remote being a function that returns a
 })
 
 test('new Store(db, options) with options.remote being a function that resolves with PouchDB instance', function (t) {
-  var store = new Store('test-db', merge({
+  var store = new Store('test-db', assign({
     PouchDB: PouchDB,
     remote: function () {
       return Promise.resolve(new PouchDB('test-db2'))

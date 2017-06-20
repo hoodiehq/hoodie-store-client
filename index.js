@@ -2,7 +2,7 @@ module.exports = Store
 
 var EventEmitter = require('events').EventEmitter
 
-var merge = require('lodash/merge')
+var assign = require('lodash/assign')
 
 var startListenToChanges = require('./lib/helpers/start-listen-to-changes')
 
@@ -37,32 +37,30 @@ function Store (dbName, options) {
 
   state.emitter.once('newListener', startListenToChanges.bind(null, state))
 
-  var api = merge(
-    {
-      db: state.db,
-      isPersistent: require('./lib/is-persistent').bind(null, state),
-      add: require('./lib/add').bind(null, state, null),
-      find: require('./lib/find').bind(null, state, null),
-      findAll: require('./lib/find-all').bind(null, state, null),
-      findOrAdd: require('./lib/find-or-add').bind(null, state, null),
-      update: require('./lib/update').bind(null, state, null),
-      updateOrAdd: require('./lib/update-or-add').bind(null, state, null),
-      updateAll: require('./lib/update-all').bind(null, state, null),
-      remove: require('./lib/remove').bind(null, state, null),
-      removeAll: require('./lib/remove-all').bind(null, state, null),
-      withIdPrefix: require('./lib/with-id-prefix').bind(null, state),
-      on: require('./lib/on').bind(null, state),
-      one: require('./lib/one').bind(null, state),
-      off: require('./lib/off').bind(null, state),
-      pull: require('./lib/pull').bind(null, state),
-      push: require('./lib/push').bind(null, state),
-      sync: require('./lib/sync').bind(null, state),
-      connect: require('./lib/connect').bind(null, state),
-      disconnect: require('./lib/disconnect').bind(null, state),
-      isConnected: require('./lib/is-connected').bind(null, state),
-      reset: require('./lib/reset').bind(null, state)
-    }
-  )
+  var api = {
+    db: state.db,
+    isPersistent: require('./lib/is-persistent').bind(null, state),
+    add: require('./lib/add').bind(null, state, null),
+    find: require('./lib/find').bind(null, state, null),
+    findAll: require('./lib/find-all').bind(null, state, null),
+    findOrAdd: require('./lib/find-or-add').bind(null, state, null),
+    update: require('./lib/update').bind(null, state, null),
+    updateOrAdd: require('./lib/update-or-add').bind(null, state, null),
+    updateAll: require('./lib/update-all').bind(null, state, null),
+    remove: require('./lib/remove').bind(null, state, null),
+    removeAll: require('./lib/remove-all').bind(null, state, null),
+    withIdPrefix: require('./lib/with-id-prefix').bind(null, state),
+    on: require('./lib/on').bind(null, state),
+    one: require('./lib/one').bind(null, state),
+    off: require('./lib/off').bind(null, state),
+    pull: require('./lib/pull').bind(null, state),
+    push: require('./lib/push').bind(null, state),
+    sync: require('./lib/sync').bind(null, state),
+    connect: require('./lib/connect').bind(null, state),
+    disconnect: require('./lib/disconnect').bind(null, state),
+    isConnected: require('./lib/is-connected').bind(null, state),
+    reset: require('./lib/reset').bind(null, state)
+  }
 
   state.api = api
 
@@ -74,7 +72,7 @@ Store.defaults = function (defaultOpts) {
     if (typeof dbName !== 'string') throw new Error('Must be a valid string.')
     options = options || {}
 
-    options = merge({}, defaultOpts, options)
+    options = assign({}, defaultOpts, options)
 
     return new Store(dbName, options)
   }
