@@ -62,7 +62,9 @@
   "dependencies": {
     "hoodie-zuul-config": "^2.0.0",
     "lie": "^3.1.1",
-    "lodash": "^4.6.0"
+    "lodash": "^4.6.0",
+    "pouchdb-errors": "^6.2.0",
+    "pouchdb-utils": "^6.2.0"
   },
   "publishConfig": {
     "access": "public"
