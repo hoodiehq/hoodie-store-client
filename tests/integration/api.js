@@ -126,7 +126,7 @@ test('store.reset creates empty instance of store', function (t) {
   })
 
   .then(function (result) {
-    t.deepEqual(result, [], '.findAll() resolves with empty array after .clear()')
+    t.deepEqual(result, [], '.findAll() resolves with empty array after .reset()')
   })
 
   .catch(t.fail)
