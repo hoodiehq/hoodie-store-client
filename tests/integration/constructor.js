@@ -139,12 +139,15 @@ test('Store.defaults with defaults', function (t) {
     remote: 'test-db-remote',
     foo: 'baz'
   }
+  simple.mock(Store.internals, 'handleChanges').callFn(function () {})
 
   var defaults = Store.defaults(options)
 
   defaults('test-db')
 
   t.is(pouchStub.callCount, 1, 'use default value when no value is provided')
+
+  simple.restore()
 
   t.end()
 })
@@ -157,6 +160,7 @@ test('Store.defaults overriden', function (t) {
     remote: 'test-db-remote',
     foo: 'baz'
   }
+  simple.mock(Store.internals, 'handleChanges').callFn(function () {})
 
   var defaults = Store.defaults(options)
 
@@ -164,6 +168,8 @@ test('Store.defaults overriden', function (t) {
 
   t.is(pouchDefaultStub.callCount, 0, 'default value is overridden')
   t.is(pouchOverrideStub.callCount, 1, 'overridden value is used')
+
+  simple.restore()
 
   t.end()
 })
