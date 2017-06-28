@@ -4,7 +4,8 @@ var EventEmitter = require('events').EventEmitter
 
 var assign = require('lodash/assign')
 
-var startListenToChanges = require('./lib/helpers/start-listen-to-changes')
+var internals = Store.internals = {}
+internals.handleChanges = require('./lib/helpers/handle-changes')
 
 function Store (dbName, options) {
   if (!(this instanceof Store)) return new Store(dbName, options)
@@ -37,8 +38,6 @@ function Store (dbName, options) {
     }
   }
 
-  state.emitter.once('newListener', startListenToChanges.bind(null, state))
-
   var api = {
     db: state.db,
     isPersistent: require('./lib/is-persistent').bind(null, state),
@@ -65,6 +64,8 @@ function Store (dbName, options) {
   }
 
   state.api = api
+
+  internals.handleChanges(state)
 
   return api
 }

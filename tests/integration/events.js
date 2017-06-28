@@ -4,6 +4,8 @@ var PouchDB = require('../utils/pouchdb.js')
 var Store = require('../../')
 var uniqueName = require('../utils/unique-name')
 
+function noop () {}
+
 test('has "on" method', function (t) {
   t.plan(1)
 
@@ -388,6 +390,28 @@ test('store.on("change") with adding one', function (t) {
   })
 })
 
+test('store.on("add") should not emit after store.add() promise resolved', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+  store.add({
+    _id: 'test'
+  })
+
+  .then(function () {
+    store.on('add', t.fail.bind(t, 'should not emit "add" event'))
+    store.on('update', t.pass.bind(t, 'emits "update" event'))
+
+    store.update({
+      _id: 'test'
+    })
+  })
+})
+
 test('store.on("change") with updating one', function (t) {
   t.plan(3)
 
@@ -707,14 +731,7 @@ test('store.off returns store', function (t) {
   t.ok(isFunction, 'allows chaining')
 })
 
-// We rely on PouchDB’s .changes() feed for events and hence have no control
-// on when the events get triggered. Most often they seem to be emitted after
-// the respective methods resolve, but not always. We could guarantee that events
-// get emitted before a method resolves, but only with a tremendous amount of
-// added complexity, so we decided against it and instead document that fact.
-// But we left this test for reference, maybe things will change in future.
-// see also: https://github.com/hoodiehq/pouchdb-hoodie-api/issues/54
-test.skip('events should emit before methods resolve', function (t) {
+test('events should emit before methods resolve', function (t) {
   t.plan(1)
 
   var name = uniqueName()
@@ -728,9 +745,137 @@ test.skip('events should emit before methods resolve', function (t) {
     eventTriggered = true
   })
 
-  store.add().then(function () {
+  store.add({
+    _id: 'foo'
+  }).then(function () {
     t.ok(eventTriggered)
   })
 })
 
-function noop () {}
+test('add/update events from remote', function (t) {
+  t.plan(2)
+
+  var name = uniqueName()
+  var remoteDbName = 'remote-' + name
+  var remoteDb = new PouchDB(remoteDbName)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  store.one('add', function () {
+    t.pass('"add" event triggered')
+  })
+
+  store.one('update', function () {
+    t.pass('"update" event triggered')
+  })
+
+  var doc = {_id: 'doc1'}
+  remoteDb.put(doc)
+
+  .then(function (response) {
+    doc._rev = response.rev
+    return store.pull()
+  })
+
+  .then(function () {
+    return remoteDb.put(doc)
+  })
+
+  .then(function () {
+    return store.pull()
+  })
+})
+
+test('add event for updated doc from remote', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var remoteDbName = 'remote-' + name
+  var remoteDb = new PouchDB(remoteDbName)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  store.one('add', function () {
+    t.pass('"add" event triggered')
+  })
+
+  store.one('update', function () {
+    t.fail('Should not emit "update"')
+  })
+
+  var doc = {_id: 'doc1', hoodie: {createdAt: new Date().toISOString()}}
+  remoteDb.put(doc)
+
+  .then(function (response) {
+    doc._rev = response.rev
+    doc.hoodie.updatedAt = new Date().toISOString()
+    return remoteDb.put(doc)
+  })
+
+  .then(function () {
+    return store.pull()
+  })
+})
+
+test('.add(array) resolves after events triggered', function (t) {
+  var name = uniqueName()
+  var remoteDbName = 'remote-' + name
+  var remoteDb = new PouchDB(remoteDbName)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var events = []
+
+  store.on('add', function (doc) {
+    events.push(doc)
+  })
+
+  store.add([
+    {_id: 'one'},
+    {_id: 'two'}
+  ])
+
+  .then(function () {
+    t.is(events.length, 2)
+    t.is(events[0]._id, 'one')
+    t.is(events[1]._id, 'two')
+
+    t.end()
+  })
+})
+
+test('.add(array) with invalid doc resolves after events triggered for valid docs', function (t) {
+  var name = uniqueName()
+  var remoteDbName = 'remote-' + name
+  var remoteDb = new PouchDB(remoteDbName)
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: remoteDb
+  })
+
+  var events = []
+
+  store.on('add', function (doc) {
+    events.push(doc)
+  })
+
+  store.add([
+    {_id: 'one'},
+    {_rev: '1-234invalid'},
+    {_id: 'two'}
+  ])
+
+  .then(function () {
+    t.is(events.length, 2)
+    t.is(events[0]._id, 'one')
+    t.is(events[1]._id, 'two')
+
+    t.end()
+  })
+})

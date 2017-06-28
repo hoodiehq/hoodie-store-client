@@ -160,6 +160,8 @@ test('adds multiple objects to db', function (t) {
   .then(function (res) {
     t.is(res.total_rows, 3, 'puts docs')
   })
+
+  .catch(t.error)
 })
 
 test('store.add(object) makes createdAt and updatedAt timestamps', function (t) {
