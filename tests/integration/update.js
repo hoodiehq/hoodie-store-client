@@ -174,7 +174,6 @@ test('store.update(array)', function (t) {
   })
 })
 
-// blocked by https://github.com/boennemann/pouchdb-hoodie-api/issues/8
 test('store.update(array) with non-existent object', function (t) {
   t.plan(4)
 
