@@ -32,7 +32,9 @@ function Store (dbName, options) {
     dbName: dbName,
     PouchDB: options.PouchDB,
     emitter: emitter,
-    remote: options.remote
+    get remote () {
+      return options.remote
+    }
   }
 
   state.emitter.once('newListener', startListenToChanges.bind(null, state))

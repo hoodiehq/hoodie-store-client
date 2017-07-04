@@ -79,3 +79,17 @@ test('new Store(db, options) with options.remote being a function that resolves 
 
   t.end()
 })
+
+test('new Store(db, options) with options.remote being a getter', function (t) {
+  t.plan(2)
+  var store = new Store('test-db', assign({
+    PouchDB: PouchDB,
+    get remote () {
+      t.pass('calls options.remote getter')
+      return new PouchDB('test-db2')
+    }
+  }))
+
+  store.sync()
+  store.sync()
+})
