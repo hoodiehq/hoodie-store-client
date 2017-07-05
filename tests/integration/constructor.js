@@ -1,4 +1,5 @@
 var assign = require('lodash/assign')
+var simple = require('simple-mock')
 var test = require('tape')
 
 var PouchDB = require('../utils/pouchdb.js')
@@ -92,4 +93,77 @@ test('new Store(db, options) with options.remote being a getter', function (t) {
 
   store.sync()
   store.sync()
+})
+
+test('new Store(db, options) with remoteBaseUrl and no remote', function (t) {
+  var options = {
+    PouchDB: PouchDB,
+    remoteBaseUrl: 'http://localhost:5984'
+  }
+  Store('test-db', options)
+
+  t.is(options.remote, 'http://localhost:5984/test-db', 'sets .remote on instance')
+
+  t.end()
+})
+
+test('new Store(db, options) with remoteBaseUrl and https:// remote', function (t) {
+  var options = {
+    PouchDB: PouchDB,
+    remote: 'https://hood.ie:5984',
+    remoteBaseUrl: 'http://localhost:5984'
+  }
+  Store('test-db', options)
+
+  t.is(options.remote, 'https://hood.ie:5984', '.remote unchanged when it is an https endpoint')
+
+  t.end()
+})
+
+test('Store.defaults throws when database name is not a string', function (t) {
+  var defaults = Store.defaults({})
+
+  t.throws(
+    function () { defaults(123, {}) },
+      /Must be a valid string/,
+    'when database name is not a string, throws an error'
+  )
+
+  t.end()
+})
+
+test('Store.defaults with defaults', function (t) {
+  var pouchStub = simple.stub()
+  var options = {
+    PouchDB: pouchStub,
+    remote: 'test-db-remote',
+    foo: 'baz'
+  }
+
+  var defaults = Store.defaults(options)
+
+  defaults('test-db')
+
+  t.is(pouchStub.callCount, 1, 'use default value when no value is provided')
+
+  t.end()
+})
+
+test('Store.defaults overriden', function (t) {
+  var pouchDefaultStub = simple.stub()
+  var pouchOverrideStub = simple.stub()
+  var options = {
+    PouchDB: pouchDefaultStub,
+    remote: 'test-db-remote',
+    foo: 'baz'
+  }
+
+  var defaults = Store.defaults(options)
+
+  defaults('test-db', { PouchDB: pouchOverrideStub })
+
+  t.is(pouchDefaultStub.callCount, 0, 'default value is overridden')
+  t.is(pouchOverrideStub.callCount, 1, 'overridden value is used')
+
+  t.end()
 })
