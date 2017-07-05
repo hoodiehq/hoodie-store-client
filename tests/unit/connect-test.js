@@ -59,3 +59,35 @@ test('connect with remote being promise', function (t) {
 
   t.end()
 })
+
+test('connect replication error', function (t) {
+  t.plan(3)
+
+  var syncApi = {
+    on: simple.stub()
+  }
+  var state = {
+    emitter: {
+      emit: simple.stub()
+    },
+    remote: 'remoteDb',
+    db: {
+      sync: simple.stub()
+    }
+  }
+  simple.mock(state.db, 'sync').returnWith(syncApi)
+
+  connect(state)
+
+  .then(function () {
+    t.is(syncApi.on.calls[0].arg, 'error', 'listens "error" event')
+
+    var errorCallback = syncApi.on.calls[0].args[1]
+    var error = new Error('Replication error')
+
+    errorCallback(error)
+
+    t.is(state.emitter.emit.lastCall.args[0], 'error', 'last event emitted was an error event')
+    t.is(state.emitter.emit.lastCall.args[1], error, 'error event was called with error object')
+  })
+})

@@ -23,5 +23,7 @@ require('./integration/update-or-add')
 require('./integration/update')
 require('./integration/with-id-prefix')
 
+require('./unit/add-many-test')
+require('./unit/add-one-test')
 require('./unit/connect-test')
 require('./unit/disconnect-test')
