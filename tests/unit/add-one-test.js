@@ -12,6 +12,7 @@ test('add-one non-409 error', function (t) {
       put: simple.stub().rejectWith(non409Error)
     }
   }
+  simple.mock(addOne.internals, 'addTimestamps')
 
   addOne(state, {})
 
