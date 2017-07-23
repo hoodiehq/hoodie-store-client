@@ -482,6 +482,12 @@ Resolves with an Array containing all found documents:
 
 Rejects with:
 
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
+
 | Name | Description  |
 | :-- | :-- |
 | Error | ... |
@@ -510,26 +516,33 @@ store.findAll(filterDocs).then(function (docs) {
 })
 ```
 
-### store.update(id, changedProperties)
-
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
+### store.update(id, properties)
 
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **id** | String | The `id` of the document | Yes |
+| **properties** | Object | Properties which should be changed or added if not existent | Yes |
 
-Resolves with ``:
+Resolves with the updated document:
 
 ```json
 {
-
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "updated-bar",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
 }
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -538,28 +551,43 @@ Rejects with:
 Example
 
 ```js
+store.update(
+  '12345678-1234-1234-1234-123456789ABC',
+  { foo: 'updated-bar' }
+).then(function (doc) {
+  alert(doc)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.update(id, updateFunction)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **id** | String | The `id` of the document | Yes |
+| **updateFunction** | Function | A function which mutates the document | Yes |
 
-Resolves with ``:
+Resolves with the updated document:
 
 ```json
 {
-
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "updated-bar",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
 }
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -568,28 +596,46 @@ Rejects with:
 Example
 
 ```js
+function updateFn(doc) {
+  return Object.assign(doc, { foo: 'updated-bar' })
+}
+
+store.update(
+  '12345678-1234-1234-1234-123456789ABC',
+  updateFn
+).then(function (doc) {
+  alert(doc)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.update(doc)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **doc** | Object | document with `_id` property | Yes |
 
-Resolves with ``:
+Resolves with the updated document:
 
 ```json
 {
-
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "updated-bar",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
 }
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -598,28 +644,42 @@ Rejects with:
 Example
 
 ```js
+store.update({
+  _id: '12345678-1234-1234-1234-123456789ABC',
+  foo: 'updated-bar'
+}).then(function (doc) {
+  alert(doc)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.update(arrayOfDocs)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **arrayOfDocs** | Array | Array of `doc` (Object) items | Yes
 
-Resolves with ``:
+Resolves with an Array of updated documents:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "updated-bar",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
+}]
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -628,6 +688,14 @@ Rejects with:
 Example
 
 ```js
+store.update([
+  { _id: '12345678-1234-1234-1234-123456789ABC', foo: 'updated-bar' },
+  { _id: '87654321-4321-4321-4321-987654321DEF', bar: 'updated-foo' },
+]).then(function (docs) {
+  alert(docs)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.updateOrAdd(id, doc)
