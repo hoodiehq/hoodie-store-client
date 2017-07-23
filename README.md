@@ -919,24 +919,32 @@ store.updateAll(updateFn).then(function (docs) {
 
 ### store.remove(id)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **id** | String | The `id` of the document | Yes |
 
-Resolves with ``:
+Resolves with the deleted document:
 
 ```json
 {
-
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z",
+    "deletedAt": "2017-07-23T12:00:00.000Z"
+  },
+  "_deleted": true
 }
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -945,28 +953,41 @@ Rejects with:
 Example
 
 ```js
+store.remove('12345678-1234-1234-1234-123456789ABC').then(function (doc) {
+  alert(doc)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.remove(doc)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **doc** | Object | A `doc` (Object) with `_id` property | Yes
 
 Resolves with ``:
 
 ```json
 {
-
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z",
+    "deletedAt": "2017-07-23T12:00:00.000Z"
+  },
+  "_deleted": true
 }
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -975,28 +996,41 @@ Rejects with:
 Example
 
 ```js
+store.remove({ _id: '12345678-1234-1234-1234-123456789ABC' }).then(function (doc) {
+  alert(doc)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.remove(idsOrDocs)
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
 | Argument | Type | Description | Required
 | :------- | :--- | :---------- | :-------
+| **idsOrDocs** | Array | Array of `id` (String) or `doc` (Object) items | Yes
 
-Resolves with ``:
+Resolves with an Array of all deleted documents:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z",
+    "deletedAt": "2017-07-23T12:00:00.000Z"
+  },
+  "_deleted": true
+}]
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -1005,28 +1039,40 @@ Rejects with:
 Example
 
 ```js
+store.remove([
+  '12345678-1234-1234-1234-123456789ABC',
+  '87654321-4321-4321-4321-987654321DEF'
+]).then(function (docs) {
+  alert(docs)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.removeAll()
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
+Resolves with an Array of all deleted documents:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z",
+    "deletedAt": "2017-07-23T12:00:00.000Z"
+  },
+  "_deleted": true
+}]
 ```
 
 Rejects with:
+
+---
+
+🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+
+---
 
 | Name | Description  |
 | :-- | :-- |
@@ -1035,6 +1081,11 @@ Rejects with:
 Example
 
 ```js
+store.removeAll().then(function (docs) {
+  alert(docs)
+}).catch(function (err) {
+  alert(err)
+})
 ```
 
 ### store.pull()
