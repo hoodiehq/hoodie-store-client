@@ -11,7 +11,9 @@ test('add-one non-409 error', function (t) {
   simple.mock(addOne.internals, 'put').rejectWith(non409Error)
   simple.mock(addOne.internals, 'addTimestamps')
 
-  var state = {}
+  var state = {
+    validate: function () { return true }
+  }
   var doc = {}
   addOne(state, doc)
 

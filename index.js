@@ -33,6 +33,7 @@ function Store (dbName, options) {
     dbName: dbName,
     PouchDB: options.PouchDB,
     emitter: emitter,
+    validate: options.validate || function () { return true },
     get remote () {
       return options.remote
     }
