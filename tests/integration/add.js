@@ -164,6 +164,33 @@ test('adds multiple objects to db', function (t) {
   .catch(t.error)
 })
 
+test('fail validation adding multiple objects to db', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name,
+    validate: function () { throw new Error() }
+  })
+
+  store.add([{
+    foo: 'bar'
+  }, {
+    foo: 'baz'
+  }, {
+    _id: 'foo',
+    foo: 'baz'
+  }])
+
+  .then(function () {
+    t.fail('Expecting ValidationError')
+  })
+  .catch(function (error) {
+    t.is(error.name, 'ValidationError')
+  })
+})
+
 test('store.add(object) makes createdAt and updatedAt timestamps', function (t) {
   t.plan(4)
 

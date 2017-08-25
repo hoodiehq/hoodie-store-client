@@ -12,8 +12,9 @@ test('add-one non-409 error', function (t) {
   simple.mock(addOne.internals, 'addTimestamps')
 
   var state = {
-    validate: function () { return true }
+    validate: function () { return Promise.resolve() }
   }
+
   var doc = {}
   addOne(state, doc)
 
@@ -23,6 +24,27 @@ test('add-one non-409 error', function (t) {
 
   .catch(function (error) {
     t.is(error, non409Error)
+
+    simple.restore()
+  })
+})
+
+test('add-one ValidationError', function (t) {
+  t.plan(1)
+
+  var state = {
+    validate: function () { throw new Error() }
+  }
+
+  var doc = {}
+  addOne(state, doc)
+
+  .then(function () {
+    t.fail('should throw an ValidationError')
+  })
+
+  .catch(function (error) {
+    t.is(error.name, 'ValidationError')
 
     simple.restore()
   })
