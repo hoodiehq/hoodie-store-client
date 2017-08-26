@@ -124,7 +124,8 @@ test('adds multiple objects to db', function (t) {
   var name = uniqueName()
   var store = new Store(name, {
     PouchDB: PouchDB,
-    remote: 'remote-' + name
+    remote: 'remote-' + name,
+    validate: function () {}
   })
 
   store.add({
@@ -165,13 +166,13 @@ test('adds multiple objects to db', function (t) {
 })
 
 test('fail validation adding multiple objects to db', function (t) {
-  t.plan(1)
+  t.plan(2)
 
   var name = uniqueName()
   var store = new Store(name, {
     PouchDB: PouchDB,
     remote: 'remote-' + name,
-    validate: function () { throw new Error() }
+    validate: function () { throw new Error('Validation failed for the given docs') }
   })
 
   store.add([{
@@ -188,6 +189,7 @@ test('fail validation adding multiple objects to db', function (t) {
   })
   .catch(function (error) {
     t.is(error.name, 'ValidationError')
+    t.is(error.message, 'Validation failed for the given docs')
   })
 })
 
