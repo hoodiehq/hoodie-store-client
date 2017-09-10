@@ -63,7 +63,7 @@ test('add-one validate rejects with Error (without message)', function (t) {
 
   .catch(function (error) {
     t.is(error.name, 'ValidationError', 'validation error name matches')
-    t.is(error.message, 'your doc(s) failed validation', 'error message matches intent')
+    t.is(error.message, 'document validation failed', 'error message matches intent')
   })
 })
 
@@ -146,6 +146,55 @@ test('add-one validate rejects with a value II', function (t) {
     t.is(error.name, 'ValidationError', 'validation error name matches')
     t.is(error.message, 'check error value for more details', 'error message matches intent')
     t.is(error.value, 1, 'error.value is 1')
+  })
+})
+
+test('add-one validate rejects with a value III', function (t) {
+  t.plan(4)
+
+  var state = {
+    validate: function () { return Promise.reject({ failure: true, tries: 1 }) }
+  }
+
+  var doc = {}
+  addOne(state, doc)
+
+  .then(function () {
+    t.fail('should throw an ValidationError')
+  })
+
+  .catch(function (error) {
+    t.is(error.name, 'ValidationError', 'validation error name matches')
+    t.is(error.message, 'check error value for more details', 'error message matches intent')
+    t.is(error.value.failure, true, 'error.value.failure is true')
+    t.is(error.value.tries, 1, 'error.value.tries is 1')
+  })
+})
+
+test('add-one validation fails with custom error', function (t) {
+  t.plan(4)
+
+  let customError = new Error('custom error message')
+
+  customError.status = 401
+  customError.errorCode = 'DB_401'
+
+  var state = {
+    validate: function () { throw customError }
+  }
+
+  var doc = {}
+  addOne(state, doc)
+
+  .then(function () {
+    t.fail('should throw an ValidationError')
+  })
+
+  .catch(function (error) {
+    t.is(error.name, 'ValidationError', 'validation error name matches')
+    t.is(error.message, 'custom error message', 'error message matches intent')
+    t.is(error.status, 401, 'error.status is 401')
+    t.is(error.errorCode, 'DB_401', 'error.errorCode is DB_401')
   })
 })
 
