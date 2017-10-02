@@ -117,6 +117,35 @@ test('store.update(id, updateFunction)', function (t) {
   })
 })
 
+test('store.update(id, updateFunction) fails validation', function (t) {
+  t.plan(3)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name,
+    validate: function (doc) {
+      if (doc.foo) {
+        throw new Error()
+      }
+    }
+  })
+
+  store.add({ _id: 'exists' })
+
+  .then(function () {
+    return store.update('exists', function (object) {
+      object.foo = object._id + 'bar'
+    })
+  })
+
+  .then(function (object) {
+    t.ok(object._id)
+    t.ok(/^2-/.test(object._rev))
+    t.is(object.foo, undefined, 'does not resolve property')
+  })
+})
+
 test('store.update(object)', function (t) {
   t.plan(3)
 
