@@ -293,6 +293,38 @@ test('remove(id, changeFunction) updates before removing', function (t) {
   })
 })
 
+test('remove(id, changeFunction) fails to update before removing', function (t) {
+  t.plan(2)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name,
+    validate: function (doc, action) {
+      if (action === 'update' && !doc._deleted) {
+        throw new Error()
+      }
+    }
+  })
+
+  store.add({
+    _id: 'foo',
+    foo: 'bar'
+  })
+
+  .then(function () {
+    return store.remove('foo', function (doc) {
+      doc.foo = 'changed'
+      return doc
+    })
+  })
+
+  .then(function (object) {
+    t.is(object._id, 'foo', 'resolves value')
+    t.is(object.foo, 'bar', 'check foo is not changed')
+  })
+})
+
 test('store.remove(object) creates deletedAt timestamp', function (t) {
   t.plan(4)
 

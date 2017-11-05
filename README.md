@@ -98,7 +98,7 @@ new Store(dbName, options)
 | **`options.remote`** | Object | PouchDB instance | Yes (ignores `remoteBaseUrl` from [Store.defaults](#storedefaults))
 | **`options.remote`** | Promise | Resolves to either string or PouchDB instance | see above
 | **`options.PouchDB`** | Constructor | [PouchDB custom builds](https://pouchdb.com/custom.html) | Yes (unless preset using [Store.defaults](#storedefaults)))
-| **`options.validate`** | Function | Validation function to execute before DB operations (Can return promise for async validation) | No
+| **`options.validate`** | Function(doc, action) | Validation function to execute before DB operations (Can return promise for async validation) | No
 
 Returns `store` API.
 
