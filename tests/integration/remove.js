@@ -293,16 +293,20 @@ test('remove(id, changeFunction) updates before removing', function (t) {
   })
 })
 
-test('remove(id, changeFunction) fails to update before removing', function (t) {
-  t.plan(2)
+test('remove(id, changeFunction) fails modification validation', function (t) {
+  t.plan(3)
+
+  let validationCallCount = 0
 
   var name = uniqueName()
   var store = new Store(name, {
     PouchDB: PouchDB,
     remote: 'remote-' + name,
-    validate: function (doc, action) {
-      if (action === 'update' && !doc._deleted) {
-        throw new Error()
+    validate: function () {
+      if (validationCallCount) {
+        throw new Error('Could not modify object')
+      } else {
+        return ++validationCallCount
       }
     }
   })
@@ -319,9 +323,10 @@ test('remove(id, changeFunction) fails to update before removing', function (t) 
     })
   })
 
-  .then(function (object) {
-    t.is(object._id, 'foo', 'resolves value')
-    t.is(object.foo, 'bar', 'check foo is not changed')
+  .catch(function (error) {
+    t.equals(validationCallCount, 1, 'Expecting Remove to fail validation')
+    t.is(error.name, 'ValidationError')
+    t.is(error.message, 'Could not modify object')
   })
 })
 
