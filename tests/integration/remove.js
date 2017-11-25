@@ -296,7 +296,7 @@ test('remove(id, changeFunction) updates before removing', function (t) {
 test('remove(id, changeFunction) fails modification validation', function (t) {
   t.plan(3)
 
-  let validationCallCount = 0
+  var validationCallCount = 0
 
   var name = uniqueName()
   var store = new Store(name, {

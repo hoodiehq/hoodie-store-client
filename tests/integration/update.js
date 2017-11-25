@@ -529,7 +529,7 @@ test('store.update(array)', function (t) {
 test('store.update([objects], change) fails to update as one doc fails validation', function (t) {
   t.plan(12)
 
-  let validationCallCount = 0
+  var validationCallCount = 0
 
   var name = uniqueName()
   var store = new Store(name, {
