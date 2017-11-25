@@ -330,6 +330,58 @@ test('remove(id, changeFunction) fails modification validation', function (t) {
   })
 })
 
+test('remove([ids], changeFunction) fails modification validation when one validation fails', function (t) {
+  t.plan(4)
+
+  var validationCallCount = 0
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name,
+    validate: function (doc) {
+      if (validationCallCount > 1) {
+        if (doc._id === 'bar') {
+          throw new Error()
+        } else {
+          ++validationCallCount
+        }
+      } else {
+        return ++validationCallCount
+      }
+    }
+  })
+
+  store.add([
+    { _id: 'foo', foo: 'bar' },
+    { _id: 'bar', foo: 'bar' }
+  ])
+
+  .then(function () {
+    return store.remove(
+      ['foo', 'bar'],
+      function (doc) {
+        doc.foo = 'changed'
+        return doc
+      }
+    )
+  })
+
+  .catch(function (error) {
+    t.equals(validationCallCount, 3, 'Expecting last remove to fail validation')
+    t.is(error.name, 'ValidationError')
+    t.is(error.message, 'document validation failed')
+
+    return null
+  })
+
+  .then(store.findAll)
+
+  .then(function (objects) {
+    t.is(objects.length, 2)
+  })
+})
+
 test('store.remove(object) creates deletedAt timestamp', function (t) {
   t.plan(4)
 
