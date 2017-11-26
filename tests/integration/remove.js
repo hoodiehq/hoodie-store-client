@@ -305,9 +305,9 @@ test('remove(id, changeFunction) fails modification validation', function (t) {
     validate: function () {
       if (validationCallCount) {
         throw new Error('Could not modify object')
-      } else {
-        return ++validationCallCount
       }
+
+      ++validationCallCount
     }
   })
 
@@ -343,12 +343,10 @@ test('remove([ids], changeFunction) fails modification validation when one valid
       if (validationCallCount > 1) {
         if (doc._id === 'bar') {
           throw new Error()
-        } else {
-          ++validationCallCount
         }
-      } else {
-        return ++validationCallCount
       }
+
+      ++validationCallCount
     }
   })
 

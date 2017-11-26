@@ -539,12 +539,10 @@ test('store.update([objects], change) fails to update as one doc fails validatio
       if (validationCallCount > 2) {
         if (doc.foo === 'baz') {
           throw new Error('document validation failed')
-        } else {
-          ++validationCallCount
         }
-      } else {
-        return ++validationCallCount
       }
+
+      ++validationCallCount
     }
   })
 
