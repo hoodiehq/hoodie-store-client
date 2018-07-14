@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter
 var withIdPrefix = require('../../lib/with-id-prefix')
 
 test('withIdPrefix only adds itself to the parent EventEmitter if something is listening', function (t) {
-  t.plan(12)
+  t.plan(13)
 
   var handlerCount = 0
   var handlerCallCount = 0
@@ -60,7 +60,7 @@ test('withIdPrefix only adds itself to the parent EventEmitter if something is l
   state.emitter.emit('change', 'add', {_id: 'something'})
 
   t.is(handlerCallCount, 0, 'prefixStore filters events out')
-  t.is(handlerCount, 1, "prefixStore doesn't remove its handler if a once handler is not called")
+  t.is(handlerCount, 1, "prefixStore doesn't remove its handler if an once handler is not called")
 
   state.emitter.emit('change', 'add', {_id: 'test/something'})
 
@@ -74,6 +74,10 @@ test('withIdPrefix only adds itself to the parent EventEmitter if something is l
   prefixStore.off('change', handler)
 
   t.is(handlerCount, 0, 'prefix removes its handler if no handler is listening')
+
+  prefixStore.on('hoodie_camp_fire_started', handler)
+
+  t.is(handlerCount, 0, "prefix doesn't add its handler if a handler for an unknow event is added")
 
   t.is(parentOnceWasCalled, false, 'once on the parentEmitter was never called')
 })
