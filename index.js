@@ -40,7 +40,9 @@ function Store (dbName, options) {
   }
 
   var api = {
-    db: state.db,
+    get db () {
+      return state.db
+    },
     isPersistent: require('./lib/is-persistent').bind(null, state),
     add: require('./lib/add').bind(null, state, null),
     find: require('./lib/find').bind(null, state, null),
