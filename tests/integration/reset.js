@@ -126,6 +126,37 @@ test('events work on scoped APIs after reset', function (t) {
   .catch(t.error)
 })
 
+test('.db works after reset (hoodiehq/hoodie-store-client#168)', function (t) {
+  t.plan(1)
+
+  var name = uniqueName()
+  var store = new Store(name, {
+    PouchDB: PouchDB,
+    remote: 'remote-' + name
+  })
+
+  store.reset()
+
+  .then(function () {
+    return store.db.put({
+      _id: 'test',
+      value: 42
+    })
+  })
+
+  .then(function () {
+    return store.db.allDocs({
+      include_docs: true
+    })
+  })
+
+  .then(function () {
+    t.pass('ok')
+  })
+
+  .catch(t.error)
+})
+
 test('emits "reset" event', function (t) {
   t.plan(1)
 
