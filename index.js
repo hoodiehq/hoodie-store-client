@@ -33,13 +33,16 @@ function Store (dbName, options) {
     dbName: dbName,
     PouchDB: options.PouchDB,
     emitter: emitter,
+    validate: options.validate,
     get remote () {
       return options.remote
     }
   }
 
   var api = {
-    db: state.db,
+    get db () {
+      return state.db
+    },
     isPersistent: require('./lib/is-persistent').bind(null, state),
     add: require('./lib/add').bind(null, state, null),
     find: require('./lib/find').bind(null, state, null),
