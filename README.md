@@ -159,15 +159,11 @@ Resolves with `properties` and adds `id` (unless provided), `createdAt` and
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `properties` isn't an object. |
+| Conflict | 409 | Object with id "id" already exists | An object with this `_id` already exists. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -200,15 +196,11 @@ with `propertiesArray`.
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `properties` isn't an object. |
+| Conflict | 409 | Object with id "id" already exists | An object with this `_id` already exists. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example: add single document
 
@@ -249,15 +241,9 @@ Resolves with `properties`
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| Not found | 404 | Object with id "id" is missing | There is no object with this `_id`. |
 
 Example
 
@@ -288,15 +274,9 @@ Resolves with `properties`
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| Not found | 404 | Object with id "id" is missing | There is no object with this `_id`. |
 
 Example
 
@@ -327,15 +307,9 @@ Resolves with array of `properties`
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| Not found | 404 | Object with id "id" is missing | There is no object with this `_id`. |
 
 Example
 
@@ -368,9 +342,9 @@ Resolves with the found document or creates a new document and returns it:
 
 Rejects with:
 
-| Name | Description  |
-| :-- | :-- |
-| PouchError | If required arguments are missing |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| missing_id | 412 | _id is required for puts | `doc` needs to contain at least an `_id` property. |
 
 Example
 
@@ -405,9 +379,10 @@ Resolves with the found document or creates a new document and returns it:
 
 Rejects with:
 
-| Name | Description  |
-| :-- | :-- |
-| PouchError | `doc` needs to contain at least an `_id` property |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| missing_id | 412 | _id is required for puts | `doc` needs to contain at least an `_id` property. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -441,15 +416,10 @@ Resolves with an Array containing all found and/or added documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| missing_id | 412 | _id is required for puts | `doc` needs to contain at least an `_id` property. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -483,15 +453,7 @@ Resolves with an Array containing all found documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+findAll doesn't have expected errors. If nothing is found, then an empty array is resolved.
 
 Example:
 
@@ -539,15 +501,12 @@ Resolves with the updated document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `properties` isn't an object. |
+| Not found | 404 | Object with id "unknown" is missing | There is no object with this `_id`. |
+| \- | \- | Must provide change | `properties` isn't an object or function. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -584,15 +543,13 @@ Resolves with the updated document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name 	| Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| unauthorized | 401 | Name or password is incorrect. | This plugin wasn't unlocked yet. |
+| bad_request | 400 | Document must be a JSON object | `updateFunction` isn't an object or function. |
+| Not found | 404 | missing | There is no object with this `_id`. |
+| \- | \- | Must provide change | `updateFunction` isn't an object or function. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -632,15 +589,11 @@ Resolves with the updated document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `doc` isn't an object with an `_id` field. |
+| Not found | 404 | missing | There is no object with this `_id`. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -676,15 +629,11 @@ Resolves with an Array of updated documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | This element in the array isn't an object with an `_id` field. |
+| Not found | 404 | missing | There is no object with this `_id`. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -721,15 +670,10 @@ Resolves with the updated or, if not yet existing, added document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `properties` isn't an object. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -765,15 +709,10 @@ Resolves with the updated or, if not yet existing, added document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `properties` isn't an object. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -809,15 +748,10 @@ Resolves with an Array of updated or, if not yet existing, added documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | This element in the array isn't an object with an `_id` field. |
+| ValidationError | \- | Message you provided in `validate` | The object didn't pass your `validate` function |
 
 Example
 
@@ -853,15 +787,10 @@ Resolves with an Array of all updated documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| \- | \- | Must provide object or function | `changedProperties` isn't an object or a function. |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
@@ -894,15 +823,10 @@ Resolves with an Array of all updated documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| \- | \- | Must provide object or function | `updateFunction` isn't an object or a function. |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
@@ -941,15 +865,10 @@ Resolves with the deleted document:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| Not found | 404 | Object with id "unknown" is missing | There is no object with this `_id`. |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
@@ -984,15 +903,11 @@ Resolves with ``:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | `doc` isn't an object with an `_id` field. |
+| Not found | 404 | missing | There is no object with this `_id`. |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
@@ -1027,15 +942,11 @@ Resolves with an Array of all deleted documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | That element of the array isn't an object with an `_id` field or a string. |
+| Not found | 404 | missing | There is no object with this `_id`. |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
@@ -1069,15 +980,9 @@ Resolves with an Array of all deleted documents:
 
 Rejects with:
 
----
-
-🐕 **Add expected Errors**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| ValidationError | \- | Message you provided in `validate` | The updated object didn't pass your `validate` function |
 
 Example
 
