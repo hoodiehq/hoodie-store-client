@@ -996,92 +996,125 @@ store.removeAll().then(function (docs) {
 
 ### store.pull()
 
----
+Pulls one or multiple objects from remote to local database. If **idOrObjectOrObjects** is undefined, then all changes will be pulled.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| **idOrObjectOrObjects** | string or object or array | Docs that should be pulled from remote | No |
 
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
+Resolves with `Array` of changed objects in **idOrObjectOrObjects** or all changed docs:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
+}]
 ```
 
 Rejects with:
 
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | That element of the array isn't an object with an `_id` field or a string. |
+| unauthorized | 401 | Name or password is incorrect. | You don't have permission to access remote db |
+| not_found | 404 | Database not found | The remote db doesn't exist. |
 
 Example
 
 ```js
+store.pull('critical_data').then(function (docs) {
+  if (docs.length === 1) {
+    // Doc 'critical_data' did change
+  }
+}).catch(function (error) {
+  // do you have access to the db?
+})
 ```
 
 ### store.push()
 
----
+Pushes one or multiple objects from local to remote database. If **idOrObjectOrObjects** is undefined, then all changes will be pushed.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| **idOrObjectOrObjects** | string or object or array | Docs that should be pulled from remote | No |
 
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
+Resolves with `Array` of pushed docs:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
+}]
 ```
 
 Rejects with:
 
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | That element of the array isn't an object with an `_id` field or a string. |
+| unauthorized | 401 | Name or password is incorrect. | You don't have permission to access remote db |
+| forbidden | 403 | Forbidden by design doc validate_doc_update function | A `validate_doc_update` in a design doc on the remote db did reject the update. More about [`validate_doc_update` at the CouchDB docs](https://docs.couchdb.org/en/stable/ddocs/ddocs.html#validate-document-update-functions "Documentation about Validate Document Update Functions in the CouchDB documentations.") |
+| not_found | 404 | Database not found | The remote db doesn't exist. |
 
 Example
 
 ```js
+store.push(['booking_23499', { _id: 'foo' }]).then(function (docs) {
+  docs.forEach(function (doc) {
+    // handle that doc was pushed to remote
+  })
+}).catch(function (error) {
+  // push couldn't be completed
+})
 ```
 
 ### store.sync()
 
----
+Syncs one or multiple objects between local and remote database. If **idOrObjectOrObjects** is undefined, then all changes will be synced.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| **idOrObjectOrObjects** | string or object or array | Docs that should be synced between local and remote database. | No |
 
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
+Resolves with `Array` of synced objects:
 
 ```json
-{
-
-}
+[{
+  "_id": "12345678-1234-1234-1234-123456789ABC",
+  "foo": "baz",
+  "hoodie": {
+    "createdAt": "2017-08-22T22:00:00.000Z",
+    "updatedAt": "2017-07-23T10:00:00.000Z"
+  }
+}]
 ```
 
 Rejects with:
 
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+| Name | Status | Description | Why |
+| :-- | :-- | :-- | :-- |
+| bad_request | 400 | Document must be a JSON object | That element of the array isn't an object with an `_id` field or a string. |
+| unauthorized | 401 | Name or password is incorrect. | You don't have permission to access remote db |
+| forbidden | 403 | Forbidden by design doc validate_doc_update function | A `validate_doc_update` in a design doc on the remote db did reject the update. More about [`validate_doc_update` at the CouchDB docs](https://docs.couchdb.org/en/stable/ddocs/ddocs.html#validate-document-update-functions "Documentation about Validate Document Update Functions in the CouchDB documentations.") |
+| not_found | 404 | Database not found | The remote db doesn't exist. |
 
 Example
 
 ```js
+store.sync('foo').then(function (docs) {
+  // 'foo' is now in sync with remote
+}).catch(function (error) {
+  // sync did fail.
+})
 ```
 
 ### store.connect()
