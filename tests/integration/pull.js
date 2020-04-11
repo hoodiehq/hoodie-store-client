@@ -188,8 +188,8 @@ test('store.pull() when local / remote in sync', function (t) {
   })
 })
 
-test('store.pull(reject)', function (t) {
-  t.plan(2)
+test('store.pull({}) rejects', function (t) {
+  t.plan(5)
 
   var name = uniqueName()
   var remoteDb = new PouchDB('remote-' + name)
@@ -205,14 +205,17 @@ test('store.pull(reject)', function (t) {
   })
 
   .catch(function (error) {
-    t.pass(error.message)
+    t.is(error.status, 400, 'Rejects with not an NOT_AN_OBJECT status')
+    t.is(error.message, 'Document must be a JSON object', 'Rejects with not an NOT_AN_OBJECT')
   })
 
   .then(function () {
     return store.pull([1, 2, undefined])
   })
 
-  .catch(function () {
+  .catch(function (error) {
+    t.is(error.status, 400, 'Rejects with not an NOT_AN_OBJECT status')
+    t.is(error.message, 'Document must be a JSON object', 'Rejects with not an NOT_AN_OBJECT')
     t.pass('One object within the array is undefined')
   })
 })
