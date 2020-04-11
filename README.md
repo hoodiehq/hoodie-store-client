@@ -1119,80 +1119,63 @@ store.sync('foo').then(function (docs) {
 
 ### store.connect()
 
----
+Connects local and remote database and starts an automatic sync process that keeps local and remote database in sync.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
 
----
+Resolves without a value. But it emits an event. 
 
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
-
-```json
-{
-
-}
-```
-
-Rejects with:
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+It doesn't Reject. All errors are events.
 
 Example
 
 ```js
+store.connect()
+  .then(function () {
+    // the store now syncs between local and remote.
+  })
 ```
 
 ### store.disconnect()
 
----
+Disconnects local and remote database and stops the automatic sync process. This does not include [`pull`](#storepull), [`push`](#storepush) and [`sync`](#storesync).
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
 
----
+Resolves without a value. But it emits an event.
 
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Resolves with ``:
-
-```json
-{
-
-}
-```
-
-Rejects with:
-
-| Name | Description  |
-| :-- | :-- |
-| Error | ... |
+It does not Reject.
 
 Example
 
 ```js
+store.disconnect()
+  .then(function () {
+    // the store stopped syncing.
+  })
 ```
 
 ### store.isConnected()
 
----
+Checks if database connection is open and working.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
 
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
-
-Returns `true` / `false`
+Returns `true` / `false`.
 
 Example
 
 ```js
+store.connect().then(function () {
+  store.isConnected() // true - the local and remote databases are syncing
+
+  return store.disconnect()
+}).then(function () {
+  store.isConnected() // false - the local and remote databases are not syncing
+})
 ```
 
 ### store.on()
