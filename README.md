@@ -1180,74 +1180,117 @@ store.connect().then(function () {
 
 ### store.on()
 
----
+Add an event handler, to handel store events.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| __event_name__ | string | Name of the event that should be listen to. | Yes |
+| __handler__ | function | Event handler function. | Yes |
 
 Returns `store` API.
 
 Example
 
 ```js
+store
+  .on('change', function (eventName, doc) {
+    // handle doc update.
+  })
+  .on('disconnect', function () {
+    // store did disconnect.
+  })
+  .on('error', function (error) {
+    // handle sync error.
+  })
 ```
 
 ### store.one()
 
----
+Add an event handler, to handle one store event. This handler will be removed after one event.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| __event_name__ | string | Name of the event that should be listen to. | Yes |
+| __handler__ | function | Event handler function. | Yes |
 
 Returns `store` API.
 
 Example
 
 ```js
+store.once('reset', function () {
+  // store was reset.
+})
 ```
 
 ### store.off()
 
----
+Remove an event handler.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| __event_name__ | string | Name of the event. | Yes |
+| __handler__ | function | The event handler function that is listening. | Yes |
 
 Returns `store` API.
 
 Example
 
 ```js
+var changeHandler = function (eventName, doc) {}
+store.on('change', changeHandler)
+
+account.once('signout', function () {
+  store.off('change', changeHandler)
+})
 ```
 
 ### store.withIdPrefix()
 
----
+Get a subset API with all CRUD methods and events scoped to an id prefix.
 
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+| __id-prefix__ | string | ID-prefix that should implicitly be added to all objects ID. | Yes |
 
----
+Returns subset of `store` API with `_id` property implicitly prefixed by passed string.
 
-| Argument | Type | Description | Required
-| :------- | :--- | :---------- | :-------
+The subset is:
 
-Returns subset of `store` API with `_id` property implicitly prefixed by passed string
+| Method | Change |
+| :----- | :----- |
+| __add__ | Add the prefix to the id. |
+| __find__ | Find only objects that start with prefix. |
+| __findOrAdd__ | Find only objects that start with prefix. Or add one with prefix. |
+| __findAll__ | Find all objects that start with prefix. |
+| __update__ | Only update objects with an id that starts with prefix |
+| __updateOrAdd__ | Only update objects with an id that starts with prefix. If none exist it adds one with that prefix. |
+| __updateAll__ | Updates all objects which have an id that starts with prefix. |
+| __remove__ | Remove an object with an id that starts with prefix |
+| __removeAll__ | Remove all objects which have an id that starts with prefix. |
+| __on__ | Only allows object events (`change`, `add`, `update` and `remove`). Event handler is only called for objects which have an id that starts with prefix |
+| __one__ | Only allows object events (`change`, `add`, `update` and `remove`). Event handler is only called for objects which have an id that starts with prefix |
+| __off__ | Can only remove an event handler that was added to this instance of store subset. |
+| __withIdPrefix__ | It extends the prefix. |
 
 Example
 
 ```js
+var prefixed = store.withIdPrefix('foo:')
+
+prefixed.add({ _id: 'bar', value: 42 }) // will add the object with id 'foo:bar'
+  .then(function (doc) {
+    // update documents with id 'foo:other' and 'foo:bar'
+    return prefixed.update(['other', 'foo:bar'], { other: 'baz' })
+  })
+
+// Finds all objects which id start with 'foo:'
+prefixed.findAll().then(function (docs) {})
+
+// Handle all changes to objects which id start with 'foo:'
+prefixed.on('change', function (eventName, doc) {})
+
+var moarPrefixed = prefixed.withIdPrefix('moarPrefix:') // prefix is now 'foo:moarPrefix:'
 ```
 
 ### Events
