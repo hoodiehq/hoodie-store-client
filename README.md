@@ -56,6 +56,8 @@ var store = new PresetStore('mydb')
 - [store.connect()](#storeconnect)
 - [store.disconnect()](#storedisconnect)
 - [store.isConnected()](#storeisconnected)
+- [store.isPersistent()](#storeispersistent)
+- [store.reset()](#storereset)
 - [store.on()](#storeon)
 - [store.one()](#storeone)
 - [store.off()](#storeoff)
@@ -1178,6 +1180,46 @@ store.connect().then(function () {
 })
 ```
 
+### store.isPersistent()
+
+Checks if local database stores objects.
+
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+
+Returns `true` / `false`.
+`true`: Data is stored on the users machine.
+`false`: Data is not stored on the users machine. If a tab is closed all data is gone and must be pulled from the remote database.
+
+Example
+
+```js
+store.isPersistent()
+```
+
+### store.reset()
+
+Destroy the local database and creates a new one. All changes that are not synced to remote database will be lost!
+
+| Argument | Type | Description | Required |
+| :------- | :--- | :---------- | :------- |
+
+Resolves with no value.
+
+Example
+
+```js
+store.remove('important_data')
+  .then(function () {
+    // destroy local database
+    return store.reset()
+  })
+  .then(function () {
+    // re download all data
+    return store.pull()
+  })
+```
+
 ### store.on()
 
 Add an event handler, to handel store [events](#events).
@@ -1305,6 +1347,7 @@ var moarPrefixed = prefixed.withIdPrefix('moarPrefix:') // prefix is now 'foo:mo
 | __pull__ | Objects where [pulled](#storepull) from remote. [sync](#storesync) also emits this event. | `pulled-objects`; An Array with all objects pulled from remote. |
 | __connect__ | Local database was [connected](#storeconnect) to remote database. | No arguments |
 | __disconnect__ | Local database was [disconnect](#storedisconnect) from remote database. | No arguments |
+| __reset__ | The local database was [reset](#storereset). | No arguments |
 
 ## Testing
 
