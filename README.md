@@ -1124,7 +1124,7 @@ Connects local and remote database and starts an automatic sync process that kee
 | Argument | Type | Description | Required |
 | :------- | :--- | :---------- | :------- |
 
-Resolves without a value. But it emits an event. 
+Resolves without a value. But it emits an [events](#events).
 
 It doesn't Reject. All errors are events.
 
@@ -1144,7 +1144,7 @@ Disconnects local and remote database and stops the automatic sync process. This
 | Argument | Type | Description | Required |
 | :------- | :--- | :---------- | :------- |
 
-Resolves without a value. But it emits an event.
+Resolves without a value. But it emits an [events](#events).
 
 It does not Reject.
 
@@ -1180,11 +1180,11 @@ store.connect().then(function () {
 
 ### store.on()
 
-Add an event handler, to handel store events.
+Add an event handler, to handel store [events](#events).
 
 | Argument | Type | Description | Required |
 | :------- | :--- | :---------- | :------- |
-| __event_name__ | string | Name of the event that should be listen to. | Yes |
+| __event_name__ | string | Name of the event that should be listen to. [Possible events](#events). | Yes |
 | __handler__ | function | Event handler function. | Yes |
 
 Returns `store` API.
@@ -1206,11 +1206,11 @@ store
 
 ### store.one()
 
-Add an event handler, to handle one store event. This handler will be removed after one event.
+Add an event handler, to handle one store [events](#events). This handler will be removed after one event.
 
 | Argument | Type | Description | Required |
 | :------- | :--- | :---------- | :------- |
-| __event_name__ | string | Name of the event that should be listen to. | Yes |
+| __event_name__ | string | Name of the event that should be listen to. [Possible events](#events). | Yes |
 | __handler__ | function | Event handler function. | Yes |
 
 Returns `store` API.
@@ -1229,7 +1229,7 @@ Remove an event handler.
 
 | Argument | Type | Description | Required |
 | :------- | :--- | :---------- | :------- |
-| __event_name__ | string | Name of the event. | Yes |
+| __event_name__ | string | Name of the event. One of the possible [events](#events). | Yes |
 | __handler__ | function | The event handler function that is listening. | Yes |
 
 Returns `store` API.
@@ -1295,14 +1295,16 @@ var moarPrefixed = prefixed.withIdPrefix('moarPrefix:') // prefix is now 'foo:mo
 
 ### Events
 
----
-
-🐕 **Complete README**: [#102](https://github.com/hoodiehq/hoodie-store-client/issues/102)
-
----
-
-| Event | Description | Arguments
-| :---- | :---------- | :--------
+| Event | Description | Arguments |
+| :---- | :---------- | :-------- |
+| __add__ | An object was added (this can be local or remote database) | `object` that was added |
+| __update__ | An object was updated (this can be local or remote database) | `object` that was updated |
+| __remove__ | An object was removed (this can be local or remote database) | `object` that was removed |
+| __change__ | An object was changed on local or remote database. A change an be an object was added, updated or removed. | `event-name` (__add__, __update__ or __remove__), `object` that was changed |
+| __push__ | Objects where [pushed](#storepush) to remote. [sync](#storesync) also emits this event. | `pushed-objects`; An Array with all objects pushed to remote. |
+| __pull__ | Objects where [pulled](#storepull) from remote. [sync](#storesync) also emits this event. | `pulled-objects`; An Array with all objects pulled from remote. |
+| __connect__ | Local database was [connected](#storeconnect) to remote database. | No arguments |
+| __disconnect__ | Local database was [disconnect](#storedisconnect) from remote database. | No arguments |
 
 ## Testing
 
