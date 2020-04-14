@@ -196,6 +196,8 @@ with `propertiesArray`.
 }
 ```
 
+Note that `store.add(arrayOfProperties)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name 	| Status | Description | Why |
@@ -307,6 +309,8 @@ Resolves with array of `properties`
 }]
 ```
 
+Note that `store.find(idsOrDocs)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name 	| Status | Description | Why |
@@ -415,6 +419,8 @@ Resolves with an Array containing all found and/or added documents:
   }
 }]
 ```
+
+Note that `store.findOrAdd(idsOrDocs)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
 
 Rejects with:
 
@@ -629,6 +635,8 @@ Resolves with an Array of updated documents:
 }]
 ```
 
+Note that `store.update(arrayOfDocs)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name | Status | Description | Why |
@@ -748,6 +756,8 @@ Resolves with an Array of updated or, if not yet existing, added documents:
 }]
 ```
 
+Note that `store.updateOrAdd(arrayOfDocs)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name | Status | Description | Why |
@@ -787,6 +797,8 @@ Resolves with an Array of all updated documents:
 }]
 ```
 
+Note that `store.updateAll(changedProperties)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name | Status | Description | Why |
@@ -822,6 +834,8 @@ Resolves with an Array of all updated documents:
   }
 }]
 ```
+
+Note that `store.updateAll(updateFunction)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
 
 Rejects with:
 
@@ -942,6 +956,8 @@ Resolves with an Array of all deleted documents:
 }]
 ```
 
+Note that `store.remove(idsOrDocs)` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
+
 Rejects with:
 
 | Name | Status | Description | Why |
@@ -979,6 +995,8 @@ Resolves with an Array of all deleted documents:
   "_deleted": true
 }]
 ```
+
+Note that `store.removeAll()` behaves like the new [`Promise.allSettled()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled "MDN documentation of Promise.allSettled()")! It resolves with an Array that contains the resulting object or an error for that object.
 
 Rejects with:
 
